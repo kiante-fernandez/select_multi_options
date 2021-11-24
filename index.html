@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title> Select Multi-Opions Experiment </title>
+
+        <script src="jspsych/jspsych.js"></script>
+        <script src="jspsych/plugin-html-button-response.js"></script>
+        <script src="jspsych/plugin-instructions.js"></script>
+        <script src="jspsych/plugin-image-keyboard-response.js"></script>
+        <script src="jspsych/plugin-html-keyboard-response.js"></script>
+        <script src="jspsych/plugin-survey-html-form.js"></script>
+        <script src="jspsych/plugin-preload.js"></script>
+
+        <link href="css/jspsych.css" rel="stylesheet" type="text/css" />
+
+    <style>
+    .jspsych-html-button-response-button {
+        float: center;
+        padding: 5px;
+        }
+
+        /* Clear floats after image containers */
+    .jspsych-html-button-response-button::after {
+        content: "";
+        clear: both;
+        display: table;
+    }
+    </style>
+
+    </head>
+
+    <body>
+    </body>
+
+<script>
+    var jsPsych = initJsPsych({
+        on_finish: function () {
+                jsPsych.data.displayData()
+            }
+    }
+);
+// function getPresentedName(file_path){
+//   const end_position = file_path.indexOf('.jpg');
+//   return file_path.substr(0, end_position);
+// }
+// create a list of all images so we can tell jsPsych to
+const image_names = [
+'img/food/food1.jpg',
+'img/food/food2.jpg',
+'img/food/food3.jpg',
+'img/food/food4.jpg',
+'img/food/food5.jpg',
+'img/food/food6.jpg',
+'img/food/food7.jpg',
+'img/food/food8.jpg',
+'img/food/food9.jpg',
+'img/food/food10.jpg',
+'img/food/food11.jpg',
+'img/food/food12.jpg',
+'img/food/food13.jpg',
+'img/food/food14.jpg',
+'img/food/food15.jpg'
+]
+
+// Preloading files are needed to present the stimuli accurately.
+const preload = {
+    type: jsPsychPreload,
+    images: image_names,
+}
+        // Welcome
+        var welcome_block = {
+            data: {
+                    screen_id: "welcome"
+            },
+            type: jsPsychHtmlButtonResponse,
+            stimulus: "Welcome to the experiment!",
+            choices:["Click here to continue"]
+        };
+        // Instructions
+        var instruction_block_1 = {
+            data: {
+                screen_id: "instructions"
+            },
+            type: jsPsychInstructions,
+            pages: [
+                '<p>Welcome to the study!</p>' +
+                "<p>Today, you will make some decisions about food items. </p>" +
+                "<p>Please pay attention to the instructions. For part of the study, your eye movements will be tracked.</p>"+
+                "<p>If you have any questions, please ask the experimenter at this time. If you are ready to begin, please press the enter key.</p>",
+            ],
+            key_forward: ' '
+        };
+        // Calibration eye tracking
+        // Experiment instructions
+        // here we need to choose one of two frames randomly. Then we need to show the approptirate text.
+        // I assume we can change the variable contents dynamically after we write our each instructions
+        // or we can just write two and present one. Either way works
+        var instruction_block_2 = {
+            data: {
+                screen_id: "instructions_2"
+            },
+            type: jsPsychInstructions,
+            pages: [
+                "<p>You''re going  shopping for snacks for the weekend. Each item costs its normal price.</p>" +
+                "<p>If you are ready to begin, please press the space bar.</p>" +
+                "<p>When you''re finished selecting items, press the space bar to finalize your selection</p>"
+            ],
+            key_forward: ' '
+        };
+
+        const shuffled_image_names = jsPsych.randomization.shuffle(image_names);
+
+        var factors = {
+            image: shuffled_image_names,
+            stimulus_duration: [5000],
+            fixation_duration: [500]
+        };
+
+        var factorial_values = jsPsych.randomization.factorial(factors);
+
+        var fixation = {
+            type: jsPsychHtmlKeyboardResponse,
+            stimulus: '+',
+            trial_duration: jsPsych.timelineVariable('fixation_duration'),
+            response_ends_trial: false
+        };
+        var trial = {
+            type: jsPsychHtmlButtonResponse,
+            stimulus: [],
+            prompt: '<p>Select the options</p>',
+            choices: [shuffled_image_names[0],
+                    shuffled_image_names[1],
+                    shuffled_image_names[2],
+                    shuffled_image_names[3],
+                    shuffled_image_names[4],
+                    shuffled_image_names[5],
+                    shuffled_image_names[6],
+                    shuffled_image_names[7],
+                    shuffled_image_names[8],
+                    shuffled_image_names[9],
+                    shuffled_image_names[10],
+                    shuffled_image_names[11],
+                    shuffled_image_names[12],
+                    shuffled_image_names[13],
+                    shuffled_image_names[14]
+                ],
+                    button_html: [
+                        '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-0">',
+                        '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-1">',
+                        '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-2">',
+                        '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-3">',
+                        '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-4">',
+                        '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-5">',
+                        '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-6">',
+                        '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-7">',
+                        '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-8">',
+                        '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-9">',
+                        '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-10">',
+                        '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-11">',
+                        '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-12">',
+                        '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-13">',
+                        '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-14">'                    ],
+                    response_ends_trial: true,
+                    margin_vertical: "40px",
+                    margin_horizontal: "50px"
+                };
+
+        var trials_with_variables = {
+            timeline: [fixation, trial],
+            timeline_variables: factorial_values
+        };
+        // Debrief
+
+        // timeline
+        var timeline = []
+
+        timeline.push(welcome_block);
+        timeline.push(instruction_block_1);
+        timeline.push(instruction_block_2);
+        timeline.push(trials_with_variables);
+
+        //Start Experiment
+        jsPsych.run(timeline);
+
+</script>
+</html>
