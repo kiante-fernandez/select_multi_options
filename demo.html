@@ -9,19 +9,32 @@
         <script src="jspsych/plugin-instructions.js"></script>
         <script src="jspsych/plugin-image-keyboard-response.js"></script>
         <script src="jspsych/plugin-html-keyboard-response.js"></script>
-        <script src="jspsych/plugin-survey-html-form.js"></script>
         <script src="jspsych/plugin-preload.js"></script>
+
+        <script src="plugin-multi_select/plugin-select-multiple-buttons.js"></script>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
         <link href="css/jspsych.css" rel="stylesheet" type="text/css" />
 
     <style>
-    .jspsych-html-button-response-button {
-        float: center;
-        padding: 5px;
-        }
 
+    .jspsych-multiple-select-response-button {
+        float: center;
+        border: 4px
+        solid #FFFFFF;
+        cursor: pointer;
+        width: 130px;
+        padding: 0px;
+        margin-bottom: 10px;
+        }
+    .active {
+        border: 4px
+        solid #FFFF00;
+        background: #eeeeee;
+        }
         /* Clear floats after image containers */
-    .jspsych-html-button-response-button::after {
+    .jspsych-multiple-select-response-button::after {
         content: "";
         clear: both;
         display: table;
@@ -44,6 +57,7 @@
 //   const end_position = file_path.indexOf('.jpg');
 //   return file_path.substr(0, end_position);
 // }
+
 // create a list of all images so we can tell jsPsych to
 const image_names = [
 'img/food/food1.jpg',
@@ -68,86 +82,11 @@ const preload = {
     type: jsPsychPreload,
     images: image_names,
 }
-        // Welcome
-        var welcome_block = {
-            data: {
-                    screen_id: "welcome"
-            },
-            type: jsPsychHtmlButtonResponse,
-            stimulus: "Welcome to the experiment!",
-            choices:["Click here to continue"]
-        };
-        // Instructions
-        var instruction_block_1 = {
-            data: {
-                screen_id: "instructions"
-            },
-            type: jsPsychInstructions,
-            pages: [
-                '<p>Welcome to the study!</p>' +
-                "<p>Today, you will make some decisions about food items. </p>" +
-                "<p>Please pay attention to the instructions. For part of the study, your eye movements will be tracked.</p>"+
-                "<p>If you have any questions, please ask the experimenter at this time. If you are ready to begin, please press the enter key.</p>",
-            ],
-            key_forward: ' '
-        };
-        // Calibration eye tracking
-        // Experiment instructions
-        // here we need to choose one of two frames randomly. Then we need to show the approptirate text.
-        // I assume we can change the variable contents dynamically after we write our each instructions
-        // or we can just write two and present one. Either way works
-        var condition_instructions = [
-            //condition 1
-            "<p>You''re going  shopping for snacks for the weekend. Each item costs its normal price.</p>" +
-            "<p>If you are ready to begin, please press the space bar.</p>" +
-            "<p>When you''re finished selecting items, press the space bar to finalize your selection</p>",
-            //condition 2
-            "<p>You''re going  shopping for snacks for the weekend. Each item costs its normal price.</p>" +
-            "<p>If you are ready to begin, please press the space bar.</p>" +
-            "<p>When you''re finished selecting items, press the space bar to finalize your selection</p>"
-        ]
-
-        function getRandomInt(max) {
-            return Math.floor(Math.random() * max);
-        };
-
-        const condition_choice = getRandomInt(2);
-
-        var instruction_block_2 = {
-            data: {
-                screen_id: "instructions"
-            },
-            type: jsPsychInstructions,
-            pages: [
-                "<p>You''re going  shopping for snacks for the weekend. Each item costs its normal price.</p>" +
-                "<p>If you are ready to begin, please press the space bar.</p>" +
-                "<p>When you''re finished selecting items, press the space bar to finalize your selection</p>"
-            ],
-            key_forward: ' '
-        };
-
         const shuffled_image_names = jsPsych.randomization.shuffle(image_names);
 
-        var trial_images = [
-            {choices: shuffled_image_names[0], data: {screen_id: "trial", option: "1"}},
-            {choices: shuffled_image_names[1], data: {screen_id: "trial", option: "2"}},
-            {choices: shuffled_image_names[2], data: {screen_id: "trial", option: "3"}},
-            {choices: shuffled_image_names[3], data: {screen_id: "trial", option: "4"}},
-            {choices: shuffled_image_names[4], data: {screen_id: "trial", option: "5"}},
-            {choices: shuffled_image_names[5], data: {screen_id: "trial", option: "6"}},
-            {choices: shuffled_image_names[6], data: {screen_id: "trial", option: "7"}},
-            {choices: shuffled_image_names[7], data: {screen_id: "trial", option: "8"}},
-            {choices: shuffled_image_names[8], data: {screen_id: "trial", option: "9"}},
-            {choices: shuffled_image_names[9], data: {screen_id: "trial", option: "10"}},
-            {choices: shuffled_image_names[10], data: {screen_id: "trial", option: "11"}},
-            {choices: shuffled_image_names[11], data: {screen_id: "trial", option: "12"}},
-            {choices: shuffled_image_names[12], data: {screen_id: "trial", option: "13"}},
-            {choices: shuffled_image_names[13], data: {screen_id: "trial", option: "14"}},
-            {choices: shuffled_image_names[14], data: {screen_id: "trial", option: "15"}}
-        ];
-        //neeed to figure out if I need/ shoudl do the factorial procedure
         var factors = {
-            image: trial_images,
+            image: shuffled_image_names,
+            stimulus_duration: [5000],
             fixation_duration: [500]
         };
 
@@ -160,7 +99,7 @@ const preload = {
             response_ends_trial: false
         };
         var trial = {
-            type: jsPsychHtmlButtonResponse,
+            type: jsPsychMutipleButtonResponse,
             stimulus: [],
             prompt: [],
             choices: [shuffled_image_names[0],
@@ -196,6 +135,7 @@ const preload = {
                         '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-13">',
                         '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-14">'                    ],
                     response_ends_trial: true,
+                    keys: ' ',
                     margin_vertical: "40px",
                     margin_horizontal: "50px"
                 };
@@ -204,14 +144,12 @@ const preload = {
             timeline: [fixation, trial],
             timeline_variables: factorial_values
         };
+
         // Debrief
 
         // timeline
         var timeline = []
 
-        timeline.push(welcome_block);
-        timeline.push(instruction_block_1);
-        timeline.push(instruction_block_2);
         timeline.push(trials_with_variables);
 
         //Start Experiment

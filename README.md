@@ -2,31 +2,37 @@
 Jspych experiment for selecting multiple options project
 
 Things to do:
-Find example code for simple reaction time experiment
-How do we put a montage of images onto the screen (15 or so)
-How do we get mouse inputs to track of specific areas on the screen
-recoding click times
-    -wrt the start of the trial (its only one trial)
-    -wrt the last click
-    -I guess technically we only need the time when each click and final button press was recorded wrt stim onset
-code up reaction time experiment with a single selection option (space bar)
+- how do we mark which the type of item each option selected is? We need a data id that tells us which jpg was selected
+- do we add the mouse tracking still since we know when an option is selected?
+- eye tracking calibration phase (see web gazer extension)
+- how do we prevent subjects from deselecting options
+- where are we sending the data after collection
+- where are we deploying the web application?
 
-(note you still need to make the new stimuli set) Ask Taro for it
 
-Intro slides
-    introduction
-instructions
+introduction
+    - condition randomization
 calibration screen (only one)
-instructions
-choice screen
-    fixation onset (once they look we move?)
-    presentation of all the options 15 No box (while tracking eyes)
-    mouse at the bottom of the screen
-    subjects can move mouse to select options
-    when selected by clicking mouse pad the option is highlighted and stays that way for the reminder of the trial
-    rt is recorded for the click
-    to end the trial subjects press the space bar
+
+condition specific instructions
+    - randomization procedure for two conditions
+choice
+    - fixation onset
+    - presentation of all the options 15
+    - mouse start at the bottom of the screen
+    - subjects can move mouse to select options
+    - subjects can select options with mouse
+    - options highlighted when selected
+    - trial does not end when click options
+    - trial ends by pressing space bar
+    - rt is recorded at each option selected and final keyboard press
+
 instructions II
-ratings for the options
-thanks and generate the reward
-    generation of reward randomly sample number, if X then we send you the snacks
+    - thank subjects /tell them about rating task?
+
+ratings for the options? (still up for discussion)
+
+instructions III
+    - thank you
+    - generate the reward
+        - randomly sample number, if X then we send you the snacks
