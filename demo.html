@@ -16,6 +16,12 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/6.2.1/math.js"></script>
 
+        <script src="jspsych/plugin-webgazer-calibrate.js"></script>
+        <script src="jspsych/plugin-webgazer-init-camera.js"></script>
+        <script src="jspsych/plugin-webgazer-validate.js"></script>
+        <script src="jspsych/extension-webgazer.js"></script>
+        <script src="node_modules/webgazer/dist/webgazer.js"></script>
+
         <link href="css/jspsych.css" rel="stylesheet" type="text/css" />
 
     <style>
@@ -137,7 +143,7 @@ const trial_options = shuffled_image_names.slice(0, 15);
                 };
 
         var trials_with_variables = {
-            timeline: [preload, fixation, trial],
+            timeline: [fixation, trial],
             // timeline_variables: factorial_values
         };
 
@@ -145,7 +151,7 @@ const trial_options = shuffled_image_names.slice(0, 15);
 
         // timeline
         var timeline = []
-
+        timeline.push(preload);
         timeline.push(trials_with_variables);
 
         //Start Experiment

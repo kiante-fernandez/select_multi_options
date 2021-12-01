@@ -133,7 +133,9 @@ var jsPsychMutipleButtonResponse = (function (jspsych) {
                 $(e.currentTarget).toggleClass('active');
                 var choice = btn_el.getAttribute("data-choice"); // don't use dataset for jsdom compatibility
                 after_response(choice);
+
             });
+
         }
 
         // store response
