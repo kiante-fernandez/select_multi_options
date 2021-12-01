@@ -30,7 +30,7 @@ choice trial:
 ~~- trial ends by pressing space bar~~
 ~~- rt is recorded at each option selected and final keyboard press~~
 -   food option names are recorded with trial names
--   at the end of the trial calculate the number of option selected
+-   on finish have the trial calculate the number of option selected
 
 instructions II
 - thank subjects /tell them about rating task?
