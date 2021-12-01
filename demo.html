@@ -76,7 +76,7 @@ const preload = {
     images: image_paths,
 }
 const shuffled_image_names = jsPsych.randomization.shuffle(image_paths);
-
+const trial_options = shuffled_image_names.slice(0, 15);
     var factors = {
             image: shuffled_image_names,
     };
@@ -91,6 +91,10 @@ const shuffled_image_names = jsPsych.randomization.shuffle(image_paths);
             response_ends_trial: false
         };
         var trial = {
+            data: {
+                screen_id: "trial",
+                options: trial_options
+            },
             type: jsPsychMutipleButtonResponse,
             stimulus: [],
             prompt: [],
