@@ -14,6 +14,7 @@
         <script src="plugin-multi_select/plugin-select-multiple-buttons.js"></script>
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/6.2.1/math.js"></script>
 
         <link href="css/jspsych.css" rel="stylesheet" type="text/css" />
 
@@ -25,7 +26,7 @@
         solid #FFFFFF;
         cursor: pointer;
         width: 130px;
-        padding: 0px;
+        padding: 1px;
         margin-bottom: 10px;
         }
     .active {
@@ -53,49 +54,40 @@
             }
     }
 );
-// function getPresentedName(file_path){
-//   const end_position = file_path.indexOf('.jpg');
-//   return file_path.substr(0, end_position);
-// }
 
-// create a list of all images so we can tell jsPsych to
-const image_names = [
-'img/food/food1.jpg',
-'img/food/food2.jpg',
-'img/food/food3.jpg',
-'img/food/food4.jpg',
-'img/food/food5.jpg',
-'img/food/food6.jpg',
-'img/food/food7.jpg',
-'img/food/food8.jpg',
-'img/food/food9.jpg',
-'img/food/food10.jpg',
-'img/food/food11.jpg',
-'img/food/food12.jpg',
-'img/food/food13.jpg',
-'img/food/food14.jpg',
-'img/food/food15.jpg'
-]
+//Creating list of image paths to load.
+//These are image paths to images for the experimental treatment shown on each trial
+var image_indices_lst = math.range(1, 80); //math.range() returns a js obj that has a parameter called '._data' and that has an Array of the range.
+
+image_indices_lst = Array.from(image_indices_lst._data); // This is just a list containing the range of numbers used for each url of the
+// experimental stimulus. The experimental stimuli are all saved in the /img/food/ folder. They have a prefix "food"
+// and then they include the number 1-N for N number of trials.
+var arrayLength = image_indices_lst.length; // arrayLength is used to show how many images/trials there are from 1-N trials.
+var image_paths = [];
+for (var i = 0; i < arrayLength; i++) {
+    // This for loop fills the image_paths list with urls to the images for each of the experimental treatments
+    var path_str1 = "img/food/food" + String(image_indices_lst[i]) + ".jpg";
+    image_paths.push(path_str1);
+  }
 
 // Preloading files are needed to present the stimuli accurately.
 const preload = {
     type: jsPsychPreload,
-    images: image_names,
+    images: image_paths,
 }
-        const shuffled_image_names = jsPsych.randomization.shuffle(image_names);
+const shuffled_image_names = jsPsych.randomization.shuffle(image_paths);
 
-        var factors = {
+    var factors = {
             image: shuffled_image_names,
-            stimulus_duration: [5000],
-            fixation_duration: [500]
-        };
+    };
 
         var factorial_values = jsPsych.randomization.factorial(factors);
 
         var fixation = {
+            data: {screen_id: "fixation"},
             type: jsPsychHtmlKeyboardResponse,
-            stimulus: '+',
-            trial_duration: jsPsych.timelineVariable('fixation_duration'),
+            stimulus: "<div style='font-size: 60px'>+</div>",
+            trial_duration: [500],
             response_ends_trial: false
         };
         var trial = {
@@ -141,8 +133,8 @@ const preload = {
                 };
 
         var trials_with_variables = {
-            timeline: [fixation, trial],
-            timeline_variables: factorial_values
+            timeline: [preload, fixation, trial],
+            // timeline_variables: factorial_values
         };
 
         // Debrief

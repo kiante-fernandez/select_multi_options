@@ -12,20 +12,22 @@ Things to do:
 
 introduction
     - condition randomization
-calibration screen (only one)
+calibration screen (only one?)
 
 condition specific instructions
     - randomization procedure for two conditions
 choice
-    - fixation onset
-    - presentation of all the options 15
+    ~~- fixation onset ~~~
+    ~~- presentation of all the options 15~~
     - mouse start at the bottom of the screen
-    - subjects can move mouse to select options
-    - subjects can select options with mouse
-    - options highlighted when selected
-    - trial does not end when click options
-    - trial ends by pressing space bar
-    - rt is recorded at each option selected and final keyboard press
+    ~~- subjects can move mouse to select options~~
+    ~~- subjects can select options with mouse~~
+    ~~- options highlighted when selected~~
+    - subjects cannot un-click options
+    ~~- trial does not end when click options~~
+    ~~- trial ends by pressing space bar~~
+    ~~- rt is recorded at each option selected and final keyboard press~~
+    -   food option names are recorded with trial names
 
 instructions II
     - thank subjects /tell them about rating task?

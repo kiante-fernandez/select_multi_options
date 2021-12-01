@@ -177,7 +177,6 @@ var jsPsychMutipleButtonResponse = (function (jspsych) {
             display_element.querySelector("#jspsych-multiple-select-response-stimulus").className +=
                 " responded";
         }
-
         function ending_the_trial(info){
             display_element.querySelector("#jspsych-multiple-select-response-stimulus").className +=
                 " responded";
