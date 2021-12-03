@@ -80,6 +80,7 @@ var condition_instructions = [
     "<p>You have been selected to buy a box of snacks. Each item costs its normal price.</p>" +
     "<p>All the items available to buy are in your box.</p>" +
     "<p>Click on all the items you want to keep in your box.</p>"+
+    "<p>Once you select an item, you cannot deselect it.</p>"+
     "<p>You will have a chance to receive each item that you selected.</p>"+
     "<p>When you’re finished selecting items, press the space bar to finalize your selection.</p>"+
     "<p>If you are ready to begin, please press the space bar.</p>",
@@ -87,6 +88,7 @@ var condition_instructions = [
     "<p>You have been selected to buy a box of snacks. Each item costs its normal price.</p>" +
     "<p>All the items available to buy will be shown.</p>" +
     "<p>Click on all the items you want to add to your box.</p>"+
+    "<p>Once you select an item, you cannot deselect it.</p>"+
     "<p>You will have a chance to receive each item that you selected.</p>"+
     "<p>When you’re finished selecting items, press the space bar to finalize your selection.</p>"+
     "<p>If you are ready to begin, please press the space bar.</p>"

@@ -133,9 +133,7 @@ var jsPsychMutipleButtonResponse = (function (jspsych) {
                 $(e.currentTarget).toggleClass('active');
                 var choice = btn_el.getAttribute("data-choice"); // don't use dataset for jsdom compatibility
                 after_response(choice);
-
             });
-
         }
 
         // store response
@@ -179,6 +177,7 @@ var jsPsychMutipleButtonResponse = (function (jspsych) {
             display_element.querySelector("#jspsych-multiple-select-response-stimulus").className +=
                 " responded";
         }
+        // function to end the trial
         function ending_the_trial(info){
             display_element.querySelector("#jspsych-multiple-select-response-stimulus").className +=
                 " responded";
