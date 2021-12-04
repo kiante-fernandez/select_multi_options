@@ -1,7 +1,10 @@
 var jsPsych = initJsPsych({
+    extensions: [
+          {type: jsPsychExtensionWebgazer}
+      ],
     on_finish: function () {
         var csv = jsPsych.data.get().csv();
-        var filename = jsPsych.data.get().values()[0].subject_id + "_" + DATE + ".csv";;
+        var filename = jsPsych.data.get().values()[0].subject_id + "_" + DATE + ".csv";
         downloadCSV(csv,filename);
         jsPsych.data.displayData()
     }
@@ -70,9 +73,92 @@ var instruction_block_1 = {
     ],
     key_forward: ' '
 };
+// EYE TRACKING
+// eye instructions
+var camera_instructions = {
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `
+    <p>In order to participate you must allow the experiment to use your camera.</p>
+    <p>You will be prompted to do this on the next screen.</p>
+    <p>If you do not wish to allow use of your camera, you cannot participate in this experiment.<p>
+    <p>It may take up to 30 seconds for the camera to initialize after you give permission.</p>
+    `,
+    choices: ['Got it'],
+}
+// initialize eye tracker
+var init_camera = {
+  type: jsPsychWebgazerInitCamera
+}
 // Calibration eye tracking
-
-
+var calibration_instructions = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: `
+    <p>Now you'll calibrate the eye tracking, so that the software can use the image of your eyes to predict where you are looking.</p>
+    <p>You'll see a series of dots appear on the screen. Look at each dot and click on it.</p>
+  `,
+  choices: ['Got it'],
+}
+var calibration = {
+   type: jsPsychWebgazerCalibrate,
+   calibration_points: [
+     [25,25],[75,25],[50,50],[25,75],[75,75]
+   ],
+   repetitions_per_point: 2,
+   randomize_calibration_order: true
+ }
+ // validation eye tracking
+ var validation_instructions = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: `
+    <p>Now we'll measure the accuracy of the calibration.</p>
+    <p>Look at each dot as it appears on the screen.</p>
+    <p style="font-weight: bold;">You do not need to click on the dots this time.</p>
+  `,
+  choices: ['Got it'],
+  post_trial_gap: 1000
+}
+var validation = {
+  type: jsPsychWebgazerValidate,
+  validation_points: [
+    [25,25],[75,25],[50,50],[25,75],[75,75]
+  ],
+  roi_radius: 200,
+  time_to_saccade: 1000,
+  validation_duration: 2000,
+  data: {
+    task: 'validate'
+  }
+}
+// recalibrate eye tracking
+var recalibrate_instructions = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: `
+    <p>The accuracy of the calibration is a little lower than we'd like.</p>
+    <p>Let's try calibrating one more time.</p>
+    <p>On the next screen, look at the dots and click on them.<p>
+  `,
+  choices: ['OK'],
+}
+var recalibrate = {
+  timeline: [recalibrate_instructions, calibration, validation_instructions, validation],
+  conditional_function: function(){
+    var validation_data = jsPsych.data.get().filter({task: 'validate'}).values()[0];
+    return validation_data.percent_in_roi.some(function(x){
+      var minimum_percent_acceptable = 50;
+      return x < minimum_percent_acceptable;
+    });
+  },
+  data: {
+    phase: 'recalibration'
+  }
+}
+var calibration_done = {
+  type: jsPsychHtmlButtonResponse,
+  stimulus: `
+    <p>Great, we're done with calibration!</p>
+  `,
+  choices: ['OK']
+}
 // Experiment instructions
 // here we need to choose one of two frames randomly. Then we need to show the approptirate text.
 var condition_instructions = [
@@ -166,7 +252,30 @@ button_html: [
         //Its a string, so extract the numbers then count
         matches = data.res_buttons.match(/\d+/g);
         data.options_selected = matches.length
-    }
+    },
+    extensions: [
+          {
+            type: jsPsychExtensionWebgazer,
+            params: {
+                targets:
+                ['#jspsych-multiple-select-response-button-0',
+                '#jspsych-multiple-select-response-button-1',
+                '#jspsych-multiple-select-response-button-2',
+                '#jspsych-multiple-select-response-button-3',
+                '#jspsych-multiple-select-response-button-4',
+                '#jspsych-multiple-select-response-button-5',
+                '#jspsych-multiple-select-response-button-6',
+                '#jspsych-multiple-select-response-button-7',
+                '#jspsych-multiple-select-response-button-8',
+                '#jspsych-multiple-select-response-button-9',
+                '#jspsych-multiple-select-response-button-10',
+                '#jspsych-multiple-select-response-button-11',
+                '#jspsych-multiple-select-response-button-12',
+                '#jspsych-multiple-select-response-button-13',
+                '#jspsych-multiple-select-response-button-14'
+        ]}
+          }
+        ]
 };
 // Debrief
 //we need to randomly select if this subject actully gets the foods or not
@@ -190,6 +299,14 @@ var timeline = []
 timeline.push(preload);
 timeline.push(welcome_block);
 timeline.push(instruction_block_1);
+timeline.push(camera_instructions);
+timeline.push(init_camera);
+timeline.push(calibration_instructions);
+timeline.push(calibration);
+timeline.push(validation_instructions);
+timeline.push(validation);
+timeline.push(recalibrate);
+timeline.push(calibration_done);
 timeline.push(instruction_block_2);
 timeline.push(trials_with_variables);
 timeline.push(Debrief);
