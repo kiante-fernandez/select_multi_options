@@ -43,5 +43,5 @@ instructions III
 
 deploying
 ~~- use flask web application? No, use node.js~~
-- run on cognition.io or Heroku or something else?
+- run on cognition.io or Heroku or something else? Heroku.
 ~~- send data directly to drive? or save of some container?~~
