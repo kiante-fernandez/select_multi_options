@@ -3,10 +3,24 @@ var jsPsych = initJsPsych({
         {type: jsPsychExtensionWebgazer}
     ],
     on_finish: function () {
+        $.ajax({
+            type: "POST",
+            url: "/experiment-data",
+            data: JSON.stringify(jsPsych.data.get().values()),
+            contentType: "application/json"
+        }).done(function() {
+            // window.location.href = "finish";
+            alert("Data has been saved!");
+        }).fail(function() {
+            alert("Problem occurred while writing data to Dropbox. " +
+                "Data will be saved to your computer. " +
+                "Please contact the experimenter regarding this issue!");
         var csv = jsPsych.data.get().csv();
         var filename = jsPsych.data.get().values()[0].subject_id + "_" + DATE + ".csv";
-        // downloadCSV(csv,filename);
-        jsPsych.data.displayData()
+        downloadCSV(csv,filename);
+        // window.location.href = "finish";
+    });
+    // jsPsych.data.displayData()
     }
 }
 );
@@ -281,15 +295,16 @@ button_html: [
 };
 // Debrief
 //we need to randomly select if this subject actully gets the foods or not
-var Debrief = {
+var debrief = {
     data: {
-        screen_id: "Debrief"
+        screen_id: "debrief"
     },
-    type: jsPsychHtmlKeyboardResponse,
-    stimulus: "<p>You have completed the experiment.</p>" +
-    "<p>please contact the experimenter.</p>",
-    choices: ' ',
-    response_ends_trial: true
+    type: jsPsychInstructions,
+    pages: [
+        "<p>We have completed our experiment. </p>" +
+        "<p>Please press next. </p>"
+    ],
+    show_clickable_nav: true,
 };
 
 var trials_with_variables = {
@@ -301,17 +316,17 @@ var timeline = []
 timeline.push(preload);
 timeline.push(welcome_block);
 timeline.push(instruction_block_1);
-timeline.push(camera_instructions);
-timeline.push(init_camera);
-timeline.push(calibration_instructions);
-timeline.push(calibration);
+// timeline.push(camera_instructions);
+// timeline.push(init_camera);
+// timeline.push(calibration_instructions);
+// timeline.push(calibration);
 // timeline.push(validation_instructions);
 // timeline.push(validation);
 // timeline.push(recalibrate);
 // timeline.push(calibration_done);
 // timeline.push(instruction_block_2);
 // timeline.push(trials_with_variables);
-// timeline.push(Debrief);
+// timeline.push(debrief);
 
 //Start Experiment
 jsPsych.run(timeline);
