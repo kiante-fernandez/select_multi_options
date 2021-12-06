@@ -45,7 +45,7 @@ app.post('/experiment-data', function(request, response) {
     // console.log(DATA_CSV)
 });
 
-// --- START THE SERVER process.env.PORT
-var server = app.listen(3000, function(){
+// --- START THE SERVER 
+var server = app.listen(process.env.PORT, function(){
     console.log("listening to port %d", server.address().port);
 });

@@ -6,9 +6,9 @@ Things to do:
 - do we add the mouse tracking still since we know when an option is selected?
 ~~- eye tracking calibration phase (see web gazer extension)~~
 ~~- how do we prevent subjects from deselecting options~~
-- how are we saving the data?
-- where are we sending the data after collection
-- where are we deploying the web application?
+~~- how are we saving the data? Dropbox.~~
+~~- where are we sending the data after collection~~
+- where are we deploying the web application? Heroku.
 
 introduction:
 ~~- condition randomization~~
@@ -29,7 +29,7 @@ choice trial:
 ~~- trial ends by pressing space bar~~
 ~~- rt is recorded at each option selected and final keyboard press~~
 ~~-   food option names are recorded with trial names~~
--   on finish have the trial calculate the number of option selected
+~~-   on finish have the trial calculate the number of option selected~~
 
 instructions II
 - thank subjects /tell them about rating task?
@@ -42,6 +42,6 @@ instructions III
     - randomly sample number, if X then we send you the snacks
 
 deploying
-- use flask web application? No, use node.js
-- run on cognition.io or Heroku or something else
-- send data directly to drive? or save of some container?
+~~- use flask web application? No, use node.js~~
+- run on cognition.io or Heroku or something else?
+~~- send data directly to drive? or save of some container?~~
