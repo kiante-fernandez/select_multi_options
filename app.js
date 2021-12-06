@@ -1,7 +1,9 @@
 // --- LOAD MODULES
 var express = require("express"),
     mymods = require("./scripts/mymods.js"),
-    body_parser = require("body-parser");
+    body_parser = require("body-parser"),
+    webgazer = require('webgazer');
+
 
 var savedropbox = mymods.saveDropbox;
 var json2csv = mymods.json2csv;
@@ -45,7 +47,7 @@ app.post('/experiment-data', function(request, response) {
     // console.log(DATA_CSV)
 });
 
-// --- START THE SERVER 
+// --- START THE SERVER
 var server = app.listen(process.env.PORT, function(){
     console.log("listening to port %d", server.address().port);
 });
