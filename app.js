@@ -1,8 +1,7 @@
 // --- LOAD MODULES
 var express = require("express"),
     mymods = require("./scripts/mymods.js"),
-    body_parser = require("body-parser"),
-    webgazer = require('webgazer');
+    body_parser = require("body-parser");
 
 
 var savedropbox = mymods.saveDropbox;
