@@ -9,7 +9,7 @@ var jsPsych = initJsPsych({
             data: JSON.stringify(jsPsych.data.get().values()),
             contentType: "application/json"
         }).done(function() {
-            // window.location.href = "finish";
+            window.location.href = "finish";
             alert("Data has been saved!");
         }).fail(function() {
             alert("Problem occurred while writing data to Dropbox. " +
@@ -18,7 +18,7 @@ var jsPsych = initJsPsych({
         var csv = jsPsych.data.get().csv();
         var filename = jsPsych.data.get().values()[0].subject_id + "_" + DATE + ".csv";
         downloadCSV(csv,filename);
-        // window.location.href = "finish";
+        window.location.href = "finish";
     });
     // jsPsych.data.displayData()
     }
@@ -302,7 +302,7 @@ var debrief = {
     type: jsPsychInstructions,
     pages: [
         "<p>We have completed our experiment. </p>" +
-        "<p>Please press next. </p>"
+        "<p>Please press next.</p>"
     ],
     show_clickable_nav: true,
 };
@@ -326,7 +326,7 @@ timeline.push(instruction_block_1);
 // timeline.push(calibration_done);
 // timeline.push(instruction_block_2);
 // timeline.push(trials_with_variables);
-// timeline.push(debrief);
+timeline.push(debrief);
 
 //Start Experiment
 jsPsych.run(timeline);

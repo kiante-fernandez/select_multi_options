@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>on finsh page</title>
+    <script src="../../js/jspsych/jspsych.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="../../js/jspsych/plugin-html-keyboard-response.js"></script>
+
+    <link href="../../css/jspsych.css" rel="stylesheet" type="text/css" />
+
+</head>
+<body>
+</body>
+<script>
+const jsPsych = initJsPsych();
+
+// Create finish screen
+var end_block = {
+    data: {
+        screen_id: "end_exp"
+    },
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus: "Your data has been saved. <p>You can now close this screen</p>"
+};
+var timeline = []
+timeline.push(end_block);
+
+//Start Experiment
+jsPsych.run(timeline);
+
+</script>
+</html>

@@ -26,6 +26,10 @@ app.get("/", function (request, response) {
     response.render("index.html")
 });
 
+app.get("/finish", function(request, response) {
+    response.render("finish.html");
+});
+
 app.post('/experiment-data', function(request, response) {
     // convert json to csv
     DATA_CSV = json2csv(request.body);
