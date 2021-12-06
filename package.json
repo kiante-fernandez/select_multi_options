@@ -1,5 +1,24 @@
 {
   "dependencies": {
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
     "webgazer": "^2.1.0"
-  }
+  },
+  "name": "select_multi_options",
+  "description": "Jspych experiment code for selecting multiple options project",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kiante-fernandez/select_multi_options.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kiante-fernandez/select_multi_options/issues"
+  },
+  "homepage": "https://github.com/kiante-fernandez/select_multi_options#readme"
 }
