@@ -63,20 +63,12 @@ var jsPsychExternalHtml = (function (jspsych) {
           if (trial.force_refresh) {
               url = trial.url + "?t=" + performance.now();
           }
-          // helper to load via XMLHttpRequest
-          const load = (element, file, callback) => {
-              var xmlhttp = new XMLHttpRequest();
-              xmlhttp.open("GET", file, true);
-              xmlhttp.onload = () => {
-                  if (xmlhttp.status == 200 || xmlhttp.status == 0) {
-                      //Check if loaded
-                      element.innerHTML = xmlhttp.responseText;
-                      callback();
-                  }
-              };
-              xmlhttp.send();
-          };
-          load(display_element, url, () => {
+          fetch(url)
+              .then((response) => {
+              return response.text();
+          })
+              .then((html) => {
+              display_element.innerHTML = html;
               on_load();
               var t0 = performance.now();
               const key_listener = (e) => {
@@ -118,9 +110,67 @@ var jsPsychExternalHtml = (function (jspsych) {
               if (trial.cont_key) {
                   display_element.addEventListener("keydown", key_listener);
               }
+          })
+              .catch((err) => {
+              console.error(`Something went wrong with fetch() in plugin-external-html.`, err);
           });
+          // helper to load via XMLHttpRequest
+          /*const load = (element, file, callback) => {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.open("GET", file, true);
+            xmlhttp.onload = () => {
+              console.log(`loaded ${xmlhttp.status}`)
+              if (xmlhttp.status == 200 || xmlhttp.status == 0) {
+                //Check if loaded
+                element.innerHTML = xmlhttp.responseText;
+                console.log(`made it ${xmlhttp.responseText}`);
+                callback();
+              }
+            };
+            xmlhttp.send();
+          };
+      
+          load(display_element, url, () => {
+            
+          });
+      */
           return new Promise((resolve) => {
               trial_complete = resolve;
+          });
+      }
+      simulate(trial, simulation_mode, simulation_options, load_callback) {
+          if (simulation_mode == "data-only") {
+              load_callback();
+              this.simulate_data_only(trial, simulation_options);
+          }
+          if (simulation_mode == "visual") {
+              this.simulate_visual(trial, simulation_options, load_callback);
+          }
+      }
+      create_simulation_data(trial, simulation_options) {
+          const default_data = {
+              url: trial.url,
+              rt: this.jsPsych.randomization.sampleExGaussian(2000, 200, 1 / 200, true),
+          };
+          const data = this.jsPsych.pluginAPI.mergeSimulationData(default_data, simulation_options);
+          this.jsPsych.pluginAPI.ensureSimulationDataConsistency(trial, data);
+          return data;
+      }
+      simulate_data_only(trial, simulation_options) {
+          const data = this.create_simulation_data(trial, simulation_options);
+          this.jsPsych.finishTrial(data);
+      }
+      simulate_visual(trial, simulation_options, load_callback) {
+          const data = this.create_simulation_data(trial, simulation_options);
+          const display_element = this.jsPsych.getDisplayElement();
+          this.trial(display_element, trial, () => {
+              load_callback();
+              if (trial.cont_key) {
+                  this.jsPsych.pluginAPI.pressKey(trial.cont_key, data.rt);
+              }
+              else if (trial.cont_btn) {
+                  this.jsPsych.pluginAPI.clickTarget(display_element.querySelector("#" + trial.cont_btn), data.rt);
+              }
           });
       }
   }

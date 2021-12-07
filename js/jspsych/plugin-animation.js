@@ -114,9 +114,7 @@ var jsPsychAnimation = (function (jspsych) {
                   show_next_frame();
               }
           }, interval_time);
-          // show the first frame immediately
-          show_next_frame();
-          function show_next_frame() {
+          const show_next_frame = () => {
               if (trial.render_on_canvas) {
                   display_element.querySelector("#jspsych-animation-image").style.visibility =
                       "visible";
@@ -155,7 +153,7 @@ var jsPsychAnimation = (function (jspsych) {
                       });
                   }, trial.frame_time);
               }
-          }
+          };
           var after_response = (info) => {
               responses.push({
                   key_press: info.key,
@@ -176,6 +174,75 @@ var jsPsychAnimation = (function (jspsych) {
               persist: true,
               allow_held_key: false,
           });
+          // show the first frame immediately
+          show_next_frame();
+      }
+      simulate(trial, simulation_mode, simulation_options, load_callback) {
+          if (simulation_mode == "data-only") {
+              load_callback();
+              this.simulate_data_only(trial, simulation_options);
+          }
+          if (simulation_mode == "visual") {
+              this.simulate_visual(trial, simulation_options, load_callback);
+          }
+      }
+      create_simulation_data(trial, simulation_options) {
+          const fake_animation_sequence = [];
+          const fake_responses = [];
+          let t = 0;
+          const check_if_fake_response_generated = () => {
+              return this.jsPsych.randomization.sampleWithReplacement([true, false], 1, [1, 10])[0];
+          };
+          for (let i = 0; i < trial.sequence_reps; i++) {
+              for (const frame of trial.stimuli) {
+                  fake_animation_sequence.push({
+                      stimulus: frame,
+                      time: t,
+                  });
+                  if (check_if_fake_response_generated()) {
+                      fake_responses.push({
+                          key_press: this.jsPsych.pluginAPI.getValidKey(trial.choices),
+                          rt: t + this.jsPsych.randomization.randomInt(0, trial.frame_time - 1),
+                          current_stim: frame,
+                      });
+                  }
+                  t += trial.frame_time;
+                  if (trial.frame_isi > 0) {
+                      fake_animation_sequence.push({
+                          stimulus: "blank",
+                          time: t,
+                      });
+                      if (check_if_fake_response_generated()) {
+                          fake_responses.push({
+                              key_press: this.jsPsych.pluginAPI.getValidKey(trial.choices),
+                              rt: t + this.jsPsych.randomization.randomInt(0, trial.frame_isi - 1),
+                              current_stim: "blank",
+                          });
+                      }
+                      t += trial.frame_isi;
+                  }
+              }
+          }
+          const default_data = {
+              animation_sequence: fake_animation_sequence,
+              response: fake_responses,
+          };
+          const data = this.jsPsych.pluginAPI.mergeSimulationData(default_data, simulation_options);
+          this.jsPsych.pluginAPI.ensureSimulationDataConsistency(trial, data);
+          return data;
+      }
+      simulate_data_only(trial, simulation_options) {
+          const data = this.create_simulation_data(trial, simulation_options);
+          this.jsPsych.finishTrial(data);
+      }
+      simulate_visual(trial, simulation_options, load_callback) {
+          const data = this.create_simulation_data(trial, simulation_options);
+          const display_element = this.jsPsych.getDisplayElement();
+          this.trial(display_element, trial);
+          load_callback();
+          for (const response of data.response) {
+              this.jsPsych.pluginAPI.pressKey(response.key_press, response.rt);
+          }
       }
   }
   AnimationPlugin.info = info;

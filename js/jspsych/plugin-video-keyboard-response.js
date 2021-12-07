@@ -104,6 +104,13 @@ var jsPsychVideoKeyboardResponse = (function (jspsych) {
           this.jsPsych = jsPsych;
       }
       trial(display_element, trial) {
+          // catch mistake where stimuli are not an array
+          if (!Array.isArray(trial.stimulus)) {
+              throw new Error(`
+        The stimulus property for the video-keyboard-response plugin must be an array
+        of files. See https://www.jspsych.org/latest/plugins/video-keyboard-response/#parameters
+      `);
+          }
           // setup stimulus
           var video_html = "<div>";
           video_html += '<video id="jspsych-video-keyboard-response-stimulus"';
@@ -198,6 +205,15 @@ var jsPsychVideoKeyboardResponse = (function (jspsych) {
               video_element.addEventListener("timeupdate", (e) => {
                   var currenttime = video_element.currentTime;
                   if (currenttime >= trial.stop) {
+                      if (!trial.response_allowed_while_playing) {
+                          this.jsPsych.pluginAPI.getKeyboardResponse({
+                              callback_function: after_response,
+                              valid_responses: trial.choices,
+                              rt_method: "performance",
+                              persist: false,
+                              allow_held_key: false,
+                          });
+                      }
                       video_element.pause();
                       if (trial.trial_ends_after_video && !stopped) {
                           // this is to prevent end_trial from being called twice, because the timeupdate event
@@ -264,6 +280,47 @@ var jsPsychVideoKeyboardResponse = (function (jspsych) {
           if (trial.trial_duration !== null) {
               this.jsPsych.pluginAPI.setTimeout(end_trial, trial.trial_duration);
           }
+      }
+      simulate(trial, simulation_mode, simulation_options, load_callback) {
+          if (simulation_mode == "data-only") {
+              load_callback();
+              this.simulate_data_only(trial, simulation_options);
+          }
+          if (simulation_mode == "visual") {
+              this.simulate_visual(trial, simulation_options, load_callback);
+          }
+      }
+      simulate_data_only(trial, simulation_options) {
+          const data = this.create_simulation_data(trial, simulation_options);
+          this.jsPsych.finishTrial(data);
+      }
+      simulate_visual(trial, simulation_options, load_callback) {
+          const data = this.create_simulation_data(trial, simulation_options);
+          const display_element = this.jsPsych.getDisplayElement();
+          this.trial(display_element, trial);
+          load_callback();
+          const video_element = display_element.querySelector("#jspsych-video-button-response-stimulus");
+          const respond = () => {
+              if (data.rt !== null) {
+                  this.jsPsych.pluginAPI.pressKey(data.response, data.rt);
+              }
+          };
+          if (!trial.response_allowed_while_playing) {
+              video_element.addEventListener("ended", respond);
+          }
+          else {
+              respond();
+          }
+      }
+      create_simulation_data(trial, simulation_options) {
+          const default_data = {
+              stimulus: trial.stimulus,
+              rt: this.jsPsych.randomization.sampleExGaussian(500, 50, 1 / 150, true),
+              response: this.jsPsych.pluginAPI.getValidKey(trial.choices),
+          };
+          const data = this.jsPsych.pluginAPI.mergeSimulationData(default_data, simulation_options);
+          this.jsPsych.pluginAPI.ensureSimulationDataConsistency(trial, data);
+          return data;
       }
   }
   VideoKeyboardResponsePlugin.info = info;

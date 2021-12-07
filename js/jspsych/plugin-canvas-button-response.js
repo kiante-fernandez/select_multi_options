@@ -137,8 +137,8 @@ var jsPsychCanvasButtonResponse = (function (jspsych) {
               display_element
                   .querySelector("#jspsych-canvas-button-response-button-" + i)
                   .addEventListener("click", (e) => {
-                  var choice = e.currentTarget;
-                  choice.getAttribute("data-choice"); // don't use dataset for jsdom compatibility
+                  var btn_el = e.currentTarget;
+                  var choice = btn_el.getAttribute("data-choice"); // don't use dataset for jsdom compatibility
                   after_response(choice);
               });
           }
@@ -193,6 +193,37 @@ var jsPsychCanvasButtonResponse = (function (jspsych) {
               this.jsPsych.pluginAPI.setTimeout(() => {
                   end_trial();
               }, trial.trial_duration);
+          }
+      }
+      simulate(trial, simulation_mode, simulation_options, load_callback) {
+          if (simulation_mode == "data-only") {
+              load_callback();
+              this.simulate_data_only(trial, simulation_options);
+          }
+          if (simulation_mode == "visual") {
+              this.simulate_visual(trial, simulation_options, load_callback);
+          }
+      }
+      create_simulation_data(trial, simulation_options) {
+          const default_data = {
+              rt: this.jsPsych.randomization.sampleExGaussian(500, 50, 1 / 150, true),
+              response: this.jsPsych.randomization.randomInt(0, trial.choices.length - 1),
+          };
+          const data = this.jsPsych.pluginAPI.mergeSimulationData(default_data, simulation_options);
+          this.jsPsych.pluginAPI.ensureSimulationDataConsistency(trial, data);
+          return data;
+      }
+      simulate_data_only(trial, simulation_options) {
+          const data = this.create_simulation_data(trial, simulation_options);
+          this.jsPsych.finishTrial(data);
+      }
+      simulate_visual(trial, simulation_options, load_callback) {
+          const data = this.create_simulation_data(trial, simulation_options);
+          const display_element = this.jsPsych.getDisplayElement();
+          this.trial(display_element, trial);
+          load_callback();
+          if (data.rt !== null) {
+              this.jsPsych.pluginAPI.clickTarget(display_element.querySelector(`div[data-choice="${data.response}"] button`), data.rt);
           }
       }
   }

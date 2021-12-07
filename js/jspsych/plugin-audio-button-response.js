@@ -88,7 +88,6 @@ var jsPsychAudioButtonResponse = (function (jspsych) {
           let trial_complete;
           // setup stimulus
           var context = this.jsPsych.pluginAPI.audioContext();
-          var audio;
           // store response
           var response = {
               rt: null,
@@ -101,13 +100,13 @@ var jsPsychAudioButtonResponse = (function (jspsych) {
               .getAudioBuffer(trial.stimulus)
               .then((buffer) => {
               if (context !== null) {
-                  audio = context.createBufferSource();
-                  audio.buffer = buffer;
-                  audio.connect(context.destination);
+                  this.audio = context.createBufferSource();
+                  this.audio.buffer = buffer;
+                  this.audio.connect(context.destination);
               }
               else {
-                  audio = buffer;
-                  audio.currentTime = 0;
+                  this.audio = buffer;
+                  this.audio.currentTime = 0;
               }
               setupTrial();
           })
@@ -118,11 +117,11 @@ var jsPsychAudioButtonResponse = (function (jspsych) {
           const setupTrial = () => {
               // set up end event if trial needs it
               if (trial.trial_ends_after_audio) {
-                  audio.addEventListener("ended", end_trial);
+                  this.audio.addEventListener("ended", end_trial);
               }
               // enable buttons after audio ends if necessary
               if (!trial.response_allowed_while_playing && !trial.trial_ends_after_audio) {
-                  audio.addEventListener("ended", enable_buttons);
+                  this.audio.addEventListener("ended", enable_buttons);
               }
               //display buttons
               var buttons = [];
@@ -172,10 +171,10 @@ var jsPsychAudioButtonResponse = (function (jspsych) {
               // start audio
               if (context !== null) {
                   startTime = context.currentTime;
-                  audio.start(startTime);
+                  this.audio.start(startTime);
               }
               else {
-                  audio.play();
+                  this.audio.play();
               }
               // end trial if time limit is set
               if (trial.trial_duration !== null) {
@@ -209,13 +208,13 @@ var jsPsychAudioButtonResponse = (function (jspsych) {
               // stop the audio file if it is playing
               // remove end event listeners if they exist
               if (context !== null) {
-                  audio.stop();
+                  this.audio.stop();
               }
               else {
-                  audio.pause();
+                  this.audio.pause();
               }
-              audio.removeEventListener("ended", end_trial);
-              audio.removeEventListener("ended", enable_buttons);
+              this.audio.removeEventListener("ended", end_trial);
+              this.audio.removeEventListener("ended", enable_buttons);
               // gather the data to store for the trial
               var trial_data = {
                   rt: response.rt,
@@ -254,6 +253,47 @@ var jsPsychAudioButtonResponse = (function (jspsych) {
           }
           return new Promise((resolve) => {
               trial_complete = resolve;
+          });
+      }
+      simulate(trial, simulation_mode, simulation_options, load_callback) {
+          if (simulation_mode == "data-only") {
+              load_callback();
+              this.simulate_data_only(trial, simulation_options);
+          }
+          if (simulation_mode == "visual") {
+              this.simulate_visual(trial, simulation_options, load_callback);
+          }
+      }
+      create_simulation_data(trial, simulation_options) {
+          const default_data = {
+              stimulus: trial.stimulus,
+              rt: this.jsPsych.randomization.sampleExGaussian(500, 50, 1 / 150, true),
+              response: this.jsPsych.randomization.randomInt(0, trial.choices.length - 1),
+          };
+          const data = this.jsPsych.pluginAPI.mergeSimulationData(default_data, simulation_options);
+          this.jsPsych.pluginAPI.ensureSimulationDataConsistency(trial, data);
+          return data;
+      }
+      simulate_data_only(trial, simulation_options) {
+          const data = this.create_simulation_data(trial, simulation_options);
+          this.jsPsych.finishTrial(data);
+      }
+      simulate_visual(trial, simulation_options, load_callback) {
+          const data = this.create_simulation_data(trial, simulation_options);
+          const display_element = this.jsPsych.getDisplayElement();
+          const respond = () => {
+              if (data.rt !== null) {
+                  this.jsPsych.pluginAPI.clickTarget(display_element.querySelector(`div[data-choice="${data.response}"] button`), data.rt);
+              }
+          };
+          this.trial(display_element, trial, () => {
+              load_callback();
+              if (!trial.response_allowed_while_playing) {
+                  this.audio.addEventListener("ended", respond);
+              }
+              else {
+                  respond();
+              }
           });
       }
   }

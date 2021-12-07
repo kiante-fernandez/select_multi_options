@@ -141,6 +141,49 @@ var jsPsychSameDifferentHtml = (function (jspsych) {
               });
           };
       }
+      simulate(trial, simulation_mode, simulation_options, load_callback) {
+          if (simulation_mode == "data-only") {
+              load_callback();
+              this.simulate_data_only(trial, simulation_options);
+          }
+          if (simulation_mode == "visual") {
+              this.simulate_visual(trial, simulation_options, load_callback);
+          }
+      }
+      create_simulation_data(trial, simulation_options) {
+          const key = this.jsPsych.pluginAPI.getValidKey([trial.same_key, trial.different_key]);
+          const default_data = {
+              stimuli: trial.stimuli,
+              response: key,
+              answer: trial.answer,
+              correct: trial.answer == "same" ? key == trial.same_key : key == trial.different_key,
+              rt: this.jsPsych.randomization.sampleExGaussian(500, 50, 1 / 150, true),
+          };
+          if (trial.first_stim_duration == null) {
+              default_data.rt_stim1 = this.jsPsych.randomization.sampleExGaussian(500, 50, 1 / 150, true);
+              default_data.response_stim1 = this.jsPsych.pluginAPI.getValidKey([
+                  trial.same_key,
+                  trial.different_key,
+              ]);
+          }
+          const data = this.jsPsych.pluginAPI.mergeSimulationData(default_data, simulation_options);
+          this.jsPsych.pluginAPI.ensureSimulationDataConsistency(trial, data);
+          return data;
+      }
+      simulate_data_only(trial, simulation_options) {
+          const data = this.create_simulation_data(trial, simulation_options);
+          this.jsPsych.finishTrial(data);
+      }
+      simulate_visual(trial, simulation_options, load_callback) {
+          const data = this.create_simulation_data(trial, simulation_options);
+          const display_element = this.jsPsych.getDisplayElement();
+          this.trial(display_element, trial);
+          load_callback();
+          if (trial.first_stim_duration == null) {
+              this.jsPsych.pluginAPI.pressKey(data.response_stim1, data.rt_stim1);
+          }
+          this.jsPsych.pluginAPI.pressKey(data.response, trial.first_stim_duration + trial.gap_duration + data.rt);
+      }
   }
   SameDifferentHtmlPlugin.info = info;
 

@@ -217,6 +217,54 @@ var jsPsychSurveyText = (function (jspsych) {
           });
           var startTime = performance.now();
       }
+      simulate(trial, simulation_mode, simulation_options, load_callback) {
+          if (simulation_mode == "data-only") {
+              load_callback();
+              this.simulate_data_only(trial, simulation_options);
+          }
+          if (simulation_mode == "visual") {
+              this.simulate_visual(trial, simulation_options, load_callback);
+          }
+      }
+      create_simulation_data(trial, simulation_options) {
+          const question_data = {};
+          let rt = 1000;
+          for (const q of trial.questions) {
+              const name = q.name ? q.name : `Q${trial.questions.indexOf(q)}`;
+              const ans_words = q.rows == 1
+                  ? this.jsPsych.randomization.sampleExponential(0.25)
+                  : this.jsPsych.randomization.randomInt(1, 10) * q.rows;
+              question_data[name] = this.jsPsych.randomization.randomWords({
+                  exactly: ans_words,
+                  join: " ",
+              });
+              rt += this.jsPsych.randomization.sampleExGaussian(2000, 400, 0.004, true);
+          }
+          const default_data = {
+              response: question_data,
+              rt: rt,
+          };
+          const data = this.jsPsych.pluginAPI.mergeSimulationData(default_data, simulation_options);
+          this.jsPsych.pluginAPI.ensureSimulationDataConsistency(trial, data);
+          return data;
+      }
+      simulate_data_only(trial, simulation_options) {
+          const data = this.create_simulation_data(trial, simulation_options);
+          this.jsPsych.finishTrial(data);
+      }
+      simulate_visual(trial, simulation_options, load_callback) {
+          const data = this.create_simulation_data(trial, simulation_options);
+          const display_element = this.jsPsych.getDisplayElement();
+          this.trial(display_element, trial);
+          load_callback();
+          const answers = Object.entries(data.response).map((x) => {
+              return x[1];
+          });
+          for (let i = 0; i < answers.length; i++) {
+              this.jsPsych.pluginAPI.fillTextInput(display_element.querySelector(`#input-${i}`), answers[i], ((data.rt - 1000) / answers.length) * (i + 1));
+          }
+          this.jsPsych.pluginAPI.clickTarget(display_element.querySelector("#jspsych-survey-text-next"), data.rt);
+      }
   }
   SurveyTextPlugin.info = info;
 

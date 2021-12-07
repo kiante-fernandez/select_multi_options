@@ -137,6 +137,37 @@ var jsPsychCanvasKeyboardResponse = (function (jspsych) {
               }, trial.trial_duration);
           }
       }
+      simulate(trial, simulation_mode, simulation_options, load_callback) {
+          if (simulation_mode == "data-only") {
+              load_callback();
+              this.simulate_data_only(trial, simulation_options);
+          }
+          if (simulation_mode == "visual") {
+              this.simulate_visual(trial, simulation_options, load_callback);
+          }
+      }
+      simulate_data_only(trial, simulation_options) {
+          const data = this.create_simulation_data(trial, simulation_options);
+          this.jsPsych.finishTrial(data);
+      }
+      simulate_visual(trial, simulation_options, load_callback) {
+          const data = this.create_simulation_data(trial, simulation_options);
+          const display_element = this.jsPsych.getDisplayElement();
+          this.trial(display_element, trial);
+          load_callback();
+          if (data.rt !== null) {
+              this.jsPsych.pluginAPI.pressKey(data.response, data.rt);
+          }
+      }
+      create_simulation_data(trial, simulation_options) {
+          const default_data = {
+              rt: this.jsPsych.randomization.sampleExGaussian(500, 50, 1 / 150, true),
+              response: this.jsPsych.pluginAPI.getValidKey(trial.choices),
+          };
+          const data = this.jsPsych.pluginAPI.mergeSimulationData(default_data, simulation_options);
+          this.jsPsych.pluginAPI.ensureSimulationDataConsistency(trial, data);
+          return data;
+      }
   }
   CanvasKeyboardResponsePlugin.info = info;
 

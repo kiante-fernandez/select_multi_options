@@ -47,67 +47,105 @@ var jsPsychFullscreen = (function (jspsych) {
           this.jsPsych = jsPsych;
       }
       trial(display_element, trial) {
-          const endTrial = () => {
-              display_element.innerHTML = "";
-              this.jsPsych.pluginAPI.setTimeout(() => {
-                  var trial_data = {
-                      success: !keyboardNotAllowed,
-                  };
-                  this.jsPsych.finishTrial(trial_data);
-              }, trial.delay_after);
-          };
           // check if keys are allowed in fullscreen mode
           var keyboardNotAllowed = typeof Element !== "undefined" && "ALLOW_KEYBOARD_INPUT" in Element;
           if (keyboardNotAllowed) {
               // This is Safari, and keyboard events will be disabled. Don't allow fullscreen here.
               // do something else?
-              endTrial();
+              this.endTrial(display_element, false, trial);
           }
           else {
               if (trial.fullscreen_mode) {
-                  display_element.innerHTML =
-                      trial.message +
-                          '<button id="jspsych-fullscreen-btn" class="jspsych-btn">' +
-                          trial.button_label +
-                          "</button>";
-                  display_element
-                      .querySelector("#jspsych-fullscreen-btn")
-                      .addEventListener("click", () => {
-                      var element = document.documentElement;
-                      if (element.requestFullscreen) {
-                          element.requestFullscreen();
-                      }
-                      else if (element["mozRequestFullScreen"]) {
-                          element["mozRequestFullScreen"]();
-                      }
-                      else if (element["webkitRequestFullscreen"]) {
-                          element["webkitRequestFullscreen"]();
-                      }
-                      else if (element["msRequestFullscreen"]) {
-                          element["msRequestFullscreen"]();
-                      }
-                      endTrial();
-                  });
+                  this.showDisplay(display_element, trial);
               }
               else {
-                  if (document.fullscreenElement ||
-                      document["mozFullScreenElement"] ||
-                      document["webkitFullscreenElement"]) {
-                      if (document.exitFullscreen) {
-                          document.exitFullscreen();
-                      }
-                      else if (document["msExitFullscreen"]) {
-                          document["msExitFullscreen"]();
-                      }
-                      else if (document["mozCancelFullScreen"]) {
-                          document["mozCancelFullScreen"]();
-                      }
-                      else if (document["webkitExitFullscreen"]) {
-                          document["webkitExitFullscreen"]();
-                      }
-                  }
-                  endTrial();
+                  this.exitFullScreen();
+                  this.endTrial(display_element, true, trial);
               }
+          }
+      }
+      showDisplay(display_element, trial) {
+          display_element.innerHTML = `
+      ${trial.message}
+      <button id="jspsych-fullscreen-btn" class="jspsych-btn">${trial.button_label}</button>
+    `;
+          display_element.querySelector("#jspsych-fullscreen-btn").addEventListener("click", () => {
+              this.enterFullScreen();
+              this.endTrial(display_element, true, trial);
+          });
+      }
+      endTrial(display_element, success, trial) {
+          display_element.innerHTML = "";
+          this.jsPsych.pluginAPI.setTimeout(() => {
+              var trial_data = {
+                  success: success,
+              };
+              this.jsPsych.finishTrial(trial_data);
+          }, trial.delay_after);
+      }
+      enterFullScreen() {
+          var element = document.documentElement;
+          if (element.requestFullscreen) {
+              element.requestFullscreen();
+          }
+          else if (element["mozRequestFullScreen"]) {
+              element["mozRequestFullScreen"]();
+          }
+          else if (element["webkitRequestFullscreen"]) {
+              element["webkitRequestFullscreen"]();
+          }
+          else if (element["msRequestFullscreen"]) {
+              element["msRequestFullscreen"]();
+          }
+      }
+      exitFullScreen() {
+          if (document.fullscreenElement ||
+              document["mozFullScreenElement"] ||
+              document["webkitFullscreenElement"]) {
+              if (document.exitFullscreen) {
+                  document.exitFullscreen();
+              }
+              else if (document["msExitFullscreen"]) {
+                  document["msExitFullscreen"]();
+              }
+              else if (document["mozCancelFullScreen"]) {
+                  document["mozCancelFullScreen"]();
+              }
+              else if (document["webkitExitFullscreen"]) {
+                  document["webkitExitFullscreen"]();
+              }
+          }
+      }
+      simulate(trial, simulation_mode, simulation_options, load_callback) {
+          if (simulation_mode == "data-only") {
+              load_callback();
+              this.simulate_data_only(trial, simulation_options);
+          }
+          if (simulation_mode == "visual") {
+              this.simulate_visual(trial, simulation_options, load_callback);
+          }
+      }
+      create_simulation_data(trial, simulation_options) {
+          const default_data = {
+              success: true,
+          };
+          const data = this.jsPsych.pluginAPI.mergeSimulationData(default_data, simulation_options);
+          return data;
+      }
+      simulate_data_only(trial, simulation_options) {
+          const data = this.create_simulation_data(trial, simulation_options);
+          this.jsPsych.finishTrial(data);
+      }
+      simulate_visual(trial, simulation_options, load_callback) {
+          const data = this.create_simulation_data(trial, simulation_options);
+          const display_element = this.jsPsych.getDisplayElement();
+          if (data.success === false) {
+              this.endTrial(display_element, false, trial);
+          }
+          else {
+              this.trial(display_element, trial);
+              load_callback();
+              this.jsPsych.pluginAPI.clickTarget(display_element.querySelector("#jspsych-fullscreen-btn"), this.jsPsych.randomization.sampleExGaussian(1000, 100, 1 / 200, true));
           }
       }
   }

@@ -237,6 +237,52 @@ var jsPsychSerialReactionTime = (function (jspsych) {
               display_element.innerHTML += trial.prompt;
           }
       }
+      simulate(trial, simulation_mode, simulation_options, load_callback) {
+          if (simulation_mode == "data-only") {
+              load_callback();
+              this.simulate_data_only(trial, simulation_options);
+          }
+          if (simulation_mode == "visual") {
+              this.simulate_visual(trial, simulation_options, load_callback);
+          }
+      }
+      create_simulation_data(trial, simulation_options) {
+          let key;
+          if (this.jsPsych.randomization.sampleBernoulli(0.8) == 1) {
+              key = trial.choices[trial.target[0]][trial.target[1]];
+          }
+          else {
+              // @ts-ignore something wrong with trial.choices type here?
+              key = this.jsPsych.pluginAPI.getValidKey(trial.choices);
+              while (key == trial.choices[trial.target[0]][trial.target[1]]) {
+                  // @ts-ignore something wrong with trial.choices type here?
+                  key = this.jsPsych.pluginAPI.getValidKey(trial.choices);
+              }
+          }
+          const default_data = {
+              grid: trial.grid,
+              target: trial.target,
+              response: key,
+              rt: this.jsPsych.randomization.sampleExGaussian(500, 50, 1 / 150, true),
+              correct: key == trial.choices[trial.target[0]][trial.target[1]],
+          };
+          const data = this.jsPsych.pluginAPI.mergeSimulationData(default_data, simulation_options);
+          this.jsPsych.pluginAPI.ensureSimulationDataConsistency(trial, data);
+          return data;
+      }
+      simulate_data_only(trial, simulation_options) {
+          const data = this.create_simulation_data(trial, simulation_options);
+          this.jsPsych.finishTrial(data);
+      }
+      simulate_visual(trial, simulation_options, load_callback) {
+          const data = this.create_simulation_data(trial, simulation_options);
+          const display_element = this.jsPsych.getDisplayElement();
+          this.trial(display_element, trial);
+          load_callback();
+          if (data.rt !== null) {
+              this.jsPsych.pluginAPI.pressKey(data.response, data.rt);
+          }
+      }
   }
   SerialReactionTimePlugin.info = info;
 

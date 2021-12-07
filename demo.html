@@ -13,7 +13,7 @@
     <script src="js/jspsych/plugin-survey-html-form.js"></script>
 
     <script src="js/plugin-multi_select/plugin-select-multiple-buttons.js"></script>
-    <script src="js/jspsych/utils.js"></script>
+    <script src="public/src/utils.js"></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/6.2.1/math.js"></script>
@@ -22,9 +22,9 @@
     <script src="js/jspsych/plugin-webgazer-init-camera.js"></script>
     <script src="js/jspsych/plugin-webgazer-validate.js"></script>
     <script src="js/jspsych/extension-webgazer.js"></script>
-    <script src="js/node_modules/webgazer/dist/webgazer.js"></script>
+    <script src="js/jspsych/webgazer.js"></script>
 
-    <link href="css/jspsych.css" rel="stylesheet" type="text/css" />
+    <link href="public/css/jspsych.css" rel="stylesheet" type="text/css" />
 
     <style>
 
@@ -164,7 +164,7 @@ var arrayLength = image_indices_lst.length; // arrayLength is used to show how m
 var image_paths = [];
 for (var i = 0; i < arrayLength; i++) {
     // This for loop fills the image_paths list with urls to the images for each of the experimental treatments
-    var path_str1 = "img/food/food" + String(image_indices_lst[i]) + ".jpg";
+    var path_str1 = "public/img/food/food" + String(image_indices_lst[i]) + ".jpg";
     image_paths.push(path_str1);
 }
 
@@ -273,14 +273,14 @@ var trials_with_variables = {
 // timeline
 var timeline = []
 timeline.push(preload);
-timeline.push(camera_instructions);
-timeline.push(init_camera);
-timeline.push(calibration_instructions);
-timeline.push(calibration);
-timeline.push(validation_instructions);
-timeline.push(validation);
-timeline.push(recalibrate);
-timeline.push(calibration_done);
+// timeline.push(camera_instructions);
+// timeline.push(init_camera);
+// timeline.push(calibration_instructions);
+// timeline.push(calibration);
+// timeline.push(validation_instructions);
+// timeline.push(validation);
+// timeline.push(recalibrate);
+// timeline.push(calibration_done);
 timeline.push(trials_with_variables);
 
 //Start Experiment

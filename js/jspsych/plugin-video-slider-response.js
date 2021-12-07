@@ -147,6 +147,12 @@ var jsPsychVideoSliderResponse = (function (jspsych) {
           this.jsPsych = jsPsych;
       }
       trial(display_element, trial) {
+          if (!Array.isArray(trial.stimulus)) {
+              throw new Error(`
+        The stimulus property for the video-slider-response plugin must be an array
+        of files. See https://www.jspsych.org/latest/plugins/video-slider-response/#parameters
+      `);
+          }
           // half of the thumb width value from jspsych.css, used to adjust the label positions
           var half_thumb_width = 7.5;
           // setup stimulus
@@ -299,6 +305,9 @@ var jsPsychVideoSliderResponse = (function (jspsych) {
                           stopped = true;
                           end_trial();
                       }
+                      if (!trial.response_allowed_while_playing) {
+                          enable_slider();
+                      }
                   }
               });
           }
@@ -312,6 +321,9 @@ var jsPsychVideoSliderResponse = (function (jspsych) {
               display_element
                   .querySelector("#jspsych-video-slider-response-response")
                   .addEventListener("touchstart", enable_button);
+              display_element
+                  .querySelector("#jspsych-video-slider-response-response")
+                  .addEventListener("change", enable_button);
           }
           var startTime = performance.now();
           // store response
@@ -366,6 +378,54 @@ var jsPsychVideoSliderResponse = (function (jspsych) {
           // end trial if time limit is set
           if (trial.trial_duration !== null) {
               this.jsPsych.pluginAPI.setTimeout(end_trial, trial.trial_duration);
+          }
+      }
+      simulate(trial, simulation_mode, simulation_options, load_callback) {
+          if (simulation_mode == "data-only") {
+              load_callback();
+              this.simulate_data_only(trial, simulation_options);
+          }
+          if (simulation_mode == "visual") {
+              this.simulate_visual(trial, simulation_options, load_callback);
+          }
+      }
+      create_simulation_data(trial, simulation_options) {
+          const default_data = {
+              stimulus: trial.stimulus,
+              slider_start: trial.slider_start,
+              response: this.jsPsych.randomization.randomInt(trial.min, trial.max),
+              rt: this.jsPsych.randomization.sampleExGaussian(500, 50, 1 / 150, true),
+              start: trial.start,
+          };
+          const data = this.jsPsych.pluginAPI.mergeSimulationData(default_data, simulation_options);
+          this.jsPsych.pluginAPI.ensureSimulationDataConsistency(trial, data);
+          return data;
+      }
+      simulate_data_only(trial, simulation_options) {
+          const data = this.create_simulation_data(trial, simulation_options);
+          this.jsPsych.finishTrial(data);
+      }
+      simulate_visual(trial, simulation_options, load_callback) {
+          const data = this.create_simulation_data(trial, simulation_options);
+          const display_element = this.jsPsych.getDisplayElement();
+          this.trial(display_element, trial);
+          load_callback();
+          const video_element = display_element.querySelector("#jspsych-video-button-response-stimulus");
+          const respond = () => {
+              if (data.rt !== null) {
+                  const el = display_element.querySelector("input[type='range']");
+                  setTimeout(() => {
+                      this.jsPsych.pluginAPI.clickTarget(el);
+                      el.valueAsNumber = data.response;
+                  }, data.rt / 2);
+                  this.jsPsych.pluginAPI.clickTarget(display_element.querySelector("button"), data.rt);
+              }
+          };
+          if (!trial.response_allowed_while_playing) {
+              video_element.addEventListener("ended", respond);
+          }
+          else {
+              respond();
           }
       }
   }

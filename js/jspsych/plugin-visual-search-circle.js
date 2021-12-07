@@ -107,53 +107,13 @@ var jsPsychVisualSearchCircle = (function (jspsych) {
           this.jsPsych = jsPsych;
       }
       trial(display_element, trial) {
-          // circle params
-          var diam = trial.circle_diameter; // pixels
-          var radi = diam / 2;
-          var paper_size = diam + trial.target_size[0];
-          // stimuli width, height
-          var stimh = trial.target_size[0];
-          var stimw = trial.target_size[1];
-          var hstimh = stimh / 2;
-          var hstimw = stimw / 2;
+          var paper_size = trial.circle_diameter + trial.target_size[0];
           // fixation location
-          var fix_loc = [
-              Math.floor(paper_size / 2 - trial.fixation_size[0] / 2),
-              Math.floor(paper_size / 2 - trial.fixation_size[1] / 2),
-          ];
+          var fix_loc = this.generateFixationLoc(trial);
           // check for correct combination of parameters and create stimuli set
-          var possible_display_locs;
-          var to_present = [];
-          if (trial.target !== null && trial.foil !== null && trial.set_size !== null) {
-              possible_display_locs = trial.set_size;
-              if (trial.target_present) {
-                  for (var i = 0; i < trial.set_size - 1; i++) {
-                      to_present.push(trial.foil);
-                  }
-                  to_present.push(trial.target);
-              }
-              else {
-                  for (var i = 0; i < trial.set_size; i++) {
-                      to_present.push(trial.foil);
-                  }
-              }
-          }
-          else if (trial.stimuli !== null) {
-              possible_display_locs = trial.stimuli.length;
-              to_present = trial.stimuli;
-          }
-          else {
-              console.error("Error in visual-search-circle plugin: you must specify an array of images via the stimuli parameter OR specify the target, foil and set_size parameters.");
-          }
-          // possible stimulus locations on the circle
-          var display_locs = [];
-          var random_offset = Math.floor(Math.random() * 360);
-          for (var i = 0; i < possible_display_locs; i++) {
-              display_locs.push([
-                  Math.floor(paper_size / 2 + cosd(random_offset + i * (360 / possible_display_locs)) * radi - hstimw),
-                  Math.floor(paper_size / 2 - sind(random_offset + i * (360 / possible_display_locs)) * radi - hstimh),
-              ]);
-          }
+          var to_present = this.generatePresentationSet(trial);
+          // stimulus locations on the circle
+          var display_locs = this.generateDisplayLocs(to_present.length, trial);
           // get target to draw on
           display_element.innerHTML +=
               '<div id="jspsych-visual-search-circle-container" style="position: relative; width:' +
@@ -250,12 +210,103 @@ var jsPsychVisualSearchCircle = (function (jspsych) {
                   display_element.innerHTML = "";
               }
           };
-          // helper function for determining stimulus locations
-          function cosd(num) {
-              return Math.cos((num / 180) * Math.PI);
+      }
+      generateFixationLoc(trial) {
+          var paper_size = trial.circle_diameter + trial.target_size[0];
+          return [
+              Math.floor(paper_size / 2 - trial.fixation_size[0] / 2),
+              Math.floor(paper_size / 2 - trial.fixation_size[1] / 2),
+          ];
+      }
+      generateDisplayLocs(n_locs, trial) {
+          // circle params
+          var diam = trial.circle_diameter; // pixels
+          var radi = diam / 2;
+          var paper_size = diam + trial.target_size[0];
+          // stimuli width, height
+          var stimh = trial.target_size[0];
+          var stimw = trial.target_size[1];
+          var hstimh = stimh / 2;
+          var hstimw = stimw / 2;
+          var display_locs = [];
+          var random_offset = Math.floor(Math.random() * 360);
+          for (var i = 0; i < n_locs; i++) {
+              display_locs.push([
+                  Math.floor(paper_size / 2 + this.cosd(random_offset + i * (360 / n_locs)) * radi - hstimw),
+                  Math.floor(paper_size / 2 - this.sind(random_offset + i * (360 / n_locs)) * radi - hstimh),
+              ]);
           }
-          function sind(num) {
-              return Math.sin((num / 180) * Math.PI);
+          return display_locs;
+      }
+      generatePresentationSet(trial) {
+          var to_present = [];
+          if (trial.target !== null && trial.foil !== null && trial.set_size !== null) {
+              if (trial.target_present) {
+                  for (var i = 0; i < trial.set_size - 1; i++) {
+                      to_present.push(trial.foil);
+                  }
+                  to_present.push(trial.target);
+              }
+              else {
+                  for (var i = 0; i < trial.set_size; i++) {
+                      to_present.push(trial.foil);
+                  }
+              }
+          }
+          else if (trial.stimuli !== null) {
+              to_present = trial.stimuli;
+          }
+          else {
+              console.error("Error in visual-search-circle plugin: you must specify an array of images via the stimuli parameter OR specify the target, foil and set_size parameters.");
+          }
+          return to_present;
+      }
+      cosd(num) {
+          return Math.cos((num / 180) * Math.PI);
+      }
+      sind(num) {
+          return Math.sin((num / 180) * Math.PI);
+      }
+      simulate(trial, simulation_mode, simulation_options, load_callback) {
+          if (simulation_mode == "data-only") {
+              load_callback();
+              this.simulate_data_only(trial, simulation_options);
+          }
+          if (simulation_mode == "visual") {
+              this.simulate_visual(trial, simulation_options, load_callback);
+          }
+      }
+      create_simulation_data(trial, simulation_options) {
+          const key = this.jsPsych.pluginAPI.getValidKey([
+              trial.target_present_key,
+              trial.target_absent_key,
+          ]);
+          const set = this.generatePresentationSet(trial);
+          const default_data = {
+              correct: trial.target_present
+                  ? key == trial.target_present_key
+                  : key == trial.target_absent_key,
+              response: key,
+              rt: this.jsPsych.randomization.sampleExGaussian(500, 50, 1 / 150, true),
+              set_size: set.length,
+              target_present: trial.target_present,
+              locations: this.generateDisplayLocs(set.length, trial),
+          };
+          const data = this.jsPsych.pluginAPI.mergeSimulationData(default_data, simulation_options);
+          this.jsPsych.pluginAPI.ensureSimulationDataConsistency(trial, data);
+          return data;
+      }
+      simulate_data_only(trial, simulation_options) {
+          const data = this.create_simulation_data(trial, simulation_options);
+          this.jsPsych.finishTrial(data);
+      }
+      simulate_visual(trial, simulation_options, load_callback) {
+          const data = this.create_simulation_data(trial, simulation_options);
+          const display_element = this.jsPsych.getDisplayElement();
+          this.trial(display_element, trial);
+          load_callback();
+          if (data.rt !== null) {
+              this.jsPsych.pluginAPI.pressKey(data.response, trial.fixation_duration + data.rt);
           }
       }
   }

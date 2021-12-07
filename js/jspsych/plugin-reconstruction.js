@@ -114,6 +114,50 @@ var jsPsychReconstruction = (function (jspsych) {
           draw(param);
           var startTime = performance.now();
       }
+      simulate(trial, simulation_mode, simulation_options, load_callback) {
+          if (simulation_mode == "data-only") {
+              load_callback();
+              this.simulate_data_only(trial, simulation_options);
+          }
+          if (simulation_mode == "visual") {
+              this.simulate_visual(trial, simulation_options, load_callback);
+          }
+      }
+      create_simulation_data(trial, simulation_options) {
+          const default_data = {
+              rt: this.jsPsych.randomization.sampleExGaussian(2000, 200, 1 / 200, true),
+              start_value: trial.starting_value,
+              final_value: this.jsPsych.randomization.randomInt(0, Math.round(1 / trial.step_size)) * trial.step_size,
+          };
+          const data = this.jsPsych.pluginAPI.mergeSimulationData(default_data, simulation_options);
+          this.jsPsych.pluginAPI.ensureSimulationDataConsistency(trial, data);
+          return data;
+      }
+      simulate_data_only(trial, simulation_options) {
+          const data = this.create_simulation_data(trial, simulation_options);
+          this.jsPsych.finishTrial(data);
+      }
+      simulate_visual(trial, simulation_options, load_callback) {
+          const data = this.create_simulation_data(trial, simulation_options);
+          const display_element = this.jsPsych.getDisplayElement();
+          this.trial(display_element, trial);
+          load_callback();
+          let steps = Math.round((data.final_value - trial.starting_value) / trial.step_size);
+          const rt_per_step = (data.rt - 300) / steps;
+          let t = 0;
+          while (steps != 0) {
+              if (steps > 0) {
+                  this.jsPsych.pluginAPI.pressKey(trial.key_increase, t + rt_per_step);
+                  steps--;
+              }
+              else {
+                  this.jsPsych.pluginAPI.pressKey(trial.key_decrease, t + rt_per_step);
+                  steps++;
+              }
+              t += rt_per_step;
+          }
+          this.jsPsych.pluginAPI.clickTarget(display_element.querySelector("#jspsych-reconstruction-next"), data.rt);
+      }
   }
   ReconstructionPlugin.info = info;
 

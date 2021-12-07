@@ -32,15 +32,15 @@ var jsPsychCallFunction = (function (jspsych) {
       }
       trial(display_element, trial) {
           //trial.post_trial_gap = 0;  // TO DO: TS error: number not assignable to type any[]. I don't think this param should be an array..?
-          var return_val;
+          let return_val;
           const end_trial = () => {
-              var trial_data = {
+              const trial_data = {
                   value: return_val,
               };
               this.jsPsych.finishTrial(trial_data);
           };
           if (trial.async) {
-              var done = (data) => {
+              const done = (data) => {
                   return_val = data;
                   end_trial();
               };

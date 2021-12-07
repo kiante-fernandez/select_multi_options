@@ -8,7 +8,7 @@ Things to do:
 ~~- how do we prevent subjects from deselecting options~~
 ~~- how are we saving the data? Dropbox.~~
 ~~- where are we sending the data after collection~~
-- where are we deploying the web application? Heroku.
+~~- where are we deploying the web application? Heroku.~~
 
 introduction:
 ~~- condition randomization~~
@@ -43,5 +43,5 @@ instructions III
 
 deploying
 ~~- use flask web application? No, use node.js~~
-- run on cognition.io or Heroku or something else? Heroku.
+~~- run on cognition.io or Heroku or something else? Heroku.~~
 ~~- send data directly to drive? or save of some container?~~

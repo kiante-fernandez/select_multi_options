@@ -244,6 +244,59 @@ var jsPsychSurveyMultiSelect = (function (jspsych) {
           });
           var startTime = performance.now();
       }
+      simulate(trial, simulation_mode, simulation_options, load_callback) {
+          if (simulation_mode == "data-only") {
+              load_callback();
+              this.simulate_data_only(trial, simulation_options);
+          }
+          if (simulation_mode == "visual") {
+              this.simulate_visual(trial, simulation_options, load_callback);
+          }
+      }
+      create_simulation_data(trial, simulation_options) {
+          const question_data = {};
+          let rt = 1000;
+          for (const q of trial.questions) {
+              let n_answers;
+              if (q.required) {
+                  n_answers = this.jsPsych.randomization.randomInt(1, q.options.length);
+              }
+              else {
+                  n_answers = this.jsPsych.randomization.randomInt(0, q.options.length);
+              }
+              const name = q.name ? q.name : `Q${trial.questions.indexOf(q)}`;
+              const selections = this.jsPsych.randomization.sampleWithoutReplacement(q.options, n_answers);
+              question_data[name] = selections;
+              rt += this.jsPsych.randomization.sampleExGaussian(1500, 400, 1 / 200, true);
+          }
+          const default_data = {
+              response: question_data,
+              rt: rt,
+              question_order: trial.randomize_question_order
+                  ? this.jsPsych.randomization.shuffle([...Array(trial.questions.length).keys()])
+                  : [...Array(trial.questions.length).keys()],
+          };
+          const data = this.jsPsych.pluginAPI.mergeSimulationData(default_data, simulation_options);
+          this.jsPsych.pluginAPI.ensureSimulationDataConsistency(trial, data);
+          return data;
+      }
+      simulate_data_only(trial, simulation_options) {
+          const data = this.create_simulation_data(trial, simulation_options);
+          this.jsPsych.finishTrial(data);
+      }
+      simulate_visual(trial, simulation_options, load_callback) {
+          const data = this.create_simulation_data(trial, simulation_options);
+          const display_element = this.jsPsych.getDisplayElement();
+          this.trial(display_element, trial);
+          load_callback();
+          const answers = Object.entries(data.response);
+          for (let i = 0; i < answers.length; i++) {
+              for (const a of answers[i][1]) {
+                  this.jsPsych.pluginAPI.clickTarget(display_element.querySelector(`#jspsych-survey-multi-select-response-${i}-${trial.questions[i].options.indexOf(a)}`), ((data.rt - 1000) / answers.length) * (i + 1));
+              }
+          }
+          this.jsPsych.pluginAPI.clickTarget(display_element.querySelector("#jspsych-survey-multi-select-next"), data.rt);
+      }
   }
   SurveyMultiSelectPlugin.info = info;
 
