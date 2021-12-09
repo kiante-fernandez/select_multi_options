@@ -285,6 +285,18 @@ timeline.push(trials_with_variables);
 
 //Start Experiment
 jsPsych.run(timeline);
+// 
+// const simulation_options = {
+//   default: {
+//     data: {
+//       rt: () => { return jsPsych.randomization.sampleExGaussian(250, 50, 0.02, true) },
+//       res_buttons: () => {return jsPsych.randomization.}
+//     }
+//   }
+// }
+//
+// jsPsych.simulate(timeline, "data-only", simulation_options);
+
 
 </script>
 </html>

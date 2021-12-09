@@ -9,6 +9,9 @@ Things to do:
 ~~- how are we saving the data? Dropbox.~~
 ~~- where are we sending the data after collection~~
 ~~- where are we deploying the web application? Heroku.~~
+- add full screen
+- add constent form
+~~- data 'object issue' (why do we get the words object back instead of the data?)~~
 
 introduction:
 ~~- condition randomization~~

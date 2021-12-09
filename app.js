@@ -3,7 +3,6 @@ var express = require("express"),
     mymods = require("./scripts/mymods.js"),
     body_parser = require("body-parser");
 
-
 var savedropbox = mymods.saveDropbox;
 var json2csv = mymods.json2csv;
 
@@ -32,16 +31,27 @@ app.get("/finish", function(request, response) {
 });
 
 app.post('/experiment-data', function(request, response) {
-    // convert json to csv
-    DATA_CSV = json2csv(request.body);
 
+    data = request.body;
+    id = data[0].subject_id;
+    id = id.replace(/'/g, "");
+    var currentdate = new Date();
+    ID_DATE = data[0].ID_DATE;
+    filename = ID_DATE + ".json";
+    foldername = id;
+    data = JSON.stringify(data);
+    savedropbox(data, filename, foldername);
+
+    // convert json to csv (just convert later) 
+    // DATA_CSV = json2csv(request.body);
     // Get filename from data
-    var rows = DATA_CSV.split("\n");
-    ID_DATE_index = rows[0].split(",").indexOf('"ID_DATE"');
-    ID_DATE = rows[1].split(",")[ID_DATE_index];
-    ID_DATE = ID_DATE.replace(/"/g, "");
-    filename = ID_DATE + ".csv";
-    savedropbox(DATA_CSV, filename);
+    // var rows = DATA_CSV.split("\n");
+    // ID_DATE_index = rows[0].split(",").indexOf('"ID_DATE"');
+    // ID_DATE = rows[1].split(",")[ID_DATE_index];
+    // ID_DATE = ID_DATE.replace(/"/g, "");
+    // filename = ID_DATE + ".csv";
+    // savedropbox(DATA_CSV, filename);
+
     response.end();
     // console.log(DATA_CSV)
 });

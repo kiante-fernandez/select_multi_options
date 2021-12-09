@@ -11,6 +11,9 @@ var jsPsych = initJsPsych({
         }).done(function() {
             window.location.href = "finish";
             alert("Data has been saved!");
+            // var csv = jsPsych.data.get().csv();
+            // var filename = jsPsych.data.get().values()[0].subject_id + "_" + DATE + ".csv";
+            // downloadCSV(csv,filename);
         }).fail(function() {
             alert("Problem occurred while writing data to Dropbox. " +
                 "Data will be saved to your computer. " +
@@ -316,14 +319,14 @@ var timeline = []
 timeline.push(preload);
 timeline.push(welcome_block);
 timeline.push(instruction_block_1);
-timeline.push(camera_instructions);
-timeline.push(init_camera);
-timeline.push(calibration_instructions);
-timeline.push(calibration);
-timeline.push(validation_instructions);
-timeline.push(validation);
-timeline.push(recalibrate);
-timeline.push(calibration_done);
+// timeline.push(camera_instructions);
+// timeline.push(init_camera);
+// timeline.push(calibration_instructions);
+// timeline.push(calibration);
+// timeline.push(validation_instructions);
+// timeline.push(validation);
+// timeline.push(recalibrate);
+// timeline.push(calibration_done);
 timeline.push(instruction_block_2);
 timeline.push(trials_with_variables);
 timeline.push(debrief);
