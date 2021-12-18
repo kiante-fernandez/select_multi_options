@@ -10,7 +10,7 @@ Things to do:
 ~~- where are we sending the data after collection~~
 ~~- where are we deploying the web application? Heroku.~~
 - add full screen
-- add constent form
+~~- add constent form~~
 ~~- data 'object issue' (why do we get the words object back instead of the data?)~~
 
 introduction:

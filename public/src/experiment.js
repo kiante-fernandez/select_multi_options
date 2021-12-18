@@ -62,6 +62,28 @@ const preload = {
     images: image_paths,
 }
 
+// Consent
+var check_consent = function(elem) {
+    if (document.getElementById('consent_checkbox').checked) {
+        return true;
+    }
+    else {
+        alert("If you wish to participate, you must check the box next to the statement ' I AGREE with the above consent.'");
+        return false;
+    }
+    return false;
+};
+
+var informed_consent = {
+    data: {
+        screen_id: "consent"
+    },
+    type: jsPsychExternalHtml,
+    url: "../../views/consent.html",
+    cont_btn: "start",
+    check_fn: check_consent
+};
+
 // Welcome
 var welcome_block = {
     data: {
@@ -316,6 +338,7 @@ var trials_with_variables = {
 // timeline
 var timeline = []
 
+timeline.push(informed_consent);
 timeline.push(preload);
 timeline.push(welcome_block);
 timeline.push(instruction_block_1);
