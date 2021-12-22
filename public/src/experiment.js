@@ -24,6 +24,7 @@ var jsPsych = initJsPsych({
         window.location.href = "finish";
     });
     // jsPsych.data.displayData()
+     closeFullscreen()
     }
 }
 );
@@ -82,6 +83,20 @@ var informed_consent = {
     url: "../../views/consent.html",
     cont_btn: "start",
     check_fn: check_consent
+};
+
+// Open Full Screen
+var fullscreenEnter = {
+  type: jsPsychFullscreen,
+  message: `<div> Before we begin, please close any unnecessary programs or applications on your computer. <br/>
+  This will help the study run more smoothly.    <br/>
+   Also, please close any browser tabs that could produce popups or alerts that would interfere with the study.    <br/>
+   Finally, once the study has started, <b>DO NOT EXIT</b> fullscreen mode or you will terminate the study and not receive any payment. <br/>
+  <br><br/>
+  The study will switch to full screen mode when you press the button below.<br/>
+  When you are ready to begin, press the button.</div>
+  <br><br/>`,
+  fullscreen_mode: true,
 };
 
 // Welcome
@@ -207,7 +222,7 @@ var condition_instructions = [
     "<p>You have been selected to buy a box of snacks. Each item costs its normal price.</p>" +
     "<p>All the items available to buy are in your box.</p>" +
     "<p>Click on all the items you want to keep in your box.</p>"+
-    "<p>Once you select an item, you cannot deselect it.</p>"+
+    "<p><b>Once you select an item, you cannot deselect it.</b></p>"+
     "<p>You will have a chance to receive each item that you selected.</p>"+
     "<p>When you’re finished selecting items, press the space bar to finalize your selection.</p>"+
     "<p>If you are ready to begin, please press the space bar.</p>",
@@ -215,7 +230,7 @@ var condition_instructions = [
     "<p>You have been selected to buy a box of snacks. Each item costs its normal price.</p>" +
     "<p>All the items available to buy will be shown.</p>" +
     "<p>Click on all the items you want to add to your box.</p>"+
-    "<p>Once you select an item, you cannot deselect it.</p>"+
+    "<p><b>Once you select an item, you cannot deselect it.</b></p>"+
     "<p>You will have a chance to receive each item that you selected.</p>"+
     "<p>When you’re finished selecting items, press the space bar to finalize your selection.</p>"+
     "<p>If you are ready to begin, please press the space bar.</p>"
@@ -339,6 +354,7 @@ var trials_with_variables = {
 var timeline = []
 
 timeline.push(informed_consent);
+timeline.push(fullscreenEnter); //start the fullscreen
 timeline.push(preload);
 timeline.push(welcome_block);
 timeline.push(instruction_block_1);

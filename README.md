@@ -9,9 +9,12 @@ Things to do:
 ~~- how are we saving the data? Dropbox.~~
 ~~- where are we sending the data after collection~~
 ~~- where are we deploying the web application? Heroku.~~
-- add full screen
+~~- add full screen~~
 ~~- add constent form~~
 ~~- data 'object issue' (why do we get the words object back instead of the data?)~~
+- get browser and screen data
+- did subjects leave the screen? Get interaction data
+- change eye tracking instructions to match the labs protocol
 
 introduction:
 ~~- condition randomization~~
@@ -35,7 +38,9 @@ choice trial:
 ~~-   on finish have the trial calculate the number of option selected~~
 
 instructions II
+- attention check? Write in box (Please name one of the items you saw: )
 - thank subjects /tell them about rating task?
+
 
 ratings for the options? (still up for discussion)
 
