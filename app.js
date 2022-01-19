@@ -2,6 +2,7 @@
 var express = require("express"),
     mymods = require("./scripts/mymods.js"),
     body_parser = require("body-parser");
+    bowser = require("bowser"); // CommonJS
 
 var savedropbox = mymods.saveDropbox;
 var json2csv = mymods.json2csv;
@@ -42,7 +43,7 @@ app.post('/experiment-data', function(request, response) {
     data = JSON.stringify(data);
     savedropbox(data, filename, foldername);
 
-    // convert json to csv (just convert later) 
+    // convert json to csv (just convert later)
     // DATA_CSV = json2csv(request.body);
     // Get filename from data
     // var rows = DATA_CSV.split("\n");

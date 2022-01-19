@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "bowser": "^2.11.0",
     "dotenv": "^10.0.0",
     "dropbox": "^10.23.0",
     "ejs": "^3.1.6",

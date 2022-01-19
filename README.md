@@ -15,6 +15,7 @@ Things to do:
 - get browser and screen data
 - did subjects leave the screen? Get interaction data
 - change eye tracking instructions to match the labs protocol
+- Create the practice trials
 
 introduction:
 ~~- condition randomization~~
@@ -22,6 +23,10 @@ calibration screen (only one?)
 
 condition specific instructions:
 ~~- randomization procedure for two conditions~~
+
+practice trials:
+animals as example? Find more than one example set; landmarks.
+use same structure as main task
 
 choice trial:
 ~~- fixation onset ~~

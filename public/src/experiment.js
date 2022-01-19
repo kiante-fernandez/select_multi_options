@@ -23,8 +23,8 @@ var jsPsych = initJsPsych({
         downloadCSV(csv,filename);
         window.location.href = "finish";
     });
+    closeFullscreen()
     // jsPsych.data.displayData()
-     closeFullscreen()
     }
 }
 );
@@ -62,6 +62,8 @@ const preload = {
     type: jsPsychPreload,
     images: image_paths,
 }
+
+// Brower Check (no need?)
 
 // Consent
 var check_consent = function(elem) {
@@ -113,6 +115,8 @@ var welcome_block = {
         jsPsych.data.addProperties({
             subject_id: responses.subject_id,
             ID_DATE: responses.subject_id + "_" + DATE,
+            browser_name: bowser.name,
+            browser_type: bowser.version
         })
     }
 };
@@ -160,7 +164,8 @@ var calibration = {
         [25,25],[75,25],[50,50],[25,75],[75,75]
     ],
     repetitions_per_point: 2,
-    randomize_calibration_order: true
+    randomize_calibration_order: true,
+    calibration_mode: "view" //if view they look at points, if click they have to click on them
 }
 // validation eye tracking
 var validation_instructions = {
