@@ -12,6 +12,7 @@
     <script src="js/jspsych/plugin-preload.js"></script>
     <script src="js/jspsych/plugin-survey-html-form.js"></script>
     <script src="js/jspsych/plugin-fullscreen.js"></script>
+    <script src="js/jspsych/plugin-image-slider-response.js"></script>
 
     <script src="js/jspsych/plugin-external-html.js"></script>
 
@@ -253,7 +254,6 @@ var calibration_done = {
 //Practice trials: animals
 //These are image paths to images for the practice trials
 var image_indices_2st = math.range(1, 16); //math.range() returns a js obj that has a parameter called '._data' and that has an Array of the range.
-
 image_indices_2st = Array.from(image_indices_2st._data); // This is just a list containing the range of numbers used for each url of the
 // praciice stimulus. The praciice stimuli are all saved in the /img/animal/ folder. They have a prefix "animal"
 // and then they include the number 1-N for N number of trials.
@@ -264,12 +264,9 @@ for (var i = 0; i < arrayLength_prac; i++) {
     var path_str2 = "public/img/animal/animal" + String(image_indices_2st[i]) + ".jpg";
     image_paths_practice.push(path_str2);
 }
-
-//Creating list of image paths to load for practice trials.
 //Practice trials: landmarks
 //These are image paths to images for the practice trials
 var image_indices_3rd = math.range(1, 16); //math.range() returns a js obj that has a parameter called '._data' and that has an Array of the range.
-
 image_indices_3rd = Array.from(image_indices_3rd._data); // This is just a list containing the range of numbers used for each url of the
 // praciice stimulus. The praciice stimuli are all saved in the /img/animal/ folder. They have a prefix "animal"
 // and then they include the number 1-N for N number of trials.
@@ -282,9 +279,9 @@ for (var i = 0; i < arrayLength_prac; i++) {
 }
 
 //Creating list of image paths to load for the main task
+
 //These are image paths to images for the experimental treatment shown on each trial
 var image_indices_lst = math.range(1, 80); //math.range() returns a js obj that has a parameter called '._data' and that has an Array of the range.
-
 image_indices_lst = Array.from(image_indices_lst._data); // This is just a list containing the range of numbers used for each url of the
 // experimental stimulus. The experimental stimuli are all saved in the /img/food/ folder. They have a prefix "food"
 // and then they include the number 1-N for N number of trials.
@@ -501,10 +498,60 @@ button_html: [
         ]
 };
 
+// get ratings //
+var ratingOverview = {
+  type: jsPsychHtmlKeyboardResponse,
+  on_start:   () => document.body.style.cursor = 'pointer',
+  stimulus: `<div> <font size=120%; font color = 'green';>Rating task</font><br/>
+                                       <br><br/>
+             Now, you will make decisions about each snack food one by one. <br/>
+             For each snack food, please rate it on a scale from 0 to 10 based on how much you would like to eat this food right now.<br/>
+             A 0 means that you would neither like nor dislike to eat this food.  <br/>
+             When choosing whether to eat this food or not, you would be willing to flip a coin.   <br/>
+             A 10 means that you would really love to eat this food. <br/>
+             If you dislike a food and would not want to eat it, then click DISLIKE. <br/>
+             During the task, you need to use your mouse to move the slider to your desired rating. <br/>
+                                          <br><br/>
+            When you are ready, press the  <b>SPACE BAR</b> to start.  </div>`,
+  choices: ' ',
+  post_trial_gap: 500,
+};
+
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+rating_choice_images = [];
+rating_choice_images_zero = [];
+
+ratings_images = jsPsych.randomization.shuffle(trial_options);
+var ratings = {
+  type: jsPsychImageSliderResponse,
+  stimulus_height: 320,
+  stimulus_width: 450,
+  timeline: ratings_images.map(img => ({
+    stimulus: img
+  })),
+  labels: ['0', '1', '2', '3', '4', '5','6','7','8','9','10'],
+  min: 0,
+  max: 10,
+  start: () => getRandomInt(0, 5),
+  require_movement: true,
+  // prompt: '<p>Willingness to donate.</p>',
+  slider_width: 500,
+  response_ends_trial: true,
+  on_finish: (data) => {
+    if (data.rating > 0) {
+      rating_choice_images.push(data.stimulus);
+    }
+    if (data.rating >= 0) {
+      rating_choice_images_zero.push(data.stimulus);
+    }
+  }
+};
 //end the experiment, distribute the reward
 
 var trials_with_variables = {
-    timeline: [fixation, practice_trial, fixation, practice_trial_2, fixation, trial],
+    timeline: [fixation, practice_trial, fixation, practice_trial_2, fixation, trial, ratingOverview, ratings],
     // timeline_variables: factorial_values
 };
 

@@ -12,10 +12,12 @@ Things to do:
 ~~- add full screen~~
 ~~- add constent form~~
 ~~- data 'object issue' (why do we get the words object back instead of the data?)~~
-- get browser and screen data
+~~- get browser data~~
+- get screen data
 - did subjects leave the screen? Get interaction data
 - change eye tracking instructions to match the labs protocol
 - Create the practice trials
+- add the get ratings task afterwards (piloting in demo mode now)
 
 introduction:
 ~~- condition randomization~~
