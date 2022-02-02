@@ -110,7 +110,7 @@ var jsPsychWebgazerCalibrate = (function (jspsych) {
               }
           };
           const calibration_display_gaze_only = (pt) => {
-              var pt_html = `<div id="calibration-point" style="width:${trial.point_size}px; height:${trial.point_size}px; border-radius:${trial.point_size}px; border: 1px solid #000; background-color: #333; position: absolute; left:${pt[0]}%; top:${pt[1]}%;"></div>`;
+              var pt_html = `<div id="calibration-point" style="width:${trial.point_size}px; height:${trial.point_size}px; border-radius:${trial.point_size}px; border: 1px solid #007500; background-color: #007500; position: absolute; left:${pt[0]}%; top:${pt[1]}%;"></div>`;
               wg_container.innerHTML = pt_html;
               var pt_dom = wg_container.querySelector("#calibration-point");
               if (trial.calibration_mode == "click") {

@@ -16,8 +16,8 @@ Things to do:
 - get screen data
 - did subjects leave the screen? Get interaction data
 - change eye tracking instructions to match the labs protocol
-- Create the practice trials
-- add the get ratings task afterwards (piloting in demo mode now)
+~~- Create the practice trials~~
+~~- add the get ratings task afterwards (piloting in demo mode now)~~
 
 introduction:
 ~~- condition randomization~~
@@ -27,8 +27,8 @@ condition specific instructions:
 ~~- randomization procedure for two conditions~~
 
 practice trials:
-animals as example? Find more than one example set; landmarks.
-use same structure as main task
+~~animals as example? Find more than one example set; landmarks.
+use same structure as main task~~
 
 choice trial:
 ~~- fixation onset ~~

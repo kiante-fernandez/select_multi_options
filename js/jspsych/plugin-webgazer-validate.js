@@ -201,10 +201,10 @@ var jsPsychWebgazerValidate = (function (jspsych) {
               }
           }
           function drawValidationPoint_PercentMode(x, y) {
-              return `<div class="validation-point" style="width:${trial.point_size}px; height:${trial.point_size}px; border-radius:${trial.point_size}px; border: 1px solid #000; background-color: #333; position: absolute; left:${x}%; top:${y}%;"></div>`;
+              return `<div class="validation-point" style="width:${trial.point_size}px; height:${trial.point_size}px; border-radius:${trial.point_size}px; border: 1px solid #007500; background-color: #007500; position: absolute; left:${x}%; top:${y}%;"></div>`;
           }
           function drawValidationPoint_CenterOffsetMode(x, y) {
-              return `<div class="validation-point" style="width:${trial.point_size}px; height:${trial.point_size}px; border-radius:${trial.point_size}px; border: 1px solid #000; background-color: #333; position: absolute; left:calc(50% - ${trial.point_size / 2}px + ${x}px); top:calc(50% - ${trial.point_size / 2}px + ${y}px);"></div>`;
+              return `<div class="validation-point" style="width:${trial.point_size}px; height:${trial.point_size}px; border-radius:${trial.point_size}px; border: 1px solid #007500; background-color: #007500; position: absolute; left:calc(50% - ${trial.point_size / 2}px + ${x}px); top:calc(50% - ${trial.point_size / 2}px + ${y}px);"></div>`;
           }
           // @ts-expect-error
           function drawCircle(target_x, target_y, dx, dy, r) {

@@ -89,6 +89,27 @@ var fullscreenEnter = {
   //   document.body.style.cursor = 'none'
   // }
 };
+// Welcome
+var welcome_block = {
+    data: {
+        screen_id: "welcome"
+    },
+    type: jsPsychSurveyHtmlForm,
+    preamble: "<p>Welcome to the experiment!</p>"+
+    "Please complete the form",
+    html: "<p>Participant ID: <input name = 'subject_id' type = 'text'/></p><p>OSU EMAIL: <input name = 'subject_email' type = 'text'/></p>",
+    on_finish: function(data) {
+        responses = data.response;
+        jsPsych.data.addProperties({
+            subject_id: responses.subject_id,
+            subject_email: responses.subject_email,
+            ID_DATE: responses.subject_id + "_" + DATE,
+            browser_name: bowser.name,
+            browser_type: bowser.version
+        })
+    }
+};
+
 
 const nImageInst = 2;
 /** load all the instruction images, and remember to preload */
@@ -122,9 +143,7 @@ var eyeTrackingInstruction1 = {
                 Your task is simply to stare directly at each dot until it disappears.<br/>
                 Then, quickly move your eyes to the next dot and repeat.<br/>
                 <br><br/>
-                Validation is basically the same as calibration. You simply need to stare at each dot until it turns <b><font color='green'>green</font></b> and disappears.<br/>
-                During validation, the dot may turn <b><font color='yellow'>yellow</font></b>, indicating that you don’t seem to be staring directly at it.  <br/>
-                Try to keep this from happening!
+                Validation is basically the same as calibration. You simply need to stare at each dot until it turns disappears.<br/>
                 <br><br/>
                 When you are ready, press the SPACE BAR to continue. </div>`,
   post_trial_gap: 500,
@@ -136,7 +155,7 @@ var eyeTrackingInstruction2 = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: `<div><font size=120%; font color = 'green';>Calibration & Validation </font><br/>
                                                                           <br><br/>
-      When the calibration begins, you will see a video feed with your face at the top left corner of your screen like this:  <br/>
+      When the calibration begins, you will see a video feed with your face at the top of your screen like this:  <br/>
         <br><br/>
          <img height="220px" width="270px" src="${instruct_img[0]}"><br/>
        <br><br/>
@@ -167,8 +186,8 @@ var eyeTrackingNote = {
              <font size=5px; font color = 'red';> <b>NOTE</b>:  <br/>
             If you are back on this page, it means the calibration and validation did not work as well as we would like.  <br/>
             Please read the tips above again, make any adjustments, and try again.  <br/>
-            There are only <b>THREE</b> chances to get this right.  <br/>
-            Otherwise, the study cannot proceed and you will only receive 50 cents for participating.  </font><br/>
+            There are only <b>TWO</b> chances to get this right.  <br/>
+            Otherwise, the study cannot proceed.  </font><br/>
             <br><br/>
              <font size=5px; >When you are ready, press the <b>SPACE BAR</b> to bring up the video feed and make these adjustments. </font></div>`,
   post_trial_gap: 500,
@@ -183,8 +202,8 @@ var init_camera = {
 var calibration_instructions = {
   type: jsPsychHtmlButtonResponse,
   stimulus: `
-    <p>Now you'll calibrate the eye tracking, so that the software can use the image of your eyes to predict where you are looking.</p>
-    <p>You'll see a series of dots appear on the screen. Look at each dot and click on it.</p>
+    <p>Now lets start the calibration.</p>
+    <p>You'll see a series of dots appear on the screen. Look at each dot.</p>
   `,
   choices: ['Got it'],
 }
@@ -202,8 +221,7 @@ var calibration = {
   stimulus: `
     <p>Now we'll measure the accuracy of the calibration.</p>
     <p>Look at each dot as it appears on the screen.</p>
-    <p style="font-weight: bold;">You do not need to click on the dots this time.</p>
-  `,
+      `,
   choices: ['Got it'],
   post_trial_gap: 1000
 }
@@ -225,7 +243,7 @@ var recalibrate_instructions = {
   stimulus: `
     <p>The accuracy of the calibration is a little lower than we'd like.</p>
     <p>Let's try calibrating one more time.</p>
-    <p>On the next screen, look at the dots and click on them.<p>
+    <p>On the next screen, look at the dots.<p>
   `,
   choices: ['OK'],
 }
@@ -251,6 +269,7 @@ var calibration_done = {
 }
 
 //Creating list of image paths to load for practice trials.
+
 //Practice trials: animals
 //These are image paths to images for the practice trials
 var image_indices_2st = math.range(1, 16); //math.range() returns a js obj that has a parameter called '._data' and that has an Array of the range.
@@ -315,6 +334,22 @@ var fixation = {
     trial_duration: [500],
     response_ends_trial: false
 };
+//practice instructions
+var practice_instructions = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: `<div><font size=120%; font color = 'green';> Practice</font><br/>
+             <br><br/>
+             <div style="text-align-last:center">
+            In this part of the study you will be choosing between animals. You will see several animals on the screen.<br/>
+            You have to select all the animals which are mammals.<br/>
+            To select an animal, hover your mouse of that animals picture and click it. Once selected the animal will have a <b><font color='yellow'>Yellow</font></b> outline. <br/>
+             <u><b>Once you select an animal, you cannot deselect it.</b> </u><br/>
+            When you’re finished selecting animals, press the space bar to finalize your selection.
+            <br><br/>
+             <font size=5px; >When you are ready, press the <b>SPACE BAR</b> to begin</font></div>`,
+  post_trial_gap: 500,
+  choices: ' ',
+}
 //practice trial
 var practice_trial = {
     data: {
@@ -323,7 +358,7 @@ var practice_trial = {
     },
     type: jsPsychMutipleButtonResponse,
     stimulus: [],
-    prompt: [],
+    prompt: ['<b>select all the animals which are mammals</b>'],
     choices: [image_paths_practice[0],
     image_paths_practice[1],
     image_paths_practice[2],
@@ -368,6 +403,21 @@ button_html: [
         data.options_selected = matches.length
     }
 };
+//practice instructions
+var practice_instructions_2 = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: `<div><font size=120%; font color = 'green';> Practice</font><br/>
+             <br><br/>
+             <div style="text-align-last:center">
+            In this part of the study you will be choosing between monuments. You will see several monuments on the screen.<br/>
+            Select all the monuments you'd like to vist.<br/>
+             <u><b>Once you select an monument, you cannot deselect it.</b> </u><br/>
+            When you’re finished selecting monuments, press the space bar to finalize your selection.
+            <br><br/>
+             <font size=5px; >When you are ready, press the <b>SPACE BAR</b> to begin</font></div>`,
+  post_trial_gap: 500,
+  choices: ' ',
+}
 var practice_trial_2 = {
     data: {
         screen_id: "practice_trial",
@@ -551,7 +601,7 @@ var ratings = {
 //end the experiment, distribute the reward
 
 var trials_with_variables = {
-    timeline: [fixation, practice_trial, fixation, practice_trial_2, fixation, trial, ratingOverview, ratings],
+    timeline: [practice_instructions, fixation, practice_trial, practice_instructions_2, fixation, practice_trial_2, fixation, trial, ratingOverview, ratings],
     // timeline_variables: factorial_values
 };
 
@@ -579,23 +629,25 @@ function closeFullscreen() {
 
 // timeline
 var timeline = []
-timeline.push(fullscreenEnter); //start the fullscreen
+// timeline.push(fullscreenEnter); //start the fullscreen
 timeline.push(preload);
+// timeline.push(welcome_block);
 
-timeline.push(eyeTrackingInstruction1);
-timeline.push(eyeTrackingInstruction2);
-timeline.push(eyeTrackingNote);
+// timeline.push(eyeTrackingInstruction1);
+// timeline.push(eyeTrackingInstruction2);
+// timeline.push(eyeTrackingNote);
 
 // timeline.push(camera_instructions);
-// timeline.push(init_camera);
+timeline.push(init_camera);
 // timeline.push(calibration_instructions);
-// timeline.push(calibration);
+timeline.push(calibration);
 // timeline.push(validation_instructions);
 // timeline.push(validation);
 // timeline.push(recalibrate);
 // timeline.push(calibration_done);
-timeline.push(trials_with_variables);
-timeline.push(fullscreenEnd); //end the fullscreen
+
+// timeline.push(trials_with_variables);
+// timeline.push(fullscreenEnd); //end the fullscreen
 
 //Start Experiment
 jsPsych.run(timeline);

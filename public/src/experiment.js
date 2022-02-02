@@ -36,7 +36,43 @@ var MM = String(TODAY.getMonth() + 1).padStart(2, '0');
 var YYYY = TODAY.getFullYear();
 const DATE = YYYY + MM + DD;
 
-//Creating list of image paths to load.
+
+//Creating list of image paths to load for instructions.
+const nImageInst = 2;
+/** load all the instruction images, and remember to preload */
+var instruct_img = [];
+for (var i = 0; i < nImageInst; i++) {
+  instruct_img.push('../../img/instruct' + i + '.png');
+}
+//Creating list of image paths to load for practice trials.
+
+//Practice trials: animals
+//These are image paths to images for the practice trials
+var image_indices_2st = math.range(1, 16); //math.range() returns a js obj that has a parameter called '._data' and that has an Array of the range.
+image_indices_2st = Array.from(image_indices_2st._data); // This is just a list containing the range of numbers used for each url of the
+// praciice stimulus. The praciice stimuli are all saved in the /img/animal/ folder. They have a prefix "animal"
+// and then they include the number 1-N for N number of trials.
+var arrayLength_prac = image_indices_2st.length; // arrayLength is used to show how many images/trials there are from 1-N trials.
+var image_paths_practice = [];
+for (var i = 0; i < arrayLength_prac; i++) {
+    // This for loop fills the image_paths list with urls to the images for each of the experimental treatments
+    var path_str2 = "../../img/animal/animal" + String(image_indices_2st[i]) + ".jpg";
+    image_paths_practice.push(path_str2);
+}
+//Practice trials: landmarks
+//These are image paths to images for the practice trials
+var image_indices_3rd = math.range(1, 16); //math.range() returns a js obj that has a parameter called '._data' and that has an Array of the range.
+image_indices_3rd = Array.from(image_indices_3rd._data); // This is just a list containing the range of numbers used for each url of the
+// praciice stimulus. The praciice stimuli are all saved in the /img/animal/ folder. They have a prefix "animal"
+// and then they include the number 1-N for N number of trials.
+var arrayLength_prac = image_indices_3rd.length; // arrayLength is used to show how many images/trials there are from 1-N trials.
+var image_paths_practice2 = [];
+for (var i = 0; i < arrayLength_prac; i++) {
+    // This for loop fills the image_paths list with urls to the images for each of the experimental treatments
+    var path_str3 = "../../img/landmark/landmark" + String(image_indices_3rd[i]) + ".jpg";
+    image_paths_practice2.push(path_str3);
+}
+
 //These are image paths to images for the experimental treatment shown on each trial
 var image_indices_lst = math.range(1, 80); //math.range() returns a js obj that has a parameter called '._data' and that has an Array of the range.
 
@@ -60,7 +96,7 @@ const trial_options = shuffled_image_names.slice(0, 15);
 // Preloading files are needed to present the stimuli accurately.
 const preload = {
     type: jsPsychPreload,
-    images: image_paths,
+    images: [instruct_img,image_paths_practice, image_paths_practice2, image_paths],   //  preload just the images
 }
 
 // Brower Check (no need?)
@@ -109,11 +145,12 @@ var welcome_block = {
     type: jsPsychSurveyHtmlForm,
     preamble: "<p>Welcome to the experiment!</p>"+
     "Please complete the form",
-    html: "<p>Participant ID: <input name = 'subject_id' type = 'text'/></p>",
+    html: "<p>Participant ID: <input name = 'subject_id' type = 'text'/></p><p>OSU EMAIL: <input name = 'subject_email' type = 'text'/></p>",
     on_finish: function(data) {
         responses = data.response;
         jsPsych.data.addProperties({
             subject_id: responses.subject_id,
+            subject_email: responses.subject_email,
             ID_DATE: responses.subject_id + "_" + DATE,
             browser_name: bowser.name,
             browser_type: bowser.version
@@ -145,18 +182,80 @@ var camera_instructions = {
     `,
     choices: ['Got it'],
 }
+var eyeTrackingInstruction1 = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: `<div> <font size=120%; font color = 'green';>Calibration & Validation </font><br/>
+                                             <br><br/>
+                Before we begin with the study, we need to turn on and adjust your webcam for eye-tracking.   <br/>
+
+                There are two parts to this process. The first part is calibration and the second part is validation.<br/>
+                <br><br/>
+                During calibration, you will see a series of dots like this <span id="calibration_dot_instruction"></span> appear on the screen, each for 3 seconds.<br/>
+                Your task is simply to stare directly at each dot until it disappears.<br/>
+                Then, quickly move your eyes to the next dot and repeat.<br/>
+                <br><br/>
+                Validation is basically the same as calibration. You simply need to stare at each dot until it turns disappears.<br/>
+                <br><br/>
+                When you are ready, press the SPACE BAR to continue. </div>`,
+  post_trial_gap: 500,
+  choices: ' ',
+
+}
+
+var eyeTrackingInstruction2 = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: `<div><font size=120%; font color = 'green';>Calibration & Validation </font><br/>
+                                                                          <br><br/>
+      When the calibration begins, you will see a video feed with your face at the top of your screen like this:  <br/>
+        <br><br/>
+         <img height="220px" width="270px" src="${instruct_img[0]}"><br/>
+       <br><br/>
+                         Try to keep your entire face within the box. When your face is in a good position, the box will turn <b><font color='green'>green</font></b>. <br/>
+                         <font size=5px; font color = 'red';> <b>NOTE</b>: the video feed only appears during calibration.</font><br/>
+                         <br><br/>
+                         <font size=5px; >When you are ready, press the  <b>SPACE BAR</b> to continue.</font>
+
+                         </div>`,
+  post_trial_gap: 500,
+  choices: ' ',
+
+}
+
+var eyeTrackingNote = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: `<div><font size=120%; font color = 'green';> Calibration & Validation</font><br/>
+                                                                          <br><br/>
+             <font size = 5px font color = "yellow">There are several <b>IMPORTANT</b> tips that are useful for passing the calibration task:<br/></font>
+             <img height="200px" width="1000px" src="${instruct_img[1]}"><br/>
+             <br><br/>
+             <div style="text-align-last:left">
+            In addition to the tips in the figure: <br/>
+            (1). Use your eyes to look around the screen and try to avoid moving your head. <br/>
+            (2). Try to keep lights in front of you rather than behind you so that the webcam can clearly see your face. Avoid sitting with a window behind you. <br/>
+            (3). After you have made these adjustments, check again that your face fits nicely within the box on the video feed and that the box is green. <br/></div>
+             <br><br/>
+             <font size=5px; font color = 'red';> <b>NOTE</b>:  <br/>
+            If you are back on this page, it means the calibration and validation did not work as well as we would like.  <br/>
+            Please read the tips above again, make any adjustments, and try again.  <br/>
+            There are only <b>TWO</b> chances to get this right.  <br/>
+            Otherwise, the study cannot proceed.  </font><br/>
+            <br><br/>
+             <font size=5px; >When you are ready, press the <b>SPACE BAR</b> to bring up the video feed and make these adjustments. </font></div>`,
+  post_trial_gap: 500,
+  choices: ' ',
+}
 // initialize eye tracker
 var init_camera = {
     type: jsPsychWebgazerInitCamera
 }
 // Calibration eye tracking
 var calibration_instructions = {
-    type: jsPsychHtmlButtonResponse,
-    stimulus: `
-    <p>Now you'll calibrate the eye tracking, so that the software can use the image of your eyes to predict where you are looking.</p>
-    <p>You'll see a series of dots appear on the screen. Look at each dot and click on it.</p>
-    `,
-    choices: ['Got it'],
+  type: jsPsychHtmlButtonResponse,
+  stimulus: `
+    <p>Now lets start the calibration.</p>
+    <p>You'll see a series of dots appear on the screen. Look at each dot.</p>
+  `,
+  choices: ['Got it'],
 }
 var calibration = {
     type: jsPsychWebgazerCalibrate,
@@ -169,14 +268,13 @@ var calibration = {
 }
 // validation eye tracking
 var validation_instructions = {
-    type: jsPsychHtmlButtonResponse,
-    stimulus: `
-    <p>Now we'll measure the accuracy of the calibration.</p>
-    <p>Look at each dot as it appears on the screen.</p>
-    <p style="font-weight: bold;">You do not need to click on the dots this time.</p>
-    `,
-    choices: ['Got it'],
-    post_trial_gap: 1000
+ type: jsPsychHtmlButtonResponse,
+ stimulus: `
+   <p>Now we'll measure the accuracy of the calibration.</p>
+   <p>Look at each dot as it appears on the screen.</p>
+     `,
+ choices: ['Got it'],
+ post_trial_gap: 1000
 }
 var validation = {
     type: jsPsychWebgazerValidate,
@@ -196,7 +294,7 @@ var recalibrate_instructions = {
     stimulus: `
     <p>The accuracy of the calibration is a little lower than we'd like.</p>
     <p>Let's try calibrating one more time.</p>
-    <p>On the next screen, look at the dots and click on them.<p>
+    <p>On the next screen, look at the dots.<p>
     `,
     choices: ['OK'],
 }
@@ -220,6 +318,144 @@ var calibration_done = {
     `,
     choices: ['OK']
 }
+//practice trials
+//practice instructions
+var practice_instructions = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: `<div><font size=120%; font color = 'green';> Practice</font><br/>
+             <br><br/>
+             <div style="text-align-last:center">
+            In this part of the study you will be choosing between animals. You will see several animals on the screen.<br/>
+            You have to select all the animals which are mammals.<br/>
+            To select an animal, hover your mouse of that animals picture and click it. Once selected the animal will have a <b><font color='yellow'>Yellow</font></b> outline. <br/>
+             <u><b>Once you select an animal, you cannot deselect it.</b> </u><br/>
+            When you’re finished selecting animals, press the space bar to finalize your selection.
+            <br><br/>
+             <font size=5px; >When you are ready, press the <b>SPACE BAR</b> to begin</font></div>`,
+  post_trial_gap: 500,
+  choices: ' ',
+}
+//practice trial
+var practice_trial = {
+    data: {
+        screen_id: "practice_trial",
+        options: trial_options
+    },
+    type: jsPsychMutipleButtonResponse,
+    stimulus: [],
+    prompt: ['<b>select all the animals which are mammals</b>'],
+    choices: [image_paths_practice[0],
+    image_paths_practice[1],
+    image_paths_practice[2],
+    image_paths_practice[3],
+    image_paths_practice[4],
+    image_paths_practice[5],
+    image_paths_practice[6],
+    image_paths_practice[7],
+    image_paths_practice[8],
+    image_paths_practice[9],
+    image_paths_practice[10],
+    image_paths_practice[11],
+    image_paths_practice[12],
+    image_paths_practice[13],
+    image_paths_practice[14]
+],
+button_html: [
+    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-0">',
+    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-1">',
+    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-2">',
+    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-3">',
+    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-4">',
+    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-5">',
+    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-6">',
+    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-7">',
+    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-8">',
+    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-9">',
+    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-10">',
+    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-11">',
+    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-12">',
+    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-13">',
+    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-14">'                    ],
+    response_ends_trial: true,
+    keys: ' ',
+    margin_vertical: "40px",
+    margin_horizontal: "50px",
+    on_finish: function(data) {
+        //count how many options where selected
+        //count how many objects in the res_buttons arrary.
+        //Its a string, so extract the numbers then count
+        matches = data.res_buttons.match(/\d+/g);
+        data.options_selected = matches.length
+    }
+};
+//practice instructions
+var practice_instructions_2 = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: `<div><font size=120%; font color = 'green';> Practice</font><br/>
+             <br><br/>
+             <div style="text-align-last:center">
+            In this part of the study you will be choosing between monuments. You will see several monuments on the screen.<br/>
+            Select all the monuments you'd like to vist.<br/>
+             <u><b>Once you select an monument, you cannot deselect it.</b> </u><br/>
+            When you’re finished selecting monuments, press the space bar to finalize your selection.
+            <br><br/>
+             <font size=5px; >When you are ready, press the <b>SPACE BAR</b> to begin</font></div>`,
+  post_trial_gap: 500,
+  choices: ' ',
+}
+var practice_trial_2 = {
+    data: {
+        screen_id: "practice_trial",
+        options: trial_options
+    },
+    type: jsPsychMutipleButtonResponse,
+    stimulus: [],
+    prompt: [],
+    choices: [image_paths_practice2[0],
+    image_paths_practice2[1],
+    image_paths_practice2[2],
+    image_paths_practice2[3],
+    image_paths_practice2[4],
+    image_paths_practice2[5],
+    image_paths_practice2[6],
+    image_paths_practice2[7],
+    image_paths_practice2[8],
+    image_paths_practice2[9],
+    image_paths_practice2[10],
+    image_paths_practice2[11],
+    image_paths_practice2[12],
+    image_paths_practice2[13],
+    image_paths_practice2[14]
+],
+button_html: [
+    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-0">',
+    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-1">',
+    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-2">',
+    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-3">',
+    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-4">',
+    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-5">',
+    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-6">',
+    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-7">',
+    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-8">',
+    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-9">',
+    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-10">',
+    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-11">',
+    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-12">',
+    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-13">',
+    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-14">'                    ],
+    response_ends_trial: true,
+    keys: ' ',
+    margin_vertical: "40px",
+    margin_horizontal: "50px",
+    on_finish: function(data) {
+        //count how many options where selected
+        //count how many objects in the res_buttons arrary.
+        //Its a string, so extract the numbers then count
+        matches = data.res_buttons.match(/\d+/g);
+        data.options_selected = matches.length
+    }
+};
+
 // Experiment instructions
 // here we need to choose one of two frames randomly. Then we need to show the approptirate text.
 var condition_instructions = [
@@ -241,10 +477,11 @@ var condition_instructions = [
     "<p>If you are ready to begin, please press the space bar.</p>"
 ];
 //randomly select a condition
-function getRandomInt(max) {
-    return Math.floor(Math.random() * max);
-};
-const condition_choice = getRandomInt(2);
+// function getRandomInt(max) {
+//     return Math.floor(Math.random() * max);
+// };
+
+const condition_choice = getRandomInt(0,1);
 // expected output: 0, 1
 
 //we need to get some indicator that tells us what conditoin this was
@@ -338,6 +575,56 @@ button_html: [
         }
     ]
 };
+// get ratings //
+var ratingOverview = {
+  type: jsPsychHtmlKeyboardResponse,
+  on_start:   () => document.body.style.cursor = 'pointer',
+  stimulus: `<div> <font size=120%; font color = 'green';>Rating task</font><br/>
+                                       <br><br/>
+             Now, you will make decisions about each snack food one by one. <br/>
+             For each snack food, please rate it on a scale from 0 to 10 based on how much you would like to eat this food right now.<br/>
+             A 0 means that you would neither like nor dislike to eat this food.  <br/>
+             When choosing whether to eat this food or not, you would be willing to flip a coin.   <br/>
+             A 10 means that you would really love to eat this food. <br/>
+             If you dislike a food and would not want to eat it, then click DISLIKE. <br/>
+             During the task, you need to use your mouse to move the slider to your desired rating. <br/>
+                                          <br><br/>
+            When you are ready, press the  <b>SPACE BAR</b> to start.  </div>`,
+  choices: ' ',
+  post_trial_gap: 500,
+};
+
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+rating_choice_images = [];
+rating_choice_images_zero = [];
+
+ratings_images = jsPsych.randomization.shuffle(trial_options);
+var ratings = {
+  type: jsPsychImageSliderResponse,
+  stimulus_height: 320,
+  stimulus_width: 450,
+  timeline: ratings_images.map(img => ({
+    stimulus: img
+  })),
+  labels: ['0', '1', '2', '3', '4', '5','6','7','8','9','10'],
+  min: 0,
+  max: 10,
+  start: () => getRandomInt(0, 5),
+  require_movement: true,
+  slider_width: 500,
+  response_ends_trial: true,
+  on_finish: (data) => {
+    if (data.rating > 0) {
+      rating_choice_images.push(data.stimulus);
+    }
+    if (data.rating >= 0) {
+      rating_choice_images_zero.push(data.stimulus);
+    }
+  }
+};
+
 // Debrief
 //we need to randomly select if this subject actully gets the foods or not
 var debrief = {
@@ -353,8 +640,9 @@ var debrief = {
 };
 
 var trials_with_variables = {
-    timeline: [fixation, trial],
+    timeline: [practice_instructions, fixation, practice_trial, practice_instructions_2, fixation, practice_trial_2, instruction_block_2, fixation, trial, ratingOverview, ratings],
 };
+
 // timeline
 var timeline = []
 
@@ -363,6 +651,9 @@ timeline.push(fullscreenEnter); //start the fullscreen
 timeline.push(preload);
 timeline.push(welcome_block);
 timeline.push(instruction_block_1);
+timeline.push(eyeTrackingInstruction1);
+timeline.push(eyeTrackingInstruction2);
+timeline.push(eyeTrackingNote);
 timeline.push(camera_instructions);
 timeline.push(init_camera);
 timeline.push(calibration_instructions);
