@@ -602,6 +602,9 @@ rating_choice_images_zero = [];
 
 ratings_images = jsPsych.randomization.shuffle(trial_options);
 var ratings = {
+    data:{
+        screen_id:"ratings",
+    },
   type: jsPsychImageSliderResponse,
   stimulus_height: 320,
   stimulus_width: 450,
@@ -611,10 +614,11 @@ var ratings = {
   labels: ['0', '1', '2', '3', '4', '5','6','7','8','9','10'],
   min: 0,
   max: 10,
-  start: () => getRandomInt(0, 5),
+  slider_start: 0,
   require_movement: true,
-  slider_width: 500,
+  slider_width: 900,
   response_ends_trial: true,
+  button_label: [],
   on_finish: (data) => {
     if (data.rating > 0) {
       rating_choice_images.push(data.stimulus);

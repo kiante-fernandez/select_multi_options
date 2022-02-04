@@ -245,7 +245,7 @@ var jsPsychImageSliderResponse = (function (jspsych) {
               submit_btn.classList.add("jspsych-btn");
               submit_btn.disabled = trial.require_movement ? true : false;
               submit_btn.innerHTML = trial.button_label;
-              display_element.insertBefore(submit_btn, display_element.nextElementSibling);
+              // display_element.insertBefore(submit_btn, display_element.nextElementSibling); // to remove button
           }
           else {
               html = '<div id="jspsych-image-slider-response-wrapper" style="margin: 100px 0px;">';
@@ -349,7 +349,7 @@ var jsPsychImageSliderResponse = (function (jspsych) {
           };
           if (trial.require_movement) {
               const enable_button = () => {
-                  display_element.querySelector("#jspsych-image-slider-response-next").disabled = false;
+                  // display_element.querySelector("#jspsych-image-slider-response-next").disabled = false; // to remove button
               };
               display_element
                   .querySelector("#jspsych-image-slider-response-response")
@@ -375,7 +375,7 @@ var jsPsychImageSliderResponse = (function (jspsych) {
               this.jsPsych.finishTrial(trialdata);
           };
           display_element
-              .querySelector("#jspsych-image-slider-response-next")
+              .querySelector("#jspsych-image-slider-response-response") //this is the line I changed to make it move forward auto
               .addEventListener("click", () => {
               // measure response time
               var endTime = performance.now();
