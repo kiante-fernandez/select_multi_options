@@ -166,7 +166,7 @@ var instruction_block_1 = {
         '<p>Welcome to the study!</p>' +
         "<p>Today, you will make some decisions about food items. </p>" +
         "<p>Please pay attention to the instructions. For part of the study, your eye movements will be tracked.</p>"+
-        "<p>If you have any questions, please ask the experimenter at this time. If you are ready to begin, please press the enter key.</p>",
+        "<p>If you have any questions, please contact the experimenter at neuroeconomics.osu@gmail.com. If you are ready to begin, please press the SPACEBAR.</p>",
     ],
     key_forward: ' '
 };
@@ -196,7 +196,7 @@ var eyeTrackingInstruction1 = {
                 <br><br/>
                 Validation is basically the same as calibration. You simply need to stare at each dot until it turns disappears.<br/>
                 <br><br/>
-                When you are ready, press the SPACE BAR to continue. </div>`,
+                When you are ready, press the SPACEBAR to continue. </div>`,
   post_trial_gap: 500,
   choices: ' ',
 
@@ -213,7 +213,7 @@ var eyeTrackingInstruction2 = {
                          Try to keep your entire face within the box. When your face is in a good position, the box will turn <b><font color='green'>green</font></b>. <br/>
                          <font size=5px; font color = 'red';> <b>NOTE</b>: the video feed only appears during calibration.</font><br/>
                          <br><br/>
-                         <font size=5px; >When you are ready, press the  <b>SPACE BAR</b> to continue.</font>
+                         <font size=5px; >When you are ready, press the  <b>SPACEBAR</b> to continue.</font>
 
                          </div>`,
   post_trial_gap: 500,
@@ -240,7 +240,7 @@ var eyeTrackingNote = {
             There are only <b>TWO</b> chances to get this right.  <br/>
             Otherwise, the study cannot proceed.  </font><br/>
             <br><br/>
-             <font size=5px; >When you are ready, press the <b>SPACE BAR</b> to bring up the video feed and make these adjustments. </font></div>`,
+             <font size=5px; >When you are ready, press the <b>SPACEBAR</b> to bring up the video feed and make these adjustments. </font></div>`,
   post_trial_gap: 500,
   choices: ' ',
 }
@@ -325,13 +325,13 @@ var practice_instructions = {
   stimulus: `<div><font size=120%; font color = 'green';> Practice</font><br/>
              <br><br/>
              <div style="text-align-last:center">
-            In this part of the study you will be choosing between animals. You will see several animals on the screen.<br/>
-            You have to select all the animals which are mammals.<br/>
-            To select an animal, hover your mouse of that animals picture and click it. Once selected the animal will have a <b><font color='yellow'>Yellow</font></b> outline. <br/>
-             <u><b>Once you select an animal, you cannot deselect it.</b> </u><br/>
-            When you’re finished selecting animals, press the space bar to finalize your selection.
+            In this practice round you will be making choices about animals. You will see several animals on the screen.<br/>
+            Your task is to select all the animals that are mammals.<br/>
+            To select an animal, move your mouse to that animal and click it. A selected animal will have a <b><font color='yellow'>Yellow</font></b> outline. <br/>
+             <u><b>Once you select an animal, you cannot unselect it.</b> </u><br/>
+            When you’re finished selecting animals, press the SPACEBAR to finalize your selection.
             <br><br/>
-             <font size=5px; >When you are ready, press the <b>SPACE BAR</b> to begin</font></div>`,
+             <font size=5px; >When you are ready, press the <b>SPACEBAR</b> to begin</font></div>`,
   post_trial_gap: 500,
   choices: ' ',
 }
@@ -394,12 +394,12 @@ var practice_instructions_2 = {
   stimulus: `<div><font size=120%; font color = 'green';> Practice</font><br/>
              <br><br/>
              <div style="text-align-last:center">
-            In this part of the study you will be choosing between monuments. You will see several monuments on the screen.<br/>
-            Select all the monuments you'd like to vist.<br/>
-             <u><b>Once you select an monument, you cannot deselect it.</b> </u><br/>
-            When you’re finished selecting monuments, press the space bar to finalize your selection.
+            In this practice round you will be making choices about monuments. You will see several monuments on the screen.<br/>
+            Your task is to select all the monuments you would like to vist.<br/>
+             <u><b>Once you select an monument, you cannot unselect it.</b> </u><br/>
+            When you’re finished selecting monuments, press the SPACEBAR to finalize your selection.
             <br><br/>
-             <font size=5px; >When you are ready, press the <b>SPACE BAR</b> to begin</font></div>`,
+             <font size=5px; >When you are ready, press the <b>SPACEBAR</b> to begin</font></div>`,
   post_trial_gap: 500,
   choices: ' ',
 }
@@ -455,31 +455,45 @@ button_html: [
         data.options_selected = matches.length
     }
 };
+// here do we want to include a recalibration?
 
 // Experiment instructions
+var exp_start_instructions = {
+    data: {screen_id: "instructions"},
+    type: jsPsychInstructions,
+    pages: [
+        '<p>We are now done with the practice rounds. The next part of the study involves real decisions.</p>'
+        "<p>If you have any questions, please contact the experimenter at neuroeconomics.osu@gmail.com. If you are ready to begin, please press the SPACEBAR.</p>",
+    ],
+    key_forward: ' '
+};
+
 // here we need to choose one of two frames randomly. Then we need to show the approptirate text.
+//what should the values for the discont be? should it be probabalistics?
 var condition_instructions = [
     //condition 1
-    "<p>You have been selected to buy a box of snacks. Each item costs its normal price.</p>" +
-    "<p>All the items available to buy are in your box.</p>" +
-    "<p>Click on all the items you want to keep in your box.</p>"+
-    "<p><b>Once you select an item, you cannot deselect it.</b></p>"+
-    "<p>You will have a chance to receive each item that you selected.</p>"+
-    "<p>When you’re finished selecting items, press the space bar to finalize your selection.</p>"+
-    "<p>If you are ready to begin, please press the space bar.</p>",
+    "<p>In this part of the study you will be making choices about food items.</p>" +
+    "<p>You have the opportunity to purchase some snack foods. To do so, you have been provided with a bonus payment of $15. </p> " +
+    "<p>Each food is discounted from its normal price by 50% to $1. Any money that you don’t spend on the foods is yours to keep.</p>" +
+    "<p>We have preloaded all the available foods into your cart.</p>" +
+    "<p>Your task is to click on all the foods that you want to keep in your cart.</p>"+
+    "<p><b>Once you select a food, you cannot unselect it.</b></p>"+
+    "<p>When you’re finished selecting foods, press the SPACEBAR to finalize your selection.</p>"+
+    "<p>At the end of the study there is a XX% chance that you will be selected for payment.</p>"+
+    "<p>In that case, you will receive all of the foods that you selected and pay the price of those foods from your bonus payment. You will receive the rest of the bonus payment in cash.</p>"+
+    "<p>If you are ready to begin, please press the SPACEBAR.</p>",
     //condition 2
-    "<p>You have been selected to buy a box of snacks. Each item costs its normal price.</p>" +
-    "<p>All the items available to buy will be shown.</p>" +
-    "<p>Click on all the items you want to add to your box.</p>"+
-    "<p><b>Once you select an item, you cannot deselect it.</b></p>"+
-    "<p>You will have a chance to receive each item that you selected.</p>"+
-    "<p>When you’re finished selecting items, press the space bar to finalize your selection.</p>"+
-    "<p>If you are ready to begin, please press the space bar.</p>"
+    "<p>In this part of the study you will be making choices about food items.</p>" +
+    "<p>You have the opportunity to purchase some snack foods To do so, you have been provided with a bonus payment of $15.</p>"+
+    "<p>Each food is discounted from its normal price by 50% to $1. Any money that you don’t spend on the foods is yours to keep.</p>" +
+    "<p>All the available foods will be displayed on the screen.</p>" +
+    "<p>Your task is to click on all the foods that you want to add to your cart.</p>"+
+    "<p><b>Once you select a food, you cannot unselect it.</b></p>"+
+    "<p>When you’re finished selecting foods, press the SPACEBAR to finalize your selection.</p>"+
+    "<p>At the end of the study there is a XX% chance that you will be selected for payment. </p>"+
+    "<p>In that case, you will receive all of the foods that you selected and pay the price of those foods from your bonus payment. You will receive the rest of the bonus payment in cash.</p>"+
+    "<p>If you are ready to begin, please press the SPACEBAR.</p>"
 ];
-//randomly select a condition
-// function getRandomInt(max) {
-//     return Math.floor(Math.random() * max);
-// };
 
 const condition_choice = getRandomInt(0,1);
 // expected output: 0, 1
@@ -589,7 +603,7 @@ var ratingOverview = {
              If you dislike a food and would not want to eat it, then click DISLIKE. <br/>
              During the task, you need to use your mouse to move the slider to your desired rating. <br/>
                                           <br><br/>
-            When you are ready, press the  <b>SPACE BAR</b> to start.  </div>`,
+            When you are ready, press the  <b>SPACEBAR</b> to start.  </div>`,
   choices: ' ',
   post_trial_gap: 500,
 };
@@ -644,7 +658,7 @@ var debrief = {
 };
 
 var trials_with_variables = {
-    timeline: [practice_instructions, fixation, practice_trial, practice_instructions_2, fixation, practice_trial_2, instruction_block_2, fixation, trial, ratingOverview, ratings],
+    timeline: [practice_instructions, fixation, practice_trial, practice_instructions_2, fixation, practice_trial_2, exp_start_instructions, instruction_block_2, fixation, trial, ratingOverview, ratings],
 };
 
 // timeline

@@ -19,6 +19,8 @@ Things to do:
 ~~- Create the practice trials~~
 ~~- add the get ratings task afterwards (piloting in demo mode now)~~
 
+change the color of the yellow (it's too bright?)
+
 introduction:
 ~~- condition randomization~~
 calibration screen (only one?)
@@ -51,7 +53,7 @@ instructions II
 
 ratings for the options? (still up for discussion)
 
-instructions III
+instructions III (debrief)
 - thank you
 - generate the reward
     - randomly sample number, if X then we send you the snacks
