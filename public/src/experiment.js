@@ -462,7 +462,7 @@ var exp_start_instructions = {
     data: {screen_id: "instructions"},
     type: jsPsychInstructions,
     pages: [
-        '<p>We are now done with the practice rounds. The next part of the study involves real decisions.</p>'
+        '<p>We are now done with the practice rounds. The next part of the study involves real decisions.</p>'+
         "<p>If you have any questions, please contact the experimenter at neuroeconomics.osu@gmail.com. If you are ready to begin, please press the SPACEBAR.</p>",
     ],
     key_forward: ' '
