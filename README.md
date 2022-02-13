@@ -69,12 +69,12 @@ after the 1st practice trial they got stuck. Check to make sure the exp goes for
 
 on an eye tracking study page it talks about a dot and no dot exisits... fix that in instructions
 
-the yellow text is hard to read, maybe try orange, this would also mean changing the box color the come around the items
+~~the yellow text is hard to read, maybe try orange, this would also mean changing the box color the come around the items~~
 
 the browser full screen and ask for permission to use the camera place. make sure that the order never makes an error come up for some folks (.i.e. swap the current order)
 
-highlight the amount of money people get and BOLD it too
+~~highlight the amount of money people get and BOLD it too~~
 
-when talking about foods say: snack foods or snacks!
+~~when talking about foods say: snack foods or snacks!~~
 
 ~~make sure the software can detect the size of the screen people are using and record that. Are things on the screen changing dynamically with the size, or staying constant?~~

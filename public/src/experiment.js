@@ -166,7 +166,7 @@ var instruction_block_1 = {
     type: jsPsychInstructions,
     pages: [
         '<p>Welcome to the study!</p>' +
-        "<p>Today, you will make some decisions about food items. </p>" +
+        "<p>Today, you will make some decisions about snack food items. </p>" +
         "<p>Please pay attention to the instructions. For part of the study, your eye movements will be tracked.</p>"+
         "<p>If you have any questions, please contact the experimenter at neuroeconomics.osu@gmail.com. If you are ready to begin, please press the SPACEBAR.</p>",
     ],
@@ -329,7 +329,7 @@ var practice_instructions = {
              <div style="text-align-last:center">
             In this practice round you will be making choices about animals. You will see several animals on the screen.<br/>
             Your task is to select all the animals that are mammals.<br/>
-            To select an animal, move your mouse to that animal and click it. A selected animal will have a <b><font color='yellow'>Yellow</font></b> outline. <br/>
+            To select an animal, move your mouse to that animal and click it. A selected animal will have a <b><font color=#FF7F00>Orange</font></b> outline. <br/>
              <u><b>Once you select an animal, you cannot unselect it.</b> </u><br/>
             When you’re finished selecting animals, press the SPACEBAR to finalize your selection.
             <br><br/>
@@ -474,26 +474,26 @@ var exp_start_instructions = {
 //what should the values for the discont be? should it be probabalistics?
 var condition_instructions = [
     //condition 1
-    "<p>In this part of the study you will be making choices about food items.</p>" +
-    "<p>You have the opportunity to purchase some snack foods. To do so, you have been provided with a bonus payment of $15. </p> " +
-    "<p>Each food is discounted from its normal price by 50% to $1. Any money that you don’t spend on the foods is yours to keep.</p>" +
-    "<p>We have preloaded all the available foods into your cart.</p>" +
-    "<p>Your task is to click on all the foods that you want to keep in your cart.</p>"+
-    "<p><b>Once you select a food, you cannot unselect it.</b></p>"+
-    "<p>When you’re finished selecting foods, press the SPACEBAR to finalize your selection.</p>"+
+    "<p>In this part of the study you will be making choices about snack food items.</p>" +
+    "<p>You have the opportunity to purchase some snack foods. To do so, you have been provided with a bonus payment of <u><b>$15.</b></u> </p> " +
+    "<p>Each snack is discounted from its normal price by 50% to $1. Any money that you don’t spend on the snacks is yours to keep.</p>" +
+    "<p>We have preloaded all the available snack foods into your cart.</p>" +
+    "<p>Your task is to click on all the snacks that you want to keep in your cart.</p>"+
+    "<p><b>Once you select a snack, you cannot unselect it.</b></p>"+
+    "<p>When you’re finished selecting snacks, press the SPACEBAR to finalize your selection.</p>"+
     "<p>At the end of the study there is a XX% chance that you will be selected for payment.</p>"+
-    "<p>In that case, you will receive all of the foods that you selected and pay the price of those foods from your bonus payment. You will receive the rest of the bonus payment in cash.</p>"+
+    "<p>In that case, you will receive all of the snacks that you selected and pay the price of those snacks from your bonus payment. You will receive the rest of the bonus payment in cash.</p>"+
     "<p>If you are ready to begin, please press the SPACEBAR.</p>",
     //condition 2
-    "<p>In this part of the study you will be making choices about food items.</p>" +
-    "<p>You have the opportunity to purchase some snack foods To do so, you have been provided with a bonus payment of $15.</p>"+
-    "<p>Each food is discounted from its normal price by 50% to $1. Any money that you don’t spend on the foods is yours to keep.</p>" +
-    "<p>All the available foods will be displayed on the screen.</p>" +
-    "<p>Your task is to click on all the foods that you want to add to your cart.</p>"+
-    "<p><b>Once you select a food, you cannot unselect it.</b></p>"+
-    "<p>When you’re finished selecting foods, press the SPACEBAR to finalize your selection.</p>"+
+    "<p>In this part of the study you will be making choices about snack food items.</p>" +
+    "<p>You have the opportunity to purchase some snack foods To do so, you have been provided with a bonus payment of <u><b>$15.</b></u></p>"+
+    "<p>Each snack is discounted from its normal price by 50% to $1. Any money that you don’t spend on the snacks is yours to keep.</p>" +
+    "<p>All the available snack foods will be displayed on the screen.</p>" +
+    "<p>Your task is to click on all the snacks that you want to add to your cart.</p>"+
+    "<p><b>Once you select a snack, you cannot unselect it.</b></p>"+
+    "<p>When you’re finished selecting snacks, press the SPACEBAR to finalize your selection.</p>"+
     "<p>At the end of the study there is a XX% chance that you will be selected for payment. </p>"+
-    "<p>In that case, you will receive all of the foods that you selected and pay the price of those foods from your bonus payment. You will receive the rest of the bonus payment in cash.</p>"+
+    "<p>In that case, you will receive all of the snacks that you selected and pay the price of those snacks from your bonus payment. You will receive the rest of the bonus payment in cash.</p>"+
     "<p>If you are ready to begin, please press the SPACEBAR.</p>"
 ];
 

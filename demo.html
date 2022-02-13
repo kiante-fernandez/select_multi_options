@@ -43,7 +43,7 @@
     }
     .active {
         border: 4px
-        solid #FFFF00;
+        solid #FF7F00;     /* changed to orange */
         background: #eeeeee;
         pointer-events: none;
     }
@@ -348,7 +348,7 @@ var practice_instructions = {
              <div style="text-align-last:center">
             In this part of the study you will be choosing between animals. You will see several animals on the screen.<br/>
             You have to select all the animals which are mammals.<br/>
-            To select an animal, hover your mouse of that animals picture and click it. Once selected the animal will have a <b><font color='yellow'>Yellow</font></b> outline. <br/>
+            To select an animal, hover your mouse of that animals picture and click it. Once selected the animal will have a <b><font color=#FF7F00>Orange</font></b> outline. <br/>
              <u><b>Once you select an animal, you cannot deselect it.</b> </u><br/>
             When you’re finished selecting animals, press the space bar to finalize your selection.
             <br><br/>
@@ -641,7 +641,7 @@ function closeFullscreen() {
 var timeline = []
 // timeline.push(fullscreenEnter); //start the fullscreen
 timeline.push(preload);
-timeline.push(welcome_block);
+// timeline.push(welcome_block);
 
 // timeline.push(eyeTrackingInstruction1);
 // timeline.push(eyeTrackingInstruction2);
@@ -655,9 +655,9 @@ timeline.push(welcome_block);
 // timeline.push(validation);
 // timeline.push(recalibrate);
 // timeline.push(calibration_done);
-timeline.push(ratings);
+// timeline.push(ratings);
 
-// timeline.push(trials_with_variables);
+timeline.push(trials_with_variables);
 // timeline.push(fullscreenEnd); //end the fullscreen
 
 //Start Experiment
