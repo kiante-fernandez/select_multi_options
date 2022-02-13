@@ -38,7 +38,7 @@ const DATE = YYYY + MM + DD;
 
 
 //Creating list of image paths to load for instructions.
-const nImageInst = 2;
+const nImageInst = 5;
 /** load all the instruction images, and remember to preload */
 var instruct_img = [];
 for (var i = 0; i < nImageInst; i++) {
@@ -192,7 +192,7 @@ var eyeTrackingInstruction1 = {
 
                 There are two parts to this process. The first part is calibration and the second part is validation.<br/>
                 <br><br/>
-                During calibration, you will see a series of dots like this <span id="calibration_dot_instruction"></span> appear on the screen, each for 3 seconds.<br/>
+                During calibration, you will see a series of dots like this: <img height="25px" width="30px" src="${instruct_img[4]}"> appear on the screen, each for 3 seconds.<br/>
                 Your task is simply to stare directly at each dot until it disappears.<br/>
                 Then, quickly move your eyes to the next dot and repeat.<br/>
                 <br><br/>
