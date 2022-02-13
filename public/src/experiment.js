@@ -153,7 +153,9 @@ var welcome_block = {
             subject_email: responses.subject_email,
             ID_DATE: responses.subject_id + "_" + DATE,
             browser_name: bowser.name,
-            browser_type: bowser.version
+            browser_type: bowser.version,
+            windowWidth: window.screen.width,
+            windowHight: window.screen.height
         })
     }
 };
