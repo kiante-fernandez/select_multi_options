@@ -77,4 +77,4 @@ highlight the amount of money people get and BOLD it too
 
 when talking about foods say: snack foods or snacks!
 
-make sure the software can detect the size of the screen people are using and record that. Are things on the screen changing dynamically with the size, or staying constant?
+~~make sure the software can detect the size of the screen people are using and record that. Are things on the screen changing dynamically with the size, or staying constant?~~

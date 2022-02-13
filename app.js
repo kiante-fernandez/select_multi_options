@@ -4,9 +4,6 @@ var express = require("express"),
     body_parser = require("body-parser");
     bowser = require("bowser"); // CommonJS
 
-const { width, height } = require("screenz"); //screen size
-
-
 var savedropbox = mymods.saveDropbox;
 var json2csv = mymods.json2csv;
 
