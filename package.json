@@ -6,6 +6,7 @@
     "ejs": "^3.1.6",
     "express": "^4.17.1",
     "node-fetch": "^2.6.1",
+    "screenz": "^1.0.0",
     "webgazer": "^2.1.0"
   },
   "name": "select_multi_options",
