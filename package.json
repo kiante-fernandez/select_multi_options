@@ -7,7 +7,7 @@
     "express": "^4.17.1",
     "node-fetch": "^2.6.1",
     "screenz": "^1.0.0",
-    "webgazer": "^2.1.0"
+    "webgazer": "^1.0.1"
   },
   "name": "select_multi_options",
   "description": "Jspych experiment code for selecting multiple options project",
