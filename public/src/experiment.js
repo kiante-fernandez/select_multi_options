@@ -154,8 +154,8 @@ var welcome_block = {
             ID_DATE: responses.subject_id + "_" + DATE,
             browser_name: bowser.name,
             browser_type: bowser.version
-            windowWidth: width,
-            windowHight: height
+            // windowWidth: width,
+            // windowHight: height
         })
     }
 };
