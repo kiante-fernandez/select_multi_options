@@ -266,7 +266,8 @@ var calibration = {
     ],
     repetitions_per_point: 2,
     randomize_calibration_order: true,
-    calibration_mode: "view" //if view they look at points, if click they have to click on them
+    calibration_mode: "view", //if view they look at points, if click they have to click on them
+    time_per_point: 3000
 }
 // validation eye tracking
 var validation_instructions = {
