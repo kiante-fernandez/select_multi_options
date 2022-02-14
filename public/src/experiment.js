@@ -237,7 +237,7 @@ var eyeTrackingNote = {
             (3). After you have made these adjustments, check again that your face fits nicely within the box on the video feed and that the box is green. <br/></div>
              <br><br/>
              <font size=5px; font color = 'red';> <b>NOTE</b>:  <br/>
-            If you are back on this page, it means the calibration and validation did not work as well as we would like.  <br/>
+            If you are seeing this page for a 2nd time, it means the calibration and validation did not work as well as we would like.  <br/>
             Please read the tips above again, make any adjustments, and try again.  <br/>
             There are only <b>TWO</b> chances to get this right.  <br/>
             Otherwise, the study cannot proceed.  </font><br/>

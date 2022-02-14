@@ -3,7 +3,6 @@ Jspych experiment code for selecting multiple options project
 
 Things to do:
 ~~- how do we mark which the type of item each option selected is? We need a data id that tells us which jpg was selected~~
-- do we add the mouse tracking still since we know when an option is selected?
 ~~- eye tracking calibration phase (see web gazer extension)~~
 ~~- how do we prevent subjects from deselecting options~~
 ~~- how are we saving the data? Dropbox.~~
@@ -13,13 +12,13 @@ Things to do:
 ~~- add constent form~~
 ~~- data 'object issue' (why do we get the words object back instead of the data?)~~
 ~~- get browser data~~
-- get screen data
+~~- get screen data~~
 - did subjects leave the screen? Get interaction data
 - change eye tracking instructions to match the labs protocol
 ~~- Create the practice trials~~
 ~~- add the get ratings task afterwards (piloting in demo mode now)~~
 
-change the color of the yellow (it's too bright?)
+~~change the color of the yellow (it's too bright?)~~
 
 introduction:
 ~~- condition randomization~~
@@ -48,10 +47,10 @@ choice trial:
 
 instructions II
 - attention check? Write in box (Please name one of the items you saw: )
-- thank subjects /tell them about rating task?
+~~- thank subjects /tell them about rating task?~~
 
 
-ratings for the options? (still up for discussion)
+~~ratings for the options? (still up for discussion)~~
 
 instructions III (debrief)
 - thank you
@@ -67,7 +66,7 @@ Uma notes:
 
 after the 1st practice trial they got stuck. Check to make sure the exp goes forward
 
-on an eye tracking study page it talks about a dot and no dot exisits... fix that in instructions
+~~on an eye tracking study page it talks about a dot and no dot exisits... fix that in instructions~~
 
 ~~the yellow text is hard to read, maybe try orange, this would also mean changing the box color the come around the items~~
 
