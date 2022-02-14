@@ -682,7 +682,6 @@ timeline.push(validation_instructions);
 timeline.push(validation);
 timeline.push(recalibrate);
 timeline.push(calibration_done);
-timeline.push(instruction_block_2);
 timeline.push(trials_with_variables);
 timeline.push(debrief);
 
