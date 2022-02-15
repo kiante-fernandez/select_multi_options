@@ -482,7 +482,7 @@ var condition_instructions = [
     "<p>Your task is to click on all the snacks that you want to keep in your cart.</p>"+
     "<p><b>Once you select a snack, you cannot unselect it.</b></p>"+
     "<p>When you’re finished selecting snacks, press the SPACEBAR to finalize your selection.</p>"+
-    "<p>At the end of the study there is a XX% chance that you will be selected for payment.</p>"+
+    "<p>At the end of the study there is a 20% chance that you will be selected for payment.</p>"+
     "<p>In that case, you will receive all of the snacks that you selected and pay the price of those snacks from your bonus payment. You will receive the rest of the bonus payment in cash.</p>"+
     "<p>If you are ready to begin, please press the SPACEBAR.</p>",
     //condition 2
@@ -493,7 +493,7 @@ var condition_instructions = [
     "<p>Your task is to click on all the snacks that you want to add to your cart.</p>"+
     "<p><b>Once you select a snack, you cannot unselect it.</b></p>"+
     "<p>When you’re finished selecting snacks, press the SPACEBAR to finalize your selection.</p>"+
-    "<p>At the end of the study there is a XX% chance that you will be selected for payment. </p>"+
+    "<p>At the end of the study there is a 20% chance that you will be selected for payment. </p>"+
     "<p>In that case, you will receive all of the snacks that you selected and pay the price of those snacks from your bonus payment. You will receive the rest of the bonus payment in cash.</p>"+
     "<p>If you are ready to begin, please press the SPACEBAR.</p>"
 ];
