@@ -621,6 +621,20 @@ var fullscreenEnd = {
   delay_after: 0
 }
 
+// Debrief
+//we need to randomly select if this subject actully gets the foods or not
+var debrief = {
+    data: {
+        screen_id: "debrief"
+    },
+    type: jsPsychInstructions,
+    pages: [
+        "<p><b><font size=100%; font color = 'green';>We have completed our experiment. </font></b></p>" +
+        "<p><b><font size=120%; font color = 'red';>To log your responses, please press next.</font></b></p>"
+    ],
+    show_clickable_nav: true,
+};
+
 /* Close fullscreen */
 function closeFullscreen() {
   if (document.exitFullscreen) {
@@ -643,8 +657,8 @@ var timeline = []
 timeline.push(preload);
 // timeline.push(welcome_block);
 
-timeline.push(eyeTrackingInstruction1);
-timeline.push(eyeTrackingInstruction2);
+// timeline.push(eyeTrackingInstruction1);
+// timeline.push(eyeTrackingInstruction2);
 // timeline.push(eyeTrackingNote);
 
 // timeline.push(camera_instructions);
@@ -657,8 +671,10 @@ timeline.push(eyeTrackingInstruction2);
 // timeline.push(calibration_done);
 // timeline.push(ratings);
 
-timeline.push(trials_with_variables);
+// timeline.push(trials_with_variables);
 // timeline.push(fullscreenEnd); //end the fullscreen
+timeline.push(debrief);
+
 
 //Start Experiment
 jsPsych.run(timeline);

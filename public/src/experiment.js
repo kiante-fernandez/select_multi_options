@@ -654,8 +654,8 @@ var debrief = {
     },
     type: jsPsychInstructions,
     pages: [
-        "<p>We have completed our experiment. </p>" +
-        "<p>Please press next.</p>"
+        "<p><b><font size=100%; font color = 'green';>We have completed our experiment. </font></b></p>" +
+        "<p><b><font size=120%; font color = 'red';>To log your responses, please press next.</font></b></p>"
     ],
     show_clickable_nav: true,
 };
