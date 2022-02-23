@@ -648,18 +648,24 @@ var ratings = {
 
 // Debrief
 //we need to randomly select if this subject actully gets the foods or not
+// var debrief = {
+//     data: {
+//         screen_id: "debrief"
+//     },
+//     type: jsPsychInstructions,
+//     pages: [
+//         "<p><b><font size=100%; font color = 'green';>We have completed our experiment. </font></b></p>" +
+//         "<p><b><font size=120%; font color = 'red';>To log your responses, please press next.</font></b></p>"
+//     ],
+//     show_clickable_nav: true,
+// };
 var debrief = {
-    data: {
-        screen_id: "debrief"
-    },
-    type: jsPsychInstructions,
-    pages: [
-        "<p><b><font size=100%; font color = 'green';>We have completed our experiment. </font></b></p>" +
-        "<p><b><font size=120%; font color = 'red';>To log your responses, please press next.</font></b></p>"
-    ],
-    show_clickable_nav: true,
+  type: jsPsychHtmlKeyboardResponse,
+  on_start:   () => document.body.style.cursor = 'pointer',
+  stimulus: `<div> <b><font size=100%; font color = 'green';>We have completed our experiment.</font></b><br/>
+  <br><br/><b><font size=100%; font color = 'green';>Thank you for participating.</font></div>`,
+  trial_duration: 500,
 };
-
 var trials_with_variables = {
     timeline: [practice_instructions, fixation, practice_trial, practice_instructions_2, fixation, practice_trial_2, exp_start_instructions, instruction_block_2, fixation, trial, ratingOverview, ratings],
 };
@@ -671,18 +677,18 @@ timeline.push(informed_consent);
 timeline.push(fullscreenEnter); //start the fullscreen
 timeline.push(preload);
 timeline.push(welcome_block);
-timeline.push(instruction_block_1);
-timeline.push(eyeTrackingInstruction1);
-timeline.push(eyeTrackingInstruction2);
-timeline.push(eyeTrackingNote);
-timeline.push(camera_instructions);
-timeline.push(init_camera);
-timeline.push(calibration_instructions);
-timeline.push(calibration);
-timeline.push(validation_instructions);
-timeline.push(validation);
-timeline.push(recalibrate);
-timeline.push(calibration_done);
+// timeline.push(instruction_block_1);
+// timeline.push(eyeTrackingInstruction1);
+// timeline.push(eyeTrackingInstruction2);
+// timeline.push(eyeTrackingNote);
+// timeline.push(camera_instructions);
+// timeline.push(init_camera);
+// timeline.push(calibration_instructions);
+// timeline.push(calibration);
+// timeline.push(validation_instructions);
+// timeline.push(validation);
+// timeline.push(recalibrate);
+// timeline.push(calibration_done);
 timeline.push(trials_with_variables);
 timeline.push(debrief);
 
