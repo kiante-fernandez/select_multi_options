@@ -598,7 +598,7 @@ var ratings = {
   // prompt: '<p>Willingness to donate.</p>',
   slider_width: 900,
   response_ends_trial: true,
-  button_label: [],
+  button_label: [`continue`],
   on_finish: (data) => {
     if (data.rating > 0) {
       rating_choice_images.push(data.stimulus);
@@ -676,7 +676,7 @@ timeline.push(preload);
 // timeline.push(validation);
 // timeline.push(recalibrate);
 // timeline.push(calibration_done);
-// timeline.push(ratings);
+timeline.push(ratings);
 
 // timeline.push(trials_with_variables);
 // timeline.push(fullscreenEnd); //end the fullscreen

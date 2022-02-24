@@ -332,6 +332,7 @@ var practice_instructions = {
             Your task is to select all the animals that are mammals.<br/>
             To select an animal, move your mouse to that animal and click it. A selected animal will have a <b><font color=#FF7F00>Orange</font></b> outline. <br/>
              <u><b>Once you select an animal, you cannot unselect it.</b> </u><br/>
+             Select at least one animal.<br><br/>
             When you’re finished selecting animals, press the SPACEBAR to finalize your selection.
             <br><br/>
              <font size=5px; >When you are ready, press the <b>SPACEBAR</b> to begin</font></div>`,
@@ -400,6 +401,7 @@ var practice_instructions_2 = {
             In this practice round you will be making choices about monuments. You will see several monuments on the screen.<br/>
             Your task is to select all the monuments you would like to vist.<br/>
              <u><b>Once you select an monument, you cannot unselect it.</b> </u><br/>
+             Select at least one monument.<br><br/>
             When you’re finished selecting monuments, press the SPACEBAR to finalize your selection.
             <br><br/>
              <font size=5px; >When you are ready, press the <b>SPACEBAR</b> to begin</font></div>`,
@@ -600,12 +602,10 @@ var ratingOverview = {
                                        <br><br/>
              Now, you will make decisions about each snack food one by one. <br/>
              For each snack food, please rate it on a scale from 0 to 10 based on how much you would like to eat this food right now.<br/>
-             A 0 means that you would neither like nor dislike to eat this food.  <br/>
+             A 1 means that you would neither like nor dislike to eat this food.  <br/>
              When choosing whether to eat this food or not, you would be willing to flip a coin.   <br/>
              A 10 means that you would really love to eat this food. <br/>
-             If you dislike a food and would not want to eat it, then click DISLIKE. <br/>
-             During the task, you need to use your mouse to move the slider to your desired rating. <br/>
-                                          <br><br/>
+             If you dislike a food and would not want to eat it, then click 0. <br/>                                          <br><br/>
             When you are ready, press the  <b>SPACEBAR</b> to start.  </div>`,
   choices: ' ',
   post_trial_gap: 500,
