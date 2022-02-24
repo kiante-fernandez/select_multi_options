@@ -635,7 +635,7 @@ var ratings = {
   require_movement: true,
   slider_width: 900,
   response_ends_trial: true,
-  button_label: [],
+  button_label: [`continue`],
   on_finish: (data) => {
     if (data.rating > 0) {
       rating_choice_images.push(data.stimulus);
