@@ -77,3 +77,12 @@ the browser full screen and ask for permission to use the camera place. make sur
 ~~when talking about foods say: snack foods or snacks!~~
 
 ~~make sure the software can detect the size of the screen people are using and record that. Are things on the screen changing dynamically with the size, or staying constant?~~
+
+
+notes from pilot experiment
+
+the screen resolution is different for each device.
+This changes the array oreientation of the items
+
+
+~~you need to fix so that people can select nothing and it wont break~~

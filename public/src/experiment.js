@@ -389,6 +389,7 @@ button_html: [
         //count how many objects in the res_buttons arrary.
         //Its a string, so extract the numbers then count
         matches = data.res_buttons.match(/\d+/g);
+        if (matches == null){matches = 0};
         data.options_selected = matches.length
     }
 };
@@ -457,6 +458,7 @@ button_html: [
         //count how many objects in the res_buttons arrary.
         //Its a string, so extract the numbers then count
         matches = data.res_buttons.match(/\d+/g);
+        if (matches == null){matches = 0};
         data.options_selected = matches.length
     }
 };
@@ -568,6 +570,7 @@ button_html: [
         //count how many objects in the res_buttons arrary.
         //Its a string, so extract the numbers then count
         matches = data.res_buttons.match(/\d+/g);
+        if (matches == null){matches = 0};
         data.options_selected = matches.length
     },
     extensions: [

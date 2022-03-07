@@ -406,6 +406,7 @@ button_html: [
         //count how many objects in the res_buttons arrary.
         //Its a string, so extract the numbers then count
         matches = data.res_buttons.match(/\d+/g);
+        if (matches == null){matches = 0};
         data.options_selected = matches.length
     }
 };
@@ -473,6 +474,7 @@ button_html: [
         //count how many objects in the res_buttons arrary.
         //Its a string, so extract the numbers then count
         matches = data.res_buttons.match(/\d+/g);
+        if (matches == null){matches = 0};
         data.options_selected = matches.length
     }
 };
@@ -527,6 +529,7 @@ button_html: [
         //count how many objects in the res_buttons arrary.
         //Its a string, so extract the numbers then count
         matches = data.res_buttons.match(/\d+/g);
+        if (matches == null){matches = 0};
         data.options_selected = matches.length
     },
     extensions: [
@@ -676,9 +679,11 @@ timeline.push(preload);
 // timeline.push(validation);
 // timeline.push(recalibrate);
 // timeline.push(calibration_done);
-timeline.push(ratings);
+// timeline.push(ratings);
 
-// timeline.push(trials_with_variables);
+timeline.push(trials_with_variables);
+timeline.push(trial);
+
 // timeline.push(fullscreenEnd); //end the fullscreen
 timeline.push(debrief);
 
