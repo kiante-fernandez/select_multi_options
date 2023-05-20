@@ -22,6 +22,7 @@ var jsPsychMutipleButtonResponse = (function (jspsych) {
              type: jspsych.ParameterType.KEYS,
              pretty_name: "keys",
              default: "ALL_KEYS",
+             array: true,
          },
           /** The HTML for creating button. Can create own style. Use the "%choice%" string to indicate where the label from the choices parameter should be inserted. */
           button_html: {
@@ -66,7 +67,13 @@ var jsPsychMutipleButtonResponse = (function (jspsych) {
               pretty_name: "Response ends trial",
               default: true,
           },
-      },
+        /** The number of unique key presses required to end the trial. */
+        num_required_responses: {
+        type: jspsych.ParameterType.INT,
+        pretty_name: "Number of required responses",
+        default: 1,
+      }
+    }
   };
   /**
    * **select_multi_options**
@@ -86,6 +93,8 @@ var jsPsychMutipleButtonResponse = (function (jspsych) {
         var html = '<div id="jspsych-multiple-select-response-stimulus">' + trial.stimulus + "</div>";
         //display buttons
         var buttons = [];
+        var choice_keys = trial.keys;
+
         if (Array.isArray(trial.button_html)) {
             if (trial.button_html.length == trial.choices.length) {
                 buttons = trial.button_html;
@@ -108,9 +117,9 @@ var jsPsychMutipleButtonResponse = (function (jspsych) {
                     " " +
                     trial.margin_horizontal +
                     '" id="jspsych-multiple-select-response-button-' +
-                    i +
+                    choice_keys[i] +
                     '" data-choice="' +
-                    i +
+                    choice_keys[i] +
                     '">' +
                     str +
                     "</div>";
@@ -121,85 +130,81 @@ var jsPsychMutipleButtonResponse = (function (jspsych) {
             html += trial.prompt;
         }
         display_element.innerHTML = html;
-        // start time
-        var start_time = performance.now();
-
-        // add event listeners to buttons
-        for (var i = 0; i < trial.choices.length; i++) {
-            display_element
-                .querySelector("#jspsych-multiple-select-response-button-" + i)
-                .addEventListener("click", (e) => {
-                var btn_el = e.currentTarget;
-                $(e.currentTarget).toggleClass('active');
-                var choice = btn_el.getAttribute("data-choice"); // don't use dataset for jsdom compatibility
-                after_response(choice);
-            });
-        }
 
         // store response
         var response = {
-            rt: null,
-            key: null,
+            key: [],
         };
         var rt = [];
         var res_buttons = [];
-        // function to end trial when it is time
-        const end_trial = () => {
-            // kill any remaining setTimeout handlers
-            this.jsPsych.pluginAPI.clearAllTimeouts();
-            // kill keyboard listeners
-            if (typeof keyboardListener !== "undefined") {
-                this.jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
-            }
-            // gather the data to store for the trial
-            var trial_data = {
-                stimulus: trial.stimulus,
-                button: response.button,
-                response: response.key,
-            };
-            trial_data.rt = JSON.stringify(rt);
-            trial_data.res_buttons = JSON.stringify(res_buttons);
+        var counter = 0;
 
-            // clear the display
-            display_element.innerHTML = "";
-            // move on to the next trial
-            this.jsPsych.finishTrial(trial_data);
-        };
+        // start time
+        var start_time = performance.now();
+
         // function to handle responses by the subject
-        function after_response(choice) {
-            // measure rt
-            var end_time = performance.now();
-            var rt_button = Math.round(end_time - start_time);
-            res_buttons.push(parseInt(choice));
-            rt.push(rt_button);
+        function after_response(info) {
+            // only record the key if it's not already been pressed. 
+            //Check if key has already been pressed by comparing to the response.key array
+            if (response.key.indexOf(info.key) == -1) {
+                var btn_el = display_element.querySelector("#jspsych-multiple-select-response-button-" + info.key);
+                $(btn_el).toggleClass("active");
+                var choice = btn_el.getAttribute("data-choice"); // don't use dataset for jsdom compatibility
+                // measure rt
+                var end_time = performance.now();
+                var rt_button = Math.round(end_time - start_time);
+                res_buttons.push(choice_keys.indexOf(choice));
+                rt.push(rt_button);
+                response.key.push(info.key);
             // after a valid response, the stimulus will have the CSS class 'responded'
             // which can be used to provide visual feedback that a response was recorded
-            display_element.querySelector("#jspsych-multiple-select-response-stimulus").className +=
-                " responded";
+                display_element.querySelector("#jspsych-multiple-select-response-stimulus").className += " responded";
+                ending_the_trial(info);
+            }
         }
         // function to end the trial
         function ending_the_trial(info){
-            display_element.querySelector("#jspsych-multiple-select-response-stimulus").className +=
-                " responded";
-            // only record the first response
-            if (response.key == null) {
-                    response.key = info;
-                }
-            if (trial.response_ends_trial) {
-                end_trial();
+            counter++;  
+            if (counter >= trial.num_required_responses) {
+                // wait for 100 ms before running the end trial function (this is so that the user can see the last button press)
+                setTimeout(function () {
+                    end_trial();
+                  },50)
+                }        
             }
-        }
 
         // start the response listener
         if (trial.keys != "NO_KEYS") {
             var keyboardListener = this.jsPsych.pluginAPI.getKeyboardResponse({
-                callback_function: ending_the_trial,
+                callback_function: after_response,
                 valid_responses: trial.keys,
                 rt_method: "performance",
-                persist: false,
+                persist: true,
                 allow_held_key: false,
             });
         }
+        // function to end trial when it is time
+        const end_trial = () => {
+                    // kill any remaining setTimeout handlers
+                    this.jsPsych.pluginAPI.clearAllTimeouts();
+                    // kill keyboard listeners
+                    if (typeof keyboardListener !== "undefined") {
+                        this.jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
+                    }
+                    // gather the data to store for the trial
+                    var trial_data = {
+                        stimulus: trial.choices,
+                        rt: JSON.stringify(rt),
+                        key_press: JSON.stringify(response.key),
+                        res_buttons: JSON.stringify(res_buttons)
+                    };
+                        
+                    // clear the display
+                    display_element.innerHTML = "";
+                    // move on to the next trial
+                    this.jsPsych.finishTrial(trial_data);
+                };
+
         // hide image if timing is set
         if (trial.stimulus_duration !== null) {
             this.jsPsych.pluginAPI.setTimeout(() => {

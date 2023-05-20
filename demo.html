@@ -36,7 +36,7 @@
         float: center;
         border: 4px
         solid #FFFFFF;
-        cursor: pointer;
+        cursor: none;
         width: 130px;
         padding: 1px;
         margin-bottom: 10px;
@@ -219,7 +219,8 @@ var calibration = {
      [25,25],[75,25],[50,50],[25,75],[75,75]
    ],
    repetitions_per_point: 2,
-   randomize_calibration_order: true
+   randomize_calibration_order: true,
+   calibration_mode: "view"
  }
  // validation eye tracking
  var validation_instructions = {
@@ -327,11 +328,46 @@ const preload = {
 const shuffled_image_names = jsPsych.randomization.shuffle(image_paths);
 const trial_options = shuffled_image_names.slice(0, 15);
 
+// Number of sets to generate
+var numSets = 100;
+// Number of images per set
+var numImagesPerSet = 4;
+// Array to store the selected sets
+var selectedSets = [];
+// Create a counter object to track the usage of each image path
+var imagePathCounter = {};
+// Generate the sets
+for (var i = 0; i < numSets; i++) {
+  var selectedImages = [];
+  var uniquePaths = []; // Array to store unique image paths for each set
+  var numAttempts = 0;
+  while (uniquePaths.length < numImagesPerSet && numAttempts < image_paths.length) {
+    // Randomly select an image path from the imagePaths array
+    var imagePath = jsPsych.randomization.sampleWithoutReplacement(image_paths, 1)[0];
+    // Check if the selected image path is already in the set or has been used four times
+    if (
+      uniquePaths.indexOf(imagePath) === -1 &&
+      (!imagePathCounter[imagePath] || imagePathCounter[imagePath] < 4)
+    ) {
+      uniquePaths.push(imagePath);
+      selectedImages.push(imagePath);
+      // Increment the counter for the used image path
+      imagePathCounter[imagePath] = (imagePathCounter[imagePath] || 0) + 1;
+    }
+    numAttempts++;
+  }
+  if (selectedImages.length === numImagesPerSet) {
+    selectedSets.push(selectedImages);
+  }
+}
+
+
+
 var factors = {
-    image: shuffled_image_names,
+    options: selectedSets
 };
 
-var factorial_values = jsPsych.randomization.factorial(factors);
+var factorial_values = jsPsych.randomization.factorial(factors, 1);
 
 var fixation = {
     data: {screen_id: "fixation"},
@@ -339,222 +375,6 @@ var fixation = {
     stimulus: "<div style='font-size: 60px'>+</div>",
     trial_duration: [500],
     response_ends_trial: false
-};
-//practice instructions
-var practice_instructions = {
-  type: jsPsychHtmlKeyboardResponse,
-  stimulus: `<div><font size=120%; font color = 'green';> Practice</font><br/>
-             <br><br/>
-             <div style="text-align-last:center">
-            In this part of the study you will be choosing between animals. You will see several animals on the screen.<br/>
-            You have to select all the animals which are mammals.<br/>
-            To select an animal, hover your mouse of that animals picture and click it. Once selected the animal will have a <b><font color=#FF7F00>Orange</font></b> outline. <br/>
-             <u><b>Once you select an animal, you cannot deselect it.</b> </u><br/>
-            When you’re finished selecting animals, press the space bar to finalize your selection.
-            <br><br/>
-             <font size=5px; >When you are ready, press the <b>SPACE BAR</b> to begin</font></div>`,
-  post_trial_gap: 500,
-  choices: ' ',
-}
-//practice trial
-var practice_trial = {
-    data: {
-        screen_id: "practice_trial",
-        options: trial_options
-    },
-    type: jsPsychMutipleButtonResponse,
-    stimulus: [],
-    prompt: ['<b>select all the animals which are mammals</b>'],
-    choices: [image_paths_practice[0],
-    image_paths_practice[1],
-    image_paths_practice[2],
-    image_paths_practice[3],
-    image_paths_practice[4],
-    image_paths_practice[5],
-    image_paths_practice[6],
-    image_paths_practice[7],
-    image_paths_practice[8],
-    image_paths_practice[9],
-    image_paths_practice[10],
-    image_paths_practice[11],
-    image_paths_practice[12],
-    image_paths_practice[13],
-    image_paths_practice[14]
-],
-button_html: [
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-0">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-1">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-2">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-3">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-4">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-5">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-6">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-7">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-8">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-9">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-10">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-11">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-12">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-13">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-14">'                    ],
-    response_ends_trial: true,
-    keys: ' ',
-    margin_vertical: "40px",
-    margin_horizontal: "50px",
-    on_finish: function(data) {
-        //count how many options where selected
-        //count how many objects in the res_buttons arrary.
-        //Its a string, so extract the numbers then count
-        matches = data.res_buttons.match(/\d+/g);
-        if (matches == null){matches = 0};
-        data.options_selected = matches.length
-    }
-};
-//practice instructions
-var practice_instructions_2 = {
-  type: jsPsychHtmlKeyboardResponse,
-  stimulus: `<div><font size=120%; font color = 'green';> Practice</font><br/>
-             <br><br/>
-             <div style="text-align-last:center">
-            In this part of the study you will be choosing between monuments. You will see several monuments on the screen.<br/>
-            Select all the monuments you'd like to vist.<br/>
-             <u><b>Once you select an monument, you cannot deselect it.</b> </u><br/>
-            When you’re finished selecting monuments, press the space bar to finalize your selection.
-            <br><br/>
-             <font size=5px; >When you are ready, press the <b>SPACE BAR</b> to begin</font></div>`,
-  post_trial_gap: 500,
-  choices: ' ',
-}
-var practice_trial_2 = {
-    data: {
-        screen_id: "practice_trial",
-        options: trial_options
-    },
-    type: jsPsychMutipleButtonResponse,
-    stimulus: [],
-    prompt: [],
-    choices: [image_paths_practice2[0],
-    image_paths_practice2[1],
-    image_paths_practice2[2],
-    image_paths_practice2[3],
-    image_paths_practice2[4],
-    image_paths_practice2[5],
-    image_paths_practice2[6],
-    image_paths_practice2[7],
-    image_paths_practice2[8],
-    image_paths_practice2[9],
-    image_paths_practice2[10],
-    image_paths_practice2[11],
-    image_paths_practice2[12],
-    image_paths_practice2[13],
-    image_paths_practice2[14]
-],
-button_html: [
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-0">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-1">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-2">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-3">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-4">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-5">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-6">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-7">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-8">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-9">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-10">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-11">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-12">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-13">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-14">'                    ],
-    response_ends_trial: true,
-    keys: ' ',
-    margin_vertical: "40px",
-    margin_horizontal: "50px",
-    on_finish: function(data) {
-        //count how many options where selected
-        //count how many objects in the res_buttons arrary.
-        //Its a string, so extract the numbers then count
-        matches = data.res_buttons.match(/\d+/g);
-        if (matches == null){matches = 0};
-        data.options_selected = matches.length
-    }
-};
-
-//task
-var trial = {
-    data: {
-        screen_id: "trial",
-        options: trial_options
-    },
-    type: jsPsychMutipleButtonResponse,
-    stimulus: [],
-    prompt: [],
-    choices: [shuffled_image_names[0],
-    shuffled_image_names[1],
-    shuffled_image_names[2],
-    shuffled_image_names[3],
-    shuffled_image_names[4],
-    shuffled_image_names[5],
-    shuffled_image_names[6],
-    shuffled_image_names[7],
-    shuffled_image_names[8],
-    shuffled_image_names[9],
-    shuffled_image_names[10],
-    shuffled_image_names[11],
-    shuffled_image_names[12],
-    shuffled_image_names[13],
-    shuffled_image_names[14]
-],
-button_html: [
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-0">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-1">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-2">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-3">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-4">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-5">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-6">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-7">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-8">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-9">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-10">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-11">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-12">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-13">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-14">'                    ],
-    response_ends_trial: true,
-    keys: ' ',
-    margin_vertical: "40px",
-    margin_horizontal: "50px",
-    on_finish: function(data) {
-        //count how many options where selected
-        //count how many objects in the res_buttons arrary.
-        //Its a string, so extract the numbers then count
-        matches = data.res_buttons.match(/\d+/g);
-        if (matches == null){matches = 0};
-        data.options_selected = matches.length
-    },
-    extensions: [
-          {
-            type: jsPsychExtensionWebgazer,
-            params: {
-                targets:
-                ['#jspsych-multiple-select-response-button-0',
-                '#jspsych-multiple-select-response-button-1',
-                '#jspsych-multiple-select-response-button-2',
-                '#jspsych-multiple-select-response-button-3',
-                '#jspsych-multiple-select-response-button-4',
-                '#jspsych-multiple-select-response-button-5',
-                '#jspsych-multiple-select-response-button-6',
-                '#jspsych-multiple-select-response-button-7',
-                '#jspsych-multiple-select-response-button-8',
-                '#jspsych-multiple-select-response-button-9',
-                '#jspsych-multiple-select-response-button-10',
-                '#jspsych-multiple-select-response-button-11',
-                '#jspsych-multiple-select-response-button-12',
-                '#jspsych-multiple-select-response-button-13',
-                '#jspsych-multiple-select-response-button-14'
-        ]}
-          }
-        ]
 };
 
 // get ratings //
@@ -611,11 +431,98 @@ var ratings = {
     }
   }
 };
+
+//practice instructions
+var practice_instructions = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: `<div><font size=120%; font color = 'green';> Practice</font><br/>
+             <br><br/>
+             <div style="text-align-last:center">
+            In this part of the study you will be choosing between animals. You will see several animals on the screen.<br/>
+            You have to select all the animals which are mammals.<br/>
+            To select an animal, hover your mouse of that animals picture and click it. Once selected the animal will have a <b><font color=#FF7F00>Orange</font></b> outline. <br/>
+             <u><b>Once you select an animal, you cannot deselect it.</b> </u><br/>
+            When you’re finished selecting animals, press the space bar to finalize your selection.
+            <br><br/>
+             <font size=5px; >When you are ready, press the <b>SPACE BAR</b> to begin</font></div>`,
+  post_trial_gap: 500,
+  choices: ' ',
+}
+//practice trial
+var practice_trial = {
+    data: {
+        screen_id: "practice_trial",
+        options: trial_options
+    },
+    type: jsPsychMutipleButtonResponse,
+    stimulus: [],
+    prompt: ['<b>select all the animals which are mammals</b>'],
+    choices: [image_paths_practice[0],
+    image_paths_practice[1],
+    image_paths_practice[2],
+    image_paths_practice[3]
+],
+button_html: [
+    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-0">',
+    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-1">',
+    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-2">',
+    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-3">'],
+    response_ends_trial: true,
+    keys: ' ',
+    margin_vertical: "40px",
+    margin_horizontal: "50px",
+    on_finish: function(data) {
+        //count how many options where selected
+        //count how many objects in the res_buttons arrary.
+        //Its a string, so extract the numbers then count
+        matches = data.res_buttons.match(/\d+/g);
+        if (matches == null){matches = 0};
+        data.options_selected = matches.length
+    }
+};
+
+//task
+var trial = {
+  on_start:   () => document.body.style.cursor = 'none',
+  data: {
+      screen_id: "trial",
+      options: jsPsych.timelineVariable('options')
+  },
+  type: jsPsychMutipleButtonResponse,
+  stimulus: [],
+  num_required_responses:2,
+  choices: jsPsych.timelineVariable('options'),
+button_html: [
+  '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-0", data-choice=0>',
+  '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-1", data-choice=1>',
+  '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-2", data-choice=2>',
+  '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-3", data-choice=3>'
+],
+  response_ends_trial: true,
+  keys: ['h','j','k','l'], 
+  margin_vertical: "40px",
+  margin_horizontal: "50px",
+  on_finish: function(data) {
+      //count how many options where selected
+      //count how many objects in the res_buttons arrary.
+      //Its a string, so extract the numbers then count
+      matches = data.res_buttons.match(/\d+/g);
+      if (matches == null){matches = 0};
+      data.options_selected = matches.length
+  }
+};
+//
+  //add webgazer extension
+
 //end the experiment, distribute the reward
 
+var task_timeline = {
+  timeline: [fixation, trial],
+  timeline_variables: factorial_values
+};
+
 var trials_with_variables = {
-    timeline: [practice_instructions, fixation, practice_trial, practice_instructions_2, fixation, practice_trial_2, fixation, trial, ratingOverview, ratings],
-    // timeline_variables: factorial_values
+  timeline: [ratingOverview, ratings, practice_instructions, fixation, practice_trial, task_timeline],
 };
 
 var fullscreenEnd = {
@@ -625,17 +532,6 @@ var fullscreenEnd = {
 }
 
 // Debrief
-//we need to randomly select if this subject actully gets the foods or not
-// var debrief = {
-//     data: {
-//         screen_id: "debrief"
-//     },
-//     type: jsPsychHtmlKeyboardResponse,
-//     stimulus:
-//         '<p><b><font size=100%; font color = 'green';>We have completed our experiment. </font></b></p>" +
-//         <p><b><font size=120%; font color = 'red';>To log your responses, please press next.</font></b></p>'
-//     ,
-// };
 var debrief = {
   type: jsPsychHtmlKeyboardResponse,
   on_start:   () => document.body.style.cursor = 'pointer',
@@ -644,65 +540,34 @@ var debrief = {
   trial_duration: 500,
 };
 
-
-/* Close fullscreen */
-function closeFullscreen() {
-  if (document.exitFullscreen) {
-    document.exitFullscreen();
-  } else if (document.mozCancelFullScreen) {
-    /* Firefox */
-    document.mozCancelFullScreen();
-  } else if (document.webkitExitFullscreen) {
-    /* Chrome, Safari and Opera */
-    document.webkitExitFullscreen();
-  } else if (document.msExitFullscreen) {
-    /* IE/Edge */
-    document.msExitFullscreen();
-  }
-}
-
 // timeline
 var timeline = []
 // timeline.push(fullscreenEnter); //start the fullscreen
 timeline.push(preload);
 // timeline.push(welcome_block);
 
-// timeline.push(eyeTrackingInstruction1);
-// timeline.push(eyeTrackingInstruction2);
-// timeline.push(eyeTrackingNote);
+//timeline.push(eyeTrackingInstruction1);
+//timeline.push(eyeTrackingInstruction2);
+//timeline.push(eyeTrackingNote);
 
-// timeline.push(camera_instructions);
-// timeline.push(init_camera);
-// timeline.push(calibration_instructions);
-// timeline.push(calibration);
-// timeline.push(validation_instructions);
-// timeline.push(validation);
-// timeline.push(recalibrate);
-// timeline.push(calibration_done);
+//timeline.push(camera_instructions);
+//timeline.push(init_camera);
+//timeline.push(calibration_instructions);
+//timeline.push(calibration);
+//timeline.push(validation_instructions);
+//timeline.push(validation);
+//timeline.push(recalibrate);
+//timeline.push(calibration_done);
 // timeline.push(ratings);
+//timeline.push(practice_trial);
 
 //timeline.push(trials_with_variables);
-timeline.push(trial);
-
+timeline.push(task_timeline);
 // timeline.push(fullscreenEnd); //end the fullscreen
 timeline.push(debrief);
 
-
 //Start Experiment
 jsPsych.run(timeline);
-//
-// const simulation_options = {
-//   default: {
-//     data: {
-//       rt: () => { return jsPsych.randomization.sampleExGaussian(250, 50, 0.02, true) },
-//       res_buttons: () => {return jsPsych.randomization.}
-//     }
-//   }
-// }
-//
-// jsPsych.simulate(timeline, "data-only", simulation_options);
-// closeFullscreen()
-
 
 </script>
 </html>
