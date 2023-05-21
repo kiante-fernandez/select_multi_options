@@ -397,7 +397,7 @@
 
   var get_choice_images = function (image_paths) {
     // Number of trials to generate
-    var numSets = 100;
+    var numSets = 2;
     // Number of images trials
     var numImagesPerSet = 4;
     // Array to store the selected sets
@@ -529,7 +529,7 @@
     },
     type: jsPsychMutipleButtonResponse,
     stimulus: [],
-    num_required_responses: 2,
+    num_required_responses: jsPsych.timelineVariable('subset_size'),
     choices: () => choice_trials[trial_count].options,
     button_html: [
       '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-j", data-choice=0>',
@@ -554,20 +554,32 @@
 
   //end the experiment, distribute the reward
 
+  var trials_with_variables = {
+    timeline: [ratingOverview, ratings, practice_instructions, fixation, practice_trial],
+  };
+
   var task_timeline = {
     timeline: [fixation, trial],
     loop_function: function () {
       if (trial_count < choice_trials.length) {
         return true;
       } else {
+        trial_count = 0;
         return false;
       }
-    }
+    },
   };
+ 
+  var choose_k_procedure = {
+    timeline: [choiceInstruction, task_timeline],
+    timeline_variables: [
+        {subset_size: 1},
+        {subset_size: 2},
+        {subset_size: 3},
+    ],
+    randomize_order: true
+}
 
-  var trials_with_variables = {
-    timeline: [ratingOverview, ratings, practice_instructions, fixation, practice_trial, task_timeline],
-  };
 
   var fullscreenEnd = {
     type: jsPsychFullscreen,
@@ -607,9 +619,11 @@
 
   //timeline.push(trials_with_variables);
   //timeline.push(ratings);
-  timeline.push(choiceInstruction);
+  timeline.push(choose_k_procedure);
 
-  timeline.push(task_timeline);
+  //timeline.push(choiceInstruction);
+
+  //timeline.push(task_timeline);
 
   // timeline.push(fullscreenEnd); //end the fullscreen
   timeline.push(debrief);
