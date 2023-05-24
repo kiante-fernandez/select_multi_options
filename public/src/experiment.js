@@ -9,22 +9,14 @@ var jsPsych = initJsPsych({
             data: JSON.stringify(jsPsych.data.get().values()),
             contentType: "application/json"
         }).done(function() {
-            window.location.href = "finish";
             alert("Data has been saved!");
-            // var csv = jsPsych.data.get().csv();
-            // var filename = jsPsych.data.get().values()[0].subject_id + "_" + DATE + ".csv";
-            // downloadCSV(csv,filename);
+            window.location.href = "finish";
         }).fail(function() {
-            alert("Problem occurred while writing data to Dropbox. " +
-                "Data will be saved to your computer. " +
+            alert("Problem occurred while writing data. " +
                 "Please contact the experimenter regarding this issue!");
-        var csv = jsPsych.data.get().csv();
-        var filename = jsPsych.data.get().values()[0].subject_id + "_" + DATE + ".csv";
-        downloadCSV(csv,filename);
+
         window.location.href = "finish";
     });
-    closeFullscreen()
-    // jsPsych.data.displayData()
     }
 }
 );
@@ -44,34 +36,7 @@ var instruct_img = [];
 for (var i = 0; i < nImageInst; i++) {
   instruct_img.push('../../img/instruct' + i + '.png');
 }
-//Creating list of image paths to load for practice trials.
-
-//Practice trials: animals
-//These are image paths to images for the practice trials
-var image_indices_2st = math.range(1, 16); //math.range() returns a js obj that has a parameter called '._data' and that has an Array of the range.
-image_indices_2st = Array.from(image_indices_2st._data); // This is just a list containing the range of numbers used for each url of the
-// praciice stimulus. The praciice stimuli are all saved in the /img/animal/ folder. They have a prefix "animal"
-// and then they include the number 1-N for N number of trials.
-var arrayLength_prac = image_indices_2st.length; // arrayLength is used to show how many images/trials there are from 1-N trials.
-var image_paths_practice = [];
-for (var i = 0; i < arrayLength_prac; i++) {
-    // This for loop fills the image_paths list with urls to the images for each of the experimental treatments
-    var path_str2 = "../../img/animal/animal" + String(image_indices_2st[i]) + ".jpg";
-    image_paths_practice.push(path_str2);
-}
-//Practice trials: landmarks
-//These are image paths to images for the practice trials
-var image_indices_3rd = math.range(1, 16); //math.range() returns a js obj that has a parameter called '._data' and that has an Array of the range.
-image_indices_3rd = Array.from(image_indices_3rd._data); // This is just a list containing the range of numbers used for each url of the
-// praciice stimulus. The praciice stimuli are all saved in the /img/animal/ folder. They have a prefix "animal"
-// and then they include the number 1-N for N number of trials.
-var arrayLength_prac = image_indices_3rd.length; // arrayLength is used to show how many images/trials there are from 1-N trials.
-var image_paths_practice2 = [];
-for (var i = 0; i < arrayLength_prac; i++) {
-    // This for loop fills the image_paths list with urls to the images for each of the experimental treatments
-    var path_str3 = "../../img/landmark/landmark" + String(image_indices_3rd[i]) + ".jpg";
-    image_paths_practice2.push(path_str3);
-}
+//Creating list of image paths
 
 //These are image paths to images for the experimental treatment shown on each trial
 var image_indices_lst = math.range(1, 80); //math.range() returns a js obj that has a parameter called '._data' and that has an Array of the range.
@@ -88,18 +53,19 @@ for (var i = 0; i < arrayLength; i++) {
     image_paths.push(path_str1);
 }
 
-// Randomly select a subset of images
+const individual_shuffled_image_names = jsPsych.randomization.shuffle(image_paths);
+var individual_items = [];
+individual_items = individual_shuffled_image_names.map(img => ({
+  stimulus: img
+}));
 const shuffled_image_names = jsPsych.randomization.shuffle(image_paths);
-// Get the img paths for the selected images
 const trial_options = shuffled_image_names.slice(0, 15);
 
 // Preloading files are needed to present the stimuli accurately.
 const preload = {
-    type: jsPsychPreload,
-    images: [instruct_img,image_paths_practice, image_paths_practice2, image_paths],   //  preload just the images
+  type: jsPsychPreload,
+  images: [instruct_img, image_paths],   //  preload just the images
 }
-
-// Brower Check (no need?)
 
 // Consent
 var check_consent = function(elem) {
@@ -138,24 +104,30 @@ var fullscreenEnter = {
 };
 
 // Welcome
-var welcome_block = {
+// capture info from Prolific //
+var subject_id = jsPsych.data.getURLVariable('PROLIFIC_PID');
+var study_id = jsPsych.data.getURLVariable('STUDY_ID');
+var session_id = jsPsych.data.getURLVariable('SESSION_ID');
+
+var welcome_block_Prolific = {
     data: {
         screen_id: "welcome"
     },
     type: jsPsychSurveyHtmlForm,
     preamble: "<p>Welcome to the experiment!</p>"+
     "Please complete the form",
-    html: "<p>Participant ID: <input name = 'subject_id' type = 'text'/></p><p>OSU EMAIL: <input name = 'subject_email' type = 'text'/></p>",
+    html: "<p>PROLIFIC ID: <input name = 'subject_id' type = 'text'/></p>",
     on_finish: function(data) {
         responses = data.response;
         jsPsych.data.addProperties({
-            subject_id: responses.subject_id,
-            subject_email: responses.subject_email,
+            subject_id: subject_id, //just add it from the variable about rather than responses.
             ID_DATE: responses.subject_id + "_" + DATE,
             browser_name: bowser.name,
             browser_type: bowser.version,
             windowWidth: $(window).width(),
-            windowHight: $(window).height()
+            windowHight: $(window).height(),
+            study_id: study_id,
+            session_id: session_id
         })
     }
 };
@@ -164,11 +136,12 @@ var welcome_block = {
 var instruction_block_1 = {
     data: {screen_id: "instructions"},
     type: jsPsychInstructions,
+    on_start:   () =>  document.body.style.cursor = 'none',
     pages: [
         '<p>Welcome to the study!</p>' +
-        "<p>Today, you will make some decisions about snack food items. </p>" +
-        "<p>Please pay attention to the instructions. For part of the study, your eye movements will be tracked.</p>"+
-        "<p>If you have any questions, please contact the experimenter at neuroeconomics.osu@gmail.com. If you are ready to begin, please press the SPACEBAR.</p>",
+                "<p>Today, you will make some decisions about foods.</p>" +
+                "<p>There will be multiple parts to the study, and you will receive instructions before each new part.</p>"+
+                "<p>If you have any questions, please contact the experimenter at neuroeconomics.osu@gmail.com. If you are ready to begin, please press the SPACEBAR.</p>",
     ],
     key_forward: ' '
 };
@@ -303,17 +276,20 @@ var recalibrate_instructions = {
 }
 var recalibrate = {
     timeline: [recalibrate_instructions, calibration, validation_instructions, validation],
-    conditional_function: function(){
-        var validation_data = jsPsych.data.get().filter({task: 'validate'}).values()[0];
-        return validation_data.percent_in_roi.some(function(x){
-            var minimum_percent_acceptable = 80; //what is the least acceptable amount?
-            return x < minimum_percent_acceptable;
-        });
+    conditional_function: function () {
+      var validation_data = jsPsych.data.get().filter({ task: 'validate' }).values()[0];
+      return validation_data.percent_in_roi.some(function (x) {
+        var minimum_percent_acceptable = 75;
+        return x < minimum_percent_acceptable;
+      });
     },
     data: {
-        phase: 'recalibration'
+      phase: 'recalibration'
+    },
+    on_finish: function () {
+      trial_count++;
     }
-}
+  }
 var calibration_done = {
     type: jsPsychHtmlButtonResponse,
     stimulus: `
@@ -321,148 +297,35 @@ var calibration_done = {
     `,
     choices: ['OK']
 }
-//practice trials
-//practice instructions
-var practice_instructions = {
-  type: jsPsychHtmlKeyboardResponse,
-  stimulus: `<div><font size=120%; font color = 'green';> Practice</font><br/>
-             <br><br/>
-             <div style="text-align-last:center">
-            In this practice round you will be making choices about animals. You will see several animals on the screen.<br/>
-            Your task is to select all the animals that are mammals.<br/>
-            To select an animal, move your mouse to that animal and click it. A selected animal will have a <b><font color=#FF7F00>Orange</font></b> outline. <br/>
-             <u><b>Once you select an animal, you cannot unselect it.</b> </u><br/>
-             Select at least one animal.<br><br/>
-            When you’re finished selecting animals, press the SPACEBAR to finalize your selection.
-            <br><br/>
-             <font size=5px; >When you are ready, press the <b>SPACEBAR</b> to begin</font></div>`,
-  post_trial_gap: 500,
-  choices: ' ',
-}
-//practice trial
-var practice_trial = {
-    data: {
-        screen_id: "practice_trial",
-        options: trial_options
-    },
-    type: jsPsychMutipleButtonResponse,
-    stimulus: [],
-    prompt: ['<b>select all the animals which are mammals</b>'],
-    choices: [image_paths_practice[0],
-    image_paths_practice[1],
-    image_paths_practice[2],
-    image_paths_practice[3],
-    image_paths_practice[4],
-    image_paths_practice[5],
-    image_paths_practice[6],
-    image_paths_practice[7],
-    image_paths_practice[8],
-    image_paths_practice[9],
-    image_paths_practice[10],
-    image_paths_practice[11],
-    image_paths_practice[12],
-    image_paths_practice[13],
-    image_paths_practice[14]
-],
-button_html: [
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-0">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-1">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-2">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-3">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-4">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-5">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-6">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-7">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-8">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-9">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-10">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-11">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-12">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-13">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-14">'                    ],
-    response_ends_trial: true,
-    keys: ' ',
-    margin_vertical: "40px",
-    margin_horizontal: "50px",
-    on_finish: function(data) {
-        //count how many options where selected
-        //count how many objects in the res_buttons arrary.
-        //Its a string, so extract the numbers then count
-        matches = data.res_buttons.match(/\d+/g);
-        if (matches == null){matches = 0};
-        data.options_selected = matches.length
+
+  //Exposure period
+var exposure_instruction = {
+    data: { screen_id: "instructions" },
+    on_start: () => document.body.style.cursor = 'none',
+    type: jsPsychInstructions,
+    pages: [
+        "<p>To familiarize you with the set of snack foods in this study, we will now briefly show you each one.</p>" +
+        "<p>Please press the SPACEBAR to begin</p>",
+    ],
+    key_forward: ' '
+};
+var exposure = {
+    data: { screen_id: "exposure" },
+    type: jsPsychImageKeyboardResponse,
+    stimulus: jsPsych.timelineVariable('stimulus'),
+    trial_duration: [750],
+    stimulus_height: 520,
+    stimulus_width: 650,
+    response_ends_trial: false,
+    on_start: function () {
+        document.body.style.cursor = 'none'
     }
 };
-//practice instructions
-var practice_instructions_2 = {
-  type: jsPsychHtmlKeyboardResponse,
-  stimulus: `<div><font size=120%; font color = 'green';> Practice</font><br/>
-             <br><br/>
-             <div style="text-align-last:center">
-            In this practice round you will be making choices about monuments. You will see several monuments on the screen.<br/>
-            Your task is to select all the monuments you would like to vist.<br/>
-             <u><b>Once you select an monument, you cannot unselect it.</b> </u><br/>
-             Select at least one monument.<br><br/>
-            When you’re finished selecting monuments, press the SPACEBAR to finalize your selection.
-            <br><br/>
-             <font size=5px; >When you are ready, press the <b>SPACEBAR</b> to begin</font></div>`,
-  post_trial_gap: 500,
-  choices: ' ',
-}
-var practice_trial_2 = {
-    data: {
-        screen_id: "practice_trial",
-        options: trial_options
-    },
-    type: jsPsychMutipleButtonResponse,
-    stimulus: [],
-    prompt: [],
-    choices: [image_paths_practice2[0],
-    image_paths_practice2[1],
-    image_paths_practice2[2],
-    image_paths_practice2[3],
-    image_paths_practice2[4],
-    image_paths_practice2[5],
-    image_paths_practice2[6],
-    image_paths_practice2[7],
-    image_paths_practice2[8],
-    image_paths_practice2[9],
-    image_paths_practice2[10],
-    image_paths_practice2[11],
-    image_paths_practice2[12],
-    image_paths_practice2[13],
-    image_paths_practice2[14]
-],
-button_html: [
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-0">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-1">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-2">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-3">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-4">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-5">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-6">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-7">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-8">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-9">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-10">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-11">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-12">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-13">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-14">'                    ],
-    response_ends_trial: true,
-    keys: ' ',
-    margin_vertical: "40px",
-    margin_horizontal: "50px",
-    on_finish: function(data) {
-        //count how many options where selected
-        //count how many objects in the res_buttons arrary.
-        //Its a string, so extract the numbers then count
-        matches = data.res_buttons.match(/\d+/g);
-        if (matches == null){matches = 0};
-        data.options_selected = matches.length
-    }
+
+var exposure_sequence = {
+    timeline: [exposure],
+    timeline_variables: individual_items
 };
-// here do we want to include a recalibration?
 
 // Experiment instructions
 var exp_start_instructions = {
@@ -475,224 +338,347 @@ var exp_start_instructions = {
     key_forward: ' '
 };
 
-// here we need to choose one of two frames randomly. Then we need to show the approptirate text.
-//what should the values for the discont be? should it be probabalistics?
-var condition_instructions = [
-    //condition 1
-    "<p>In this part of the study you will be making choices about snack food items.</p>" +
-    "<p>You have the opportunity to purchase some snack foods. To do so, you have been provided with a bonus payment of <u><b>$15.</b></u> </p> " +
-    "<p>Each snack is discounted from its normal price by 50% to $1. Any money that you don’t spend on the snacks is yours to keep.</p>" +
-    "<p>We have preloaded all the available snack foods into your cart.</p>" +
-    "<p>Your task is to click on all the snacks that you want to keep in your cart.</p>"+
-    "<p><b>Once you select a snack, you cannot unselect it.</b></p>"+
-    "<p>When you’re finished selecting snacks, press the SPACEBAR to finalize your selection.</p>"+
-    "<p>At the end of the study there is a 20% chance that you will be selected for payment.</p>"+
-    "<p>In that case, you will receive all of the snacks that you selected and pay the price of those snacks from your bonus payment. You will receive the rest of the bonus payment in cash.</p>"+
-    "<p>If you are ready to begin, please press the SPACEBAR.</p>",
-    //condition 2
-    "<p>In this part of the study you will be making choices about snack food items.</p>" +
-    "<p>You have the opportunity to purchase some snack foods To do so, you have been provided with a bonus payment of <u><b>$15.</b></u></p>"+
-    "<p>Each snack is discounted from its normal price by 50% to $1. Any money that you don’t spend on the snacks is yours to keep.</p>" +
-    "<p>All the available snack foods will be displayed on the screen.</p>" +
-    "<p>Your task is to click on all the snacks that you want to add to your cart.</p>"+
-    "<p><b>Once you select a snack, you cannot unselect it.</b></p>"+
-    "<p>When you’re finished selecting snacks, press the SPACEBAR to finalize your selection.</p>"+
-    "<p>At the end of the study there is a 20% chance that you will be selected for payment. </p>"+
-    "<p>In that case, you will receive all of the snacks that you selected and pay the price of those snacks from your bonus payment. You will receive the rest of the bonus payment in cash.</p>"+
-    "<p>If you are ready to begin, please press the SPACEBAR.</p>"
-];
-
-const condition_choice = getRandomInt(0,1);
-// expected output: 0, 1
-
-//we need to get some indicator that tells us what conditoin this was
-var instruction_block_2 = {
-    data: {screen_id: "framing", condition: condition_choice},
-    type: jsPsychInstructions,
-    pages: [condition_instructions[condition_choice]
-],
-key_forward: ' '
-};
 //choice task
 var fixation = {
-    data: {screen_id: "fixation", stimulus: "fixation"},
+    data: { screen_id: "fixation" },
     type: jsPsychHtmlKeyboardResponse,
-    stimulus: "<div style='font-size: 60px'>+</div>",
-    trial_duration: [500],
+    stimulus: "<div style='font-size: 80px'>+</div>",
+    trial_duration: [700],
     response_ends_trial: false
 };
-var trial = {
-    data: {
-        screen_id: "trial",
-        options: trial_options
-    },
-    type: jsPsychMutipleButtonResponse,
-    stimulus: [],
-    prompt: [],
-    choices: [shuffled_image_names[0],
-    shuffled_image_names[1],
-    shuffled_image_names[2],
-    shuffled_image_names[3],
-    shuffled_image_names[4],
-    shuffled_image_names[5],
-    shuffled_image_names[6],
-    shuffled_image_names[7],
-    shuffled_image_names[8],
-    shuffled_image_names[9],
-    shuffled_image_names[10],
-    shuffled_image_names[11],
-    shuffled_image_names[12],
-    shuffled_image_names[13],
-    shuffled_image_names[14]
-],
-button_html: [
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-0">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-1">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-2">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-3">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-4">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-5">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-6">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-7">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-8">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-9">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-10">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-11">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-12">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-13">',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-14">'                    ],
-    response_ends_trial: true,
-    keys: ' ',
-    margin_vertical: "40px",
-    margin_horizontal: "50px",
-    on_finish: function(data) {
-        //count how many options where selected
-        //count how many objects in the res_buttons arrary.
-        //Its a string, so extract the numbers then count
-        matches = data.res_buttons.match(/\d+/g);
-        if (matches == null){matches = 0};
-        data.options_selected = matches.length
-    },
-    extensions: [
-        {
-            type: jsPsychExtensionWebgazer,
-            params: {
-                targets:
-                ['#jspsych-multiple-select-response-button-0',
-                '#jspsych-multiple-select-response-button-1',
-                '#jspsych-multiple-select-response-button-2',
-                '#jspsych-multiple-select-response-button-3',
-                '#jspsych-multiple-select-response-button-4',
-                '#jspsych-multiple-select-response-button-5',
-                '#jspsych-multiple-select-response-button-6',
-                '#jspsych-multiple-select-response-button-7',
-                '#jspsych-multiple-select-response-button-8',
-                '#jspsych-multiple-select-response-button-9',
-                '#jspsych-multiple-select-response-button-10',
-                '#jspsych-multiple-select-response-button-11',
-                '#jspsych-multiple-select-response-button-12',
-                '#jspsych-multiple-select-response-button-13',
-                '#jspsych-multiple-select-response-button-14'
-            ]}
-        }
-    ]
-};
-// get ratings //
+
+  // get ratings //
 var ratingOverview = {
-  type: jsPsychHtmlKeyboardResponse,
-  on_start:   () => document.body.style.cursor = 'pointer',
-  stimulus: `<div> <font size=120%; font color = 'green';>Rating task</font><br/>
+    type: jsPsychHtmlKeyboardResponse,
+    on_start: () => document.body.style.cursor = 'none',
+    stimulus: `<div> <font size=120%; font color = 'green';>Rating task</font><br/>
                                        <br><br/>
-             Now, you will make decisions about each snack food one by one. <br/>
-             For each snack food, please rate it on a scale from 0 to 10 based on how much you would like to eat this food right now.<br/>
-             A 1 means that you would neither like nor dislike to eat this food.  <br/>
-             When choosing whether to eat this food or not, you would be willing to flip a coin.   <br/>
-             A 10 means that you would really love to eat this food. <br/>
-             If you dislike a food and would not want to eat it, then click 0. <br/>                                          <br><br/>
-            When you are ready, press the  <b>SPACEBAR</b> to start.  </div>`,
-  choices: ' ',
-  post_trial_gap: 500,
+             <font size = 5%>Now, you will make decisions about each snack food one by one. <br/>
+             For each snack food, please rate it on a scale from "Not at all" to "Very much" based on how much would you like this as a daily snack.<br/>
+             A "Not at all" means that you would neither like nor dislike to eat this food.<br/>
+             A "Very much" means that you would really love to eat this food.<br/>
+             To rate an item, use the mouse to click anywhere along the slider scale. When you have rated an item, press continue to move to proceed.<br/>                                      <br><br/>
+            When you are ready, press the  <b>SPACEBAR</b> to start.  </font></div>`,
+    choices: ' ',
+    post_trial_gap: 500,
 };
 
 function getRandomInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-rating_choice_images = [];
-rating_choice_images_zero = [];
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
 
-ratings_images = jsPsych.randomization.shuffle(trial_options);
-var ratings = {
-    data:{
-        screen_id:"ratings",
+  rating_choice_images = [];
+  rating_choice_images_zero = [];
+
+  ratings_images = jsPsych.randomization.shuffle(trial_options);
+  var numbers = Array.from({ length: 100 }, (_, index) => index + 1);
+
+  var ratings = {
+    on_start: () => document.body.style.cursor = 'pointer',
+    data: {
+      screen_id: "ratings",
     },
-  type: jsPsychImageSliderResponse,
-  stimulus_height: 320,
-  stimulus_width: 450,
-  timeline: ratings_images.map(img => ({
-    stimulus: img
-  })),
-  labels: ['0', '1', '2', '3', '4', '5','6','7','8','9','10'],
-  min: 0,
-  max: 10,
-  slider_start: 0,
-  require_movement: true,
-  slider_width: 900,
-  response_ends_trial: true,
-  button_label: [`continue`],
-  on_finish: (data) => {
-    if (data.rating > 0) {
-      rating_choice_images.push(data.stimulus);
+    type: jsPsychImageSliderResponse,
+    stimulus_height: 520, //320
+    stimulus_width: 650, //450
+    timeline: ratings_images.map(img => ({
+      stimulus: img,
+      slider_start: jsPsych.randomization.sampleWithoutReplacement(numbers, 1)
+    })),
+    labels: ['Not at all', 'Very much'],
+    min: 1,
+    max: 100,
+    require_movement: false, //set to true for experiment
+    slider_width: 1000,
+    response_ends_trial: true,
+    button_label: [`continue`],
+    on_finish: (data) => {
+      if (data.rating > 0) {
+        rating_choice_images.push(data.stimulus);
+      }
+      if (data.rating >= 0) {
+        rating_choice_images_zero.push(data.stimulus);
+      }
     }
-    if (data.rating >= 0) {
-      rating_choice_images_zero.push(data.stimulus);
+  };
+
+// Choice task
+
+var get_choice_images = function (image_paths) {
+    // Number of trials to generate
+    var numSets = 2;
+    // Number of images trials
+    var numImagesPerSet = 4;
+    // Array to store the selected sets
+    var selectedSets = [];
+    // Create a counter object to track the usage of each image path
+    var imagePathCounter = {};
+    // Generate the sets
+    for (var i = 0; i < numSets; i++) {
+      var selectedImages = [];
+      var uniquePaths = []; // Array to store unique image paths for each set
+      var numAttempts = 0;
+      while (uniquePaths.length < numImagesPerSet && numAttempts < image_paths.length) {
+        // Randomly select an image path from the imagePaths array
+        var imagePath = jsPsych.randomization.sampleWithoutReplacement(image_paths, 1)[0];
+        // Check if the selected image path is already in the set or has been used four times
+        if (
+          uniquePaths.indexOf(imagePath) === -1 &&
+          (!imagePathCounter[imagePath] || imagePathCounter[imagePath] < 6)
+        ) {
+          uniquePaths.push(imagePath);
+          selectedImages.push(imagePath);
+          // Increment the counter for the used image path
+          imagePathCounter[imagePath] = (imagePathCounter[imagePath] || 0) + 1;
+        }
+        numAttempts++;
+      }
+      if (selectedImages.length === numImagesPerSet) {
+        selectedSets.push(selectedImages);
+      }
+    }
+
+var factors = {
+      options: selectedSets
+};
+var factorial_values = jsPsych.randomization.factorial( {
+      options: selectedSets
+    }, 1);
+    return factorial_values;
+};
+
+var choice_trials = [0];
+
+var stimulus_html = [
+  //select 1
+  `<div><font size=120%; font color = 'green';>Food preference: : choose one</font><br/>
+  <br><br/>
+  Now, we will begin with the choice task. Please keep your head still, otherwise we may have to redo the calibration and validation.<br/>
+  There will be a break halfway through the task. During the break you can move your head if you need to.    <br/>
+  As a quick reminder, you are choosing which food you would prefer to eat: <br/>
+  To select an food:<br/>
+  If you want to eat to the left food,  press  the <b><font color='green'>J</font></b> key; <br/>
+  If you want to eat to the top food,  press  the <b><font color='green'>I</font></b> key; <br/>
+  If you want to eat to the right food,  press the <b><font color='green'>L</font></b>  key;<br/>
+  If you want to eat to the bottom food,  press  the <b><font color='green'>K</font></b> key; <br/>
+  <br><br/>
+  Once selected the animal will have a <b><font color=#FF7F00>Orange</font></b> outline. <br/>
+  <u><b>Once you select an food, you cannot deselect it.</b> </u><br/>
+  <br><br/>
+  When you are ready, press the <b>SPACE BAR</b> to begin with a couple of practice rounds. </div>`,
+  //condition 2
+  `<div><font size=120%; font color = 'green';>Food preference: choose two</font><br/>
+  <br><br/>
+  Now, we will begin with the choice task. Please keep your head still, otherwise we may have to redo the calibration and validation.<br/>
+  There will be a break halfway through the task. During the break you can move your head if you need to.    <br/>
+  As a quick reminder, you are choosing which food you would prefer to eat: <br/>
+  To select an food:<br/>
+  If you want to eat to the left food,  press  the <b><font color='green'>J</font></b> key; <br/>
+  If you want to eat to the top food,  press  the <b><font color='green'>I</font></b> key; <br/>
+  If you want to eat to the right food,  press the <b><font color='green'>L</font></b>  key;<br/>
+  If you want to eat to the bottom food,  press  the <b><font color='green'>K</font></b> key; <br/>
+  <br><br/>
+  Once selected the animal will have a <b><font color=#FF7F00>Orange</font></b> outline. <br/>
+  <u><b>Once you select an food, you cannot deselect it.</b> </u><br/>
+  <br><br/>
+  When you are ready, press the <b>SPACE BAR</b> to begin with a couple of practice rounds. </div>`,
+  `<div><font size=120%; font color = 'green';>Food preference: choose three</font><br/>
+  <br><br/>
+  Now, we will begin with the choice task. Please keep your head still, otherwise we may have to redo the calibration and validation.<br/>
+  There will be a break halfway through the task. During the break you can move your head if you need to.    <br/>
+  As a quick reminder, you are choosing which food you would prefer to eat: <br/>
+  To select an food:<br/>
+  If you want to eat to the left food,  press  the <b><font color='green'>J</font></b> key; <br/>
+  If you want to eat to the top food,  press  the <b><font color='green'>I</font></b> key; <br/>
+  If you want to eat to the right food,  press the <b><font color='green'>L</font></b>  key;<br/>
+  If you want to eat to the bottom food,  press  the <b><font color='green'>K</font></b> key; <br/>
+  <br><br/>
+  Once selected the animal will have a <b><font color=#FF7F00>Orange</font></b> outline. <br/>
+  <u><b>Once you select an food, you cannot deselect it.</b> </u><br/>
+  <br><br/>
+  When you are ready, press the <b>SPACE BAR</b> to begin with a couple of practice rounds. </div>`
+];
+
+var choiceInstruction_choose_one = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: stimulus_html[0],
+  choices: ' ',
+  post_trial_gap: 500,
+  on_finish: function() {
+    choice_trials = get_choice_images(image_paths);
+  }
+}
+var choiceInstruction_choose_two = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: stimulus_html[1],
+  choices: ' ',
+  post_trial_gap: 500,
+  on_finish: function() {
+    choice_trials = get_choice_images(image_paths);
+  }
+}
+var choiceInstruction_choose_three = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: stimulus_html[2],
+  choices: ' ',
+  post_trial_gap: 500,
+  on_finish: function() {
+    choice_trials = get_choice_images(image_paths);
+  }
+}
+
+var trial_count = 0;
+//task
+var trial = {
+  on_start: () => document.body.style.cursor = 'none',
+  data: {
+    screen_id: "trial",
+    options: choice_trials[trial_count].options
+  },
+  type: jsPsychMutipleButtonResponse,
+  stimulus: [],
+  num_required_responses: jsPsych.timelineVariable('subset_size'),
+  choices: () => choice_trials[trial_count].options,
+  button_html: [
+    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-j", data-choice=0>',
+    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-i", data-choice=1>',
+    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-l", data-choice=2>',
+    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-k", data-choice=3>'
+  ],
+  response_ends_trial: true,
+  keys: ['j', 'i', 'l', 'k'],
+  margin_vertical: "40px",
+  margin_horizontal: "50px",
+  on_finish: function (data) {
+    //count how many options where selected
+    //count how many objects in the res_buttons arrary.
+    //Its a string, so extract the numbers then count
+    matches = data.res_buttons.match(/\d+/g);
+    if (matches == null) { matches = 0 };
+    data.options_selected = matches.length
+    trial_count++;
+  },
+  extensions: [
+    {
+        type: jsPsychExtensionWebgazer,
+        params: {
+            targets:
+            ['#jspsych-multiple-select-response-button-j',
+            '#jspsych-multiple-select-response-button-i',
+            '#jspsych-multiple-select-response-button-l',
+            '#jspsych-multiple-select-response-button-k'
+        ]}
+    }
+]
+};
+
+var ratings_procedure = {
+    timeline: [ratingOverview, ratings],
+  };
+
+  var task_timeline = {
+    timeline: [if_recalibrate,fixation, trial],
+    loop_function: function () {
+      if (trial_count < choice_trials.length) {
+        return true;
+      } else {
+        trial_count = 0;
+        return false;
+      }
+    },
+  };
+ //make conditional timeline variable for eye tracking re-calibration
+  var if_recalibrate = {
+    timeline: [recalibrate],
+    conditional_function: function(){
+      if (trial_count == choice_trials.length/2 || trial_count == 0){
+        return true;
+      } else {
+        return false;
+      }
     }
   }
+
+ //make conditional timeline variable for choice task instructions
+ var if_choose_one = {
+  timeline: [choiceInstruction_choose_one],
+  conditional_function: function(){
+    if (jsPsych.timelineVariable('subset_size') == 1){
+      return true;
+    } else {
+      return false;
+    }
+  }
+ }
+ var if_choose_two = {
+  timeline: [choiceInstruction_choose_two],
+  conditional_function: function(){
+    if (jsPsych.timelineVariable('subset_size') == 2){
+      return true;
+    } else {
+      return false;
+    }
+  }
+ }
+ var if_choose_three = {
+  timeline: [choiceInstruction_choose_three],
+  conditional_function: function(){
+    if (jsPsych.timelineVariable('subset_size') == 3){
+      return true;
+    } else {
+      return false;
+    }
+  }
+ }
+  var choose_k_procedure = {
+    timeline: [if_choose_one,if_choose_two,if_choose_three, task_timeline],
+    timeline_variables: [
+        {subset_size: 1},
+        {subset_size: 2},
+        {subset_size: 3},
+    ],
+    randomize_order: true
+}
+
+var debrief = {
+    type: jsPsychHtmlKeyboardResponse,
+    on_start:   () => document.body.style.cursor = 'pointer',
+    stimulus: `<div> <b><font size=100%; font color = 'green';>We have completed our experiment.</font></b><br/>
+    <br><br/><b><font size=100%; font color = 'green';>Thank you for participating.</font></div>`,
+    trial_duration: 600
 };
 
-// Debrief
-//we need to randomly select if this subject actully gets the foods or not
-// var debrief = {
-//     data: {
-//         screen_id: "debrief"
-//     },
-//     type: jsPsychInstructions,
-//     pages: [
-//         "<p><b><font size=100%; font color = 'green';>We have completed our experiment. </font></b></p>" +
-//         "<p><b><font size=120%; font color = 'red';>To log your responses, please press next.</font></b></p>"
-//     ],
-//     show_clickable_nav: true,
-// };
-var debrief = {
-  type: jsPsychHtmlKeyboardResponse,
-  on_start:   () => document.body.style.cursor = 'pointer',
-  stimulus: `<div> <b><font size=100%; font color = 'green';>We have completed our experiment.</font></b><br/>
-  <br><br/><b><font size=100%; font color = 'green';>Thank you for participating.</font></div>`,
-  trial_duration: 500,
-};
-var trials_with_variables = {
-    timeline: [practice_instructions, fixation, practice_trial, practice_instructions_2, fixation, practice_trial_2, exp_start_instructions, instruction_block_2, fixation, trial, ratingOverview, ratings],
-};
+var fullscreenEnd = {
+    type: jsPsychFullscreen,
+    fullscreen_mode: false,
+    delay_after: 0
+}
 
 // timeline
 var timeline = []
 
 timeline.push(informed_consent);
+timeline.push(welcome_block_Prolific); //for prolific specific data collection
 timeline.push(fullscreenEnter); //start the fullscreen
 timeline.push(preload);
-timeline.push(welcome_block);
-// timeline.push(instruction_block_1);
-// timeline.push(eyeTrackingInstruction1);
-// timeline.push(eyeTrackingInstruction2);
-// timeline.push(eyeTrackingNote);
-// timeline.push(camera_instructions);
-// timeline.push(init_camera);
-// timeline.push(calibration_instructions);
-// timeline.push(calibration);
-// timeline.push(validation_instructions);
-// timeline.push(validation);
-// timeline.push(recalibrate);
-// timeline.push(calibration_done);
-timeline.push(trials_with_variables);
+timeline.push(instruction_block_1);
+//eye tracking
+timeline.push(eyeTrackingInstruction1);
+timeline.push(eyeTrackingInstruction2);
+timeline.push(eyeTrackingNote);
+timeline.push(camera_instructions);
+timeline.push(init_camera);
+timeline.push(calibration_instructions);
+timeline.push(calibration);
+timeline.push(validation_instructions);
+timeline.push(validation);
+timeline.push(recalibrate);
+timeline.push(calibration_done);
+
+//task
+timeline.push(ratings_procedure);
+timeline.push(choose_k_procedure);
+timeline.push(fullscreenEnd); //end the fullscreen
 timeline.push(debrief);
 
 //Start Experiment
