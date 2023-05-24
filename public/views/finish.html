@@ -16,13 +16,26 @@
 const jsPsych = initJsPsych();
 
 // Create finish screen
+// var end_block = {
+//     data: {
+//         screen_id: "end_exp"
+//     },
+//     type: jsPsychHtmlKeyboardResponse,
+//     stimulus: "Your data has been saved. <p>You can now close this screen</p>"
+// };
+//Prolific completion page
 var end_block = {
-    data: {
-        screen_id: "end_exp"
-    },
-    type: jsPsychHtmlKeyboardResponse,
-    stimulus: "Your data has been saved. <p>You can now close this screen</p>"
-};
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: `<p>You've finished the last task. Your data has been saved. Thanks for participating!</p>
+    <p><a href="https://app.prolific.co/submissions/complete?cc=CBFRV4OW">Click here to return to Prolific and complete the study</a>.</p>`,
+  choices: "NO_KEYS"
+}
+//var end_block = {
+//   type: jsPsychHtmlKeyboardResponse,
+//   stimulus: `<p>You've finished the last task. Your data has been saved. Thanks for participating!</p>`,
+//   choices: "NO_KEYS"
+// }
+
 var timeline = []
 timeline.push(end_block);
 
