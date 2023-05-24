@@ -86,3 +86,11 @@ This changes the array oreientation of the items
 
 
 ~~you need to fix so that people can select nothing and it wont break~~
+
+
+
+need to:
+add recalibration screen after every 50 trials.  (needs to be tested)
+update data saving so it goes to google drive
+move the demo script to the experiment js file  
+add a reward distribution screen

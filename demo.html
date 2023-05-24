@@ -247,6 +247,9 @@
     },
     data: {
       phase: 'recalibration'
+    },
+    on_finish: function () {
+      trial_count++;
     }
   }
   var calibration_done = {
@@ -611,7 +614,7 @@ var choiceInstruction_choose_one = {
   };
 
   var task_timeline = {
-    timeline: [fixation, trial],
+    timeline: [if_recalibrate,fixation, trial],
     loop_function: function () {
       if (trial_count < choice_trials.length) {
         return true;
@@ -621,6 +624,18 @@ var choiceInstruction_choose_one = {
       }
     },
   };
+ //make conditional timeline variable for eye tracking re-calibration
+  var if_recalibrate = {
+    timeline: [recalibrate],
+    conditional_function: function(){
+      if (trial_count == choice_trials.length/2 || trial_count == 0){
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+
  //make conditional timeline variable for choice task instructions
  var if_choose_one = {
   timeline: [choiceInstruction_choose_one],
