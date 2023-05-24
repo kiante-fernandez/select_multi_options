@@ -148,6 +148,7 @@ var instruction_block_1 = {
 // EYE TRACKING
 // eye instructions
 var camera_instructions = {
+    on_start: () => document.body.style.cursor = 'pointer',
     type: jsPsychHtmlButtonResponse,
     stimulus: `
     <p>In order to participate you must allow the experiment to use your camera.</p>
