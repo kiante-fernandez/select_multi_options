@@ -19,8 +19,8 @@ var app = express();
 const subjects = {};
 
 // --- Database SETUP
-const CLIENT_ID = '228376881552-hrg29htnkq46t0t8ql91uhe4o291tkjr.apps.googleusercontent.com';
-const CLIENT_SECRET = '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';
+const CLIENT_ID = '766132476109-943brm88g0abjas8kl93vpdgbirh6gh1.apps.googleusercontent.com';
+const CLIENT_SECRET = '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';
 // const REDIRECT_URL = 'https://neuroeconomics.herokuapp.com';
 const REDIRECT_URL = 'https://developers.google.com/oauthplayground';
 const REFRESH_TOKEN = '1//04xDNYRN9D_o7CgYIARAAGAQSNwF-L9IrvNi5g6WVtIprjCF36ey835OvEeer71-lwCFvQVL6EAmbNLYO3tyfjtH0-AwZ9IIE-bQ';
@@ -38,8 +38,8 @@ const drive = google.drive({ version: 'v3', auth: oauth2Client });
 
 function writeJSONFile(id,data) {
     try {
-    const createStream = fs.createWriteStream(`similarity_exp_${id}.json`);
-    const writeStream = fs.createWriteStream(`similarity_exp_${id}.json`);
+    const createStream = fs.createWriteStream(`choosek_exp_${id}.json`);
+    const writeStream = fs.createWriteStream(`choosek_exp_${id}.json`);
     writeStream.write(JSON.stringify(data));
     createStream.end();
     writeStream.end();
@@ -50,7 +50,7 @@ function writeJSONFile(id,data) {
 
 async function removeFile(id) {
     try {
-    await fs.unlink(`similarity_exp_${id}.json`);
+    await fs.unlink(`choosek_exp_${id}.json`);
       console.log('filePath was deleted');
     } catch(error) {
         console.error(`Got an error trying to delete the file: ${error.message}`);
@@ -62,13 +62,13 @@ async function uploadFile(id,data) {
     // console.log("are we breaking?")
     const response = await drive.files.create({
             requestBody: {
-                name: `similarity_exp_${id}.json`, //file name
+                name: `choosek_exp_${id}.json`, //file name
                 mimeType: 'application/json',
-                parents: ['1PFHm5wI7hOz4eu1gRppwtgVFZkl5M_tk']
+                parents: ['18f5ereBSs2AifIQtSV50TzxkP_VCqm5d']
             },
             media: {
                 mimeType: 'application/json',
-                body: fs.createReadStream(`similarity_exp_${id}.json`),
+                body: fs.createReadStream(`choosek_exp_${id}.json`),
             },
         });
         // report the response from the request
