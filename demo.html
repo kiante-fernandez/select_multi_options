@@ -493,25 +493,77 @@
 
   var choice_trials = [0];
 
-  var choiceInstruction = {
+  var stimulus_html = [
+    //select 1
+    `<div><font size=120%; font color = 'green';>Food preference: : choose one</font><br/>
+    <br><br/>
+    Now, we will begin with the choice task. Please keep your head still, otherwise we may have to redo the calibration and validation.<br/>
+    There will be a break halfway through the task. During the break you can move your head if you need to.    <br/>
+    As a quick reminder, you are choosing which food you would prefer to eat: <br/>
+    To select an food:<br/>
+    If you want to eat to the left food,  press  the <b><font color='green'>J</font></b> key; <br/>
+    If you want to eat to the top food,  press  the <b><font color='green'>I</font></b> key; <br/>
+    If you want to eat to the right food,  press the <b><font color='green'>L</font></b>  key;<br/>
+    If you want to eat to the bottom food,  press  the <b><font color='green'>K</font></b> key; <br/>
+    <br><br/>
+    Once selected the animal will have a <b><font color=#FF7F00>Orange</font></b> outline. <br/>
+    <u><b>Once you select an food, you cannot deselect it.</b> </u><br/>
+    <br><br/>
+    When you are ready, press the <b>SPACE BAR</b> to begin with a couple of practice rounds. </div>`,
+    //condition 2
+    `<div><font size=120%; font color = 'green';>Food preference: choose two</font><br/>
+    <br><br/>
+    Now, we will begin with the choice task. Please keep your head still, otherwise we may have to redo the calibration and validation.<br/>
+    There will be a break halfway through the task. During the break you can move your head if you need to.    <br/>
+    As a quick reminder, you are choosing which food you would prefer to eat: <br/>
+    To select an food:<br/>
+    If you want to eat to the left food,  press  the <b><font color='green'>J</font></b> key; <br/>
+    If you want to eat to the top food,  press  the <b><font color='green'>I</font></b> key; <br/>
+    If you want to eat to the right food,  press the <b><font color='green'>L</font></b>  key;<br/>
+    If you want to eat to the bottom food,  press  the <b><font color='green'>K</font></b> key; <br/>
+    <br><br/>
+    Once selected the animal will have a <b><font color=#FF7F00>Orange</font></b> outline. <br/>
+    <u><b>Once you select an food, you cannot deselect it.</b> </u><br/>
+    <br><br/>
+    When you are ready, press the <b>SPACE BAR</b> to begin with a couple of practice rounds. </div>`,
+    `<div><font size=120%; font color = 'green';>Food preference: choose three</font><br/>
+    <br><br/>
+    Now, we will begin with the choice task. Please keep your head still, otherwise we may have to redo the calibration and validation.<br/>
+    There will be a break halfway through the task. During the break you can move your head if you need to.    <br/>
+    As a quick reminder, you are choosing which food you would prefer to eat: <br/>
+    To select an food:<br/>
+    If you want to eat to the left food,  press  the <b><font color='green'>J</font></b> key; <br/>
+    If you want to eat to the top food,  press  the <b><font color='green'>I</font></b> key; <br/>
+    If you want to eat to the right food,  press the <b><font color='green'>L</font></b>  key;<br/>
+    If you want to eat to the bottom food,  press  the <b><font color='green'>K</font></b> key; <br/>
+    <br><br/>
+    Once selected the animal will have a <b><font color=#FF7F00>Orange</font></b> outline. <br/>
+    <u><b>Once you select an food, you cannot deselect it.</b> </u><br/>
+    <br><br/>
+    When you are ready, press the <b>SPACE BAR</b> to begin with a couple of practice rounds. </div>`
+];
+
+var choiceInstruction_choose_one = {
     type: jsPsychHtmlKeyboardResponse,
-    stimulus: `<div><font size=120%; font color = 'green';>Food preference</font><br/>
-                                          <br><br/>
-         Now, we will begin with the choice task. Please keep your head still, otherwise we may have to redo the calibration and validation.<br/>
-         There will be a break halfway through the task. During the break you can move your head if you need to.    <br/>
-         As a quick reminder, you are choosing which food you would prefer to eat: <br/>
-
-         To select an food:<br/>
-
-         If you want to eat to the left food,  press  the <b><font color='green'>J</font></b> key; <br/>
-         If you want to eat to the top food,  press  the <b><font color='green'>I</font></b> key; <br/>
-         If you want to eat to the right food,  press the <b><font color='green'>L</font></b>  key;<br/>
-         If you want to eat to the bottom food,  press  the <b><font color='green'>K</font></b> key; <br/>
-                    <br><br/>
-        Once selected the animal will have a <b><font color=#FF7F00>Orange</font></b> outline. <br/>
-        <u><b>Once you select an food, you cannot deselect it.</b> </u><br/>
-                                                 <br><br/>
-        When you are ready, press the <b>SPACE BAR</b> to begin with a couple of practice rounds. </div>`,
+    stimulus: stimulus_html[0],
+    choices: ' ',
+    post_trial_gap: 500,
+    on_finish: function() {
+      choice_trials = get_choice_images(image_paths);
+    }
+  }
+  var choiceInstruction_choose_two = {
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus: stimulus_html[1],
+    choices: ' ',
+    post_trial_gap: 500,
+    on_finish: function() {
+      choice_trials = get_choice_images(image_paths);
+    }
+  }
+  var choiceInstruction_choose_three = {
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus: stimulus_html[2],
     choices: ' ',
     post_trial_gap: 500,
     on_finish: function() {
@@ -569,9 +621,39 @@
       }
     },
   };
- 
+ //make conditional timeline variable for choice task instructions
+ var if_choose_one = {
+  timeline: [choiceInstruction_choose_one],
+  conditional_function: function(){
+    if (jsPsych.timelineVariable('subset_size') == 1){
+      return true;
+    } else {
+      return false;
+    }
+  }
+ }
+ var if_choose_two = {
+  timeline: [choiceInstruction_choose_two],
+  conditional_function: function(){
+    if (jsPsych.timelineVariable('subset_size') == 2){
+      return true;
+    } else {
+      return false;
+    }
+  }
+ }
+ var if_choose_three = {
+  timeline: [choiceInstruction_choose_three],
+  conditional_function: function(){
+    if (jsPsych.timelineVariable('subset_size') == 3){
+      return true;
+    } else {
+      return false;
+    }
+  }
+ }
   var choose_k_procedure = {
-    timeline: [choiceInstruction, task_timeline],
+    timeline: [if_choose_one,if_choose_two,if_choose_three, task_timeline],
     timeline_variables: [
         {subset_size: 1},
         {subset_size: 2},
@@ -579,7 +661,6 @@
     ],
     randomize_order: true
 }
-
 
   var fullscreenEnd = {
     type: jsPsychFullscreen,
