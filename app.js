@@ -19,11 +19,16 @@ var app = express();
 const subjects = {};
 
 // --- Database SETUP
-const CLIENT_ID = '766132476109-943brm88g0abjas8kl93vpdgbirh6gh1.apps.googleusercontent.com';
-const CLIENT_SECRET = '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';
-// const REDIRECT_URL = 'https://neuroeconomics.herokuapp.com';
+const CLIENT_ID = '228376881552-hrg29htnkq46t0t8ql91uhe4o291tkjr.apps.googleusercontent.com';
+const CLIENT_SECRET = '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';
 const REDIRECT_URL = 'https://developers.google.com/oauthplayground';
-const REFRESH_TOKEN = '1//04ByqVMVRM2pgCgYIARAAGAQSNwF-L9IruKKCs_eI8lMHxzi2hCrryVjglSwS1asLnhPy0WXDnbhwjUbM3yP5OoSXPZmAVqJDm78';
+const REFRESH_TOKEN = '1//04xDNYRN9D_o7CgYIARAAGAQSNwF-L9IrvNi5g6WVtIprjCF36ey835OvEeer71-lwCFvQVL6EAmbNLYO3tyfjtH0-AwZ9IIE-bQ';
+
+//const CLIENT_ID = '766132476109-943brm88g0abjas8kl93vpdgbirh6gh1.apps.googleusercontent.com';
+//const CLIENT_SECRET = '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';
+// const REDIRECT_URL = 'https://neuroeconomics.herokuapp.com';
+//const REDIRECT_URL = 'https://developers.google.com/oauthplayground';
+//const REFRESH_TOKEN = '1//04ByqVMVRM2pgCgYIARAAGAQSNwF-L9IruKKCs_eI8lMHxzi2hCrryVjglSwS1asLnhPy0WXDnbhwjUbM3yP5OoSXPZmAVqJDm78';
 // const ACCESS_TOKEN = 'ya29.a0Aa4xrXNzy99TN4nngl464mzynSe4U2uPdTg3yBvEaQfgvl2DpI1rzyLRSnvxgsd2CPiq7zuZSUt4IW0XGm3gxUf_t2spUG7xAij4siTuSehg13Il0FdP3KBWJkaLzwQd81d16SssYHpsha3pMJ6JDxzE0nf_aCgYKATASARISFQEjDvL9LXmlqdTqiboWb7_a4dik-g0163'
 
 const oauth2Client = new google.auth.OAuth2(
