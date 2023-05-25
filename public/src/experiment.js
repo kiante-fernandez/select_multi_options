@@ -59,7 +59,7 @@ individual_items = individual_shuffled_image_names.map(img => ({
   stimulus: img
 }));
 const shuffled_image_names = jsPsych.randomization.shuffle(image_paths);
-const trial_options = shuffled_image_names.slice(0, 15);
+const trial_options = shuffled_image_names.slice(0, 15); // set to low number for debugging
 
 // Preloading files are needed to present the stimuli accurately.
 const preload = {
@@ -408,7 +408,7 @@ function getRandomInt(min, max) {
 
 var get_choice_images = function (image_paths) {
     // Number of trials to generate
-    var numSets = 2;
+    var numSets = 10;
     // Number of images trials
     var numImagesPerSet = 4;
     // Array to store the selected sets
@@ -467,7 +467,7 @@ var stimulus_html = [
   Once selected the food will have a <b><font color=#FF7F00>Orange</font></b> outline. <br/>
   <u><b>Once you select an food, you cannot deselect it.</b> </u><br/>
   <br><br/>
-  When you are ready, press the <b>SPACE BAR</b> to begin with a couple of practice rounds. </div>`,
+  When you are ready, press the <b>SPACE BAR</b> to begin. </div>`,
   //condition 2
   `<div><font size=120%; font color = 'green';>Food preference: choose two</font><br/>
   <br><br/>
@@ -483,7 +483,7 @@ var stimulus_html = [
   Once selected the food will have a <b><font color=#FF7F00>Orange</font></b> outline. <br/>
   <u><b>Once you select an food, you cannot deselect it.</b> </u><br/>
   <br><br/>
-  When you are ready, press the <b>SPACE BAR</b> to begin with a couple of practice rounds. </div>`,
+  When you are ready, press the <b>SPACE BAR</b> to begin. </div>`,
   `<div><font size=120%; font color = 'green';>Food preference: choose three</font><br/>
   <br><br/>
   Now, we will begin with the choice task. Please keep your head still, otherwise we may have to redo the calibration and validation.<br/>
@@ -498,7 +498,7 @@ var stimulus_html = [
   Once selected the food will have a <b><font color=#FF7F00>Orange</font></b> outline. <br/>
   <u><b>Once you select an food, you cannot deselect it.</b> </u><br/>
   <br><br/>
-  When you are ready, press the <b>SPACE BAR</b> to begin with a couple of practice rounds. </div>`
+  When you are ready, press the <b>SPACE BAR</b> to begin. </div>`,
 ];
 
 var choiceInstruction_choose_one = {
@@ -657,6 +657,7 @@ timeline.push(welcome_block_Prolific); //for prolific specific data collection
 timeline.push(fullscreenEnter); //start the fullscreen
 timeline.push(preload);
 timeline.push(instruction_block_1);
+
 //eye tracking
 // timeline.push(eyeTrackingInstruction1);
 // timeline.push(eyeTrackingInstruction2);
