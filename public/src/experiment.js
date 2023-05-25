@@ -464,7 +464,7 @@ var stimulus_html = [
   If you want to eat to the right food,  press the <b><font color='green'>L</font></b>  key;<br/>
   If you want to eat to the bottom food,  press  the <b><font color='green'>K</font></b> key; <br/>
   <br><br/>
-  Once selected the animal will have a <b><font color=#FF7F00>Orange</font></b> outline. <br/>
+  Once selected the food will have a <b><font color=#FF7F00>Orange</font></b> outline. <br/>
   <u><b>Once you select an food, you cannot deselect it.</b> </u><br/>
   <br><br/>
   When you are ready, press the <b>SPACE BAR</b> to begin with a couple of practice rounds. </div>`,
@@ -480,7 +480,7 @@ var stimulus_html = [
   If you want to eat to the right food,  press the <b><font color='green'>L</font></b>  key;<br/>
   If you want to eat to the bottom food,  press  the <b><font color='green'>K</font></b> key; <br/>
   <br><br/>
-  Once selected the animal will have a <b><font color=#FF7F00>Orange</font></b> outline. <br/>
+  Once selected the food will have a <b><font color=#FF7F00>Orange</font></b> outline. <br/>
   <u><b>Once you select an food, you cannot deselect it.</b> </u><br/>
   <br><br/>
   When you are ready, press the <b>SPACE BAR</b> to begin with a couple of practice rounds. </div>`,
@@ -495,7 +495,7 @@ var stimulus_html = [
   If you want to eat to the right food,  press the <b><font color='green'>L</font></b>  key;<br/>
   If you want to eat to the bottom food,  press  the <b><font color='green'>K</font></b> key; <br/>
   <br><br/>
-  Once selected the animal will have a <b><font color=#FF7F00>Orange</font></b> outline. <br/>
+  Once selected the food will have a <b><font color=#FF7F00>Orange</font></b> outline. <br/>
   <u><b>Once you select an food, you cannot deselect it.</b> </u><br/>
   <br><br/>
   When you are ready, press the <b>SPACE BAR</b> to begin with a couple of practice rounds. </div>`
@@ -505,28 +505,19 @@ var choiceInstruction_choose_one = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: stimulus_html[0],
   choices: ' ',
-  post_trial_gap: 500,
-  on_finish: function() {
-    choice_trials = get_choice_images(image_paths);
-  }
+  post_trial_gap: 500
 }
 var choiceInstruction_choose_two = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: stimulus_html[1],
   choices: ' ',
-  post_trial_gap: 500,
-  on_finish: function() {
-    choice_trials = get_choice_images(image_paths);
-  }
+  post_trial_gap: 500
 }
 var choiceInstruction_choose_three = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: stimulus_html[2],
   choices: ' ',
-  post_trial_gap: 500,
-  on_finish: function() {
-    choice_trials = get_choice_images(image_paths);
-  }
+  post_trial_gap: 500
 }
 
 var trial_count = 0;
@@ -579,7 +570,8 @@ var ratings_procedure = {
   };
 
   var task_timeline = {
-    timeline: [if_recalibrate,fixation, trial],
+    timeline: [fixation, trial],
+    // timeline: [if_recalibrate,fixation, trial],
     loop_function: function () {
       if (trial_count < choice_trials.length) {
         return true;
@@ -633,6 +625,7 @@ var ratings_procedure = {
   }
  }
   var choose_k_procedure = {
+    on_start: () => choice_trials = get_choice_images(image_paths),
     timeline: [if_choose_one,if_choose_two,if_choose_three, task_timeline],
     timeline_variables: [
         {subset_size: 1},
@@ -665,17 +658,17 @@ timeline.push(fullscreenEnter); //start the fullscreen
 timeline.push(preload);
 timeline.push(instruction_block_1);
 //eye tracking
-timeline.push(eyeTrackingInstruction1);
-timeline.push(eyeTrackingInstruction2);
-timeline.push(eyeTrackingNote);
-timeline.push(camera_instructions);
-timeline.push(init_camera);
-timeline.push(calibration_instructions);
-timeline.push(calibration);
-timeline.push(validation_instructions);
-timeline.push(validation);
-timeline.push(recalibrate);
-timeline.push(calibration_done);
+// timeline.push(eyeTrackingInstruction1);
+// timeline.push(eyeTrackingInstruction2);
+// timeline.push(eyeTrackingNote);
+// timeline.push(camera_instructions);
+// timeline.push(init_camera);
+// timeline.push(calibration_instructions);
+// timeline.push(calibration);
+// timeline.push(validation_instructions);
+// timeline.push(validation);
+// timeline.push(recalibrate);
+// timeline.push(calibration_done);
 
 //task
 timeline.push(ratings_procedure);

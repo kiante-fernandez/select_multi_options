@@ -384,7 +384,7 @@
     labels: ['Not at all', 'Very much'],
     min: 1,
     max: 100,
-    require_movement: true,
+    require_movement: false,
     slider_width: 1000,
     response_ends_trial: true,
     button_label: [`continue`],
@@ -550,30 +550,22 @@ var choiceInstruction_choose_one = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: stimulus_html[0],
     choices: ' ',
-    post_trial_gap: 500,
-    on_finish: function() {
-      choice_trials = get_choice_images(image_paths);
-    }
+    post_trial_gap: 500
   }
   var choiceInstruction_choose_two = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: stimulus_html[1],
     choices: ' ',
-    post_trial_gap: 500,
-    on_finish: function() {
-      choice_trials = get_choice_images(image_paths);
-    }
+    post_trial_gap: 500
   }
   var choiceInstruction_choose_three = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: stimulus_html[2],
     choices: ' ',
-    post_trial_gap: 500,
-    on_finish: function() {
-      choice_trials = get_choice_images(image_paths);
-    }
+    post_trial_gap: 500
   }
 
+  //var choice_trials = get_choice_images(image_paths);
   var trial_count = 0;
   //task
   var trial = {
@@ -610,11 +602,11 @@ var choiceInstruction_choose_one = {
   //end the experiment, distribute the reward
 
   var trials_with_variables = {
-    timeline: [ratingOverview, ratings, practice_instructions, fixation, practice_trial],
+    timeline: [ratingOverview, ratings]
   };
 
   var task_timeline = {
-    timeline: [if_recalibrate,fixation, trial],
+    timeline: [fixation, trial],
     loop_function: function () {
       if (trial_count < choice_trials.length) {
         return true;
@@ -668,6 +660,7 @@ var choiceInstruction_choose_one = {
   }
  }
   var choose_k_procedure = {
+    on_start: () => choice_trials = get_choice_images(image_paths),
     timeline: [if_choose_one,if_choose_two,if_choose_three, task_timeline],
     timeline_variables: [
         {subset_size: 1},
@@ -713,8 +706,7 @@ var choiceInstruction_choose_one = {
   // timeline.push(ratings);
   //timeline.push(practice_trial);
 
-  //timeline.push(trials_with_variables);
-  //timeline.push(ratings);
+  timeline.push(trials_with_variables);
   timeline.push(choose_k_procedure);
 
   //timeline.push(choiceInstruction);
