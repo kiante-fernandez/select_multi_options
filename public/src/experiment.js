@@ -408,7 +408,7 @@ function getRandomInt(min, max) {
 
 var get_choice_images = function (image_paths) {
     // Number of trials to generate
-    var numSets = 10;
+    var numSets = 100;
     // Number of images trials
     var numImagesPerSet = 4;
     // Array to store the selected sets
@@ -440,25 +440,25 @@ var get_choice_images = function (image_paths) {
       }
     }
 
-var factors = {
-      options: selectedSets
-};
-var factorial_values = jsPsych.randomization.factorial( {
-      options: selectedSets
-    }, 1);
-    return factorial_values;
-};
+// var factors = {
+//       options: selectedSets
+// };
+// var factorial_values = jsPsych.randomization.factorial( {
+//       options: selectedSets
+//     }, 1);
+//     return factorial_values;
+// };
 
 var choice_trials = [0];
 
 var stimulus_html = [
   //select 1
-  `<div><font size=120%; font color = 'green';>Food preference: : choose one</font><br/>
+  `<div><font size=120%; font color = 'green';>Food preference: : Choose one</font><br/>
   <br><br/>
-  Now, we will begin with the choice task. Please keep your head still, otherwise we may have to redo the calibration and validation.<br/>
-  There will be a break halfway through the task. During the break you can move your head if you need to.    <br/>
-  As a quick reminder, you are choosing which food you would prefer to eat: <br/>
-  To select an food:<br/>
+  You will now select <b><font color='green'>one</font></b> of the foods you'd prefer to eat. <br/>
+  Please keep your head still, otherwise we may have to redo the calibration and validation.<br/>
+  There will be a break halfway through the task. During the break you can move your head if you need to. <br/>
+  As a quick reminder, you are choosing which food you would prefer to eat: <br/><br/>
   If you want to eat to the left food,  press  the <b><font color='green'>J</font></b> key; <br/>
   If you want to eat to the top food,  press  the <b><font color='green'>I</font></b> key; <br/>
   If you want to eat to the right food,  press the <b><font color='green'>L</font></b>  key;<br/>
@@ -471,6 +471,7 @@ var stimulus_html = [
   //condition 2
   `<div><font size=120%; font color = 'green';>Food preference: choose two</font><br/>
   <br><br/>
+  You will now select <b><font color='green'>two</font></b> of the foods you'd prefer to eat. <br/>
   Now, we will begin with the choice task. Please keep your head still, otherwise we may have to redo the calibration and validation.<br/>
   There will be a break halfway through the task. During the break you can move your head if you need to.    <br/>
   As a quick reminder, you are choosing which food you would prefer to eat: <br/>
@@ -484,9 +485,11 @@ var stimulus_html = [
   <u><b>Once you select an food, you cannot deselect it.</b> </u><br/>
   <br><br/>
   When you are ready, press the <b>SPACE BAR</b> to begin. </div>`,
+  //condition 3
   `<div><font size=120%; font color = 'green';>Food preference: choose three</font><br/>
   <br><br/>
-  Now, we will begin with the choice task. Please keep your head still, otherwise we may have to redo the calibration and validation.<br/>
+  You will now select <b><font color='green'>three</font></b> of the foods you'd prefer to eat. <br/>
+  Please keep your head still, otherwise we may have to redo the calibration and validation.<br/>
   There will be a break halfway through the task. During the break you can move your head if you need to.    <br/>
   As a quick reminder, you are choosing which food you would prefer to eat: <br/>
   To select an food:<br/>
@@ -659,17 +662,17 @@ timeline.push(preload);
 timeline.push(instruction_block_1);
 
 //eye tracking
-// timeline.push(eyeTrackingInstruction1);
-// timeline.push(eyeTrackingInstruction2);
-// timeline.push(eyeTrackingNote);
-// timeline.push(camera_instructions);
-// timeline.push(init_camera);
-// timeline.push(calibration_instructions);
-// timeline.push(calibration);
-// timeline.push(validation_instructions);
-// timeline.push(validation);
-// timeline.push(recalibrate);
-// timeline.push(calibration_done);
+timeline.push(eyeTrackingInstruction1);
+timeline.push(eyeTrackingInstruction2);
+timeline.push(eyeTrackingNote);
+timeline.push(camera_instructions);
+timeline.push(init_camera);
+timeline.push(calibration_instructions);
+timeline.push(calibration);
+timeline.push(validation_instructions);
+timeline.push(validation);
+timeline.push(recalibrate);
+timeline.push(calibration_done);
 
 //task
 timeline.push(ratings_procedure);
