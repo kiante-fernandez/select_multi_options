@@ -408,7 +408,7 @@ function getRandomInt(min, max) {
 
 var get_choice_images = function (image_paths) {
     // Number of trials to generate
-    var numSets = 100;
+    var numSets = 50;
     // Number of images trials
     var numImagesPerSet = 4;
     // Array to store the selected sets
