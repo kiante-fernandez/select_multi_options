@@ -439,7 +439,15 @@ var get_choice_images = function (image_paths) {
         selectedSets.push(selectedImages);
       }
     }
-};
+    var factors = {
+      options: selectedSets
+    };
+
+    var factorial_values = jsPsych.randomization.factorial( {
+      options: selectedSets
+    }, 1);
+    return factorial_values;
+  };
 
 var choice_trials = [0];
 
