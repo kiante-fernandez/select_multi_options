@@ -572,20 +572,8 @@ var ratings_procedure = {
     timeline: [ratingOverview, ratings],
   };
 
-  var task_timeline = {
-    timeline: [fixation, trial],
-    // timeline: [if_recalibrate,fixation, trial],
-    loop_function: function () {
-      if (trial_count < choice_trials.length) {
-        return true;
-      } else {
-        trial_count = 0;
-        return false;
-      }
-    },
-  };
- //make conditional timeline variable for eye tracking re-calibration
-  var if_recalibrate = {
+   //make conditional timeline variable for eye tracking re-calibration
+   var if_recalibrate = {
     timeline: [recalibrate],
     conditional_function: function(){
       if (trial_count == choice_trials.length/2 || trial_count == 0){
@@ -595,6 +583,19 @@ var ratings_procedure = {
       }
     }
   }
+  
+  var task_timeline = {
+//    timeline: [fixation, trial],
+    timeline: [fixation, trial, if_recalibrate],
+    loop_function: function () {
+      if (trial_count < choice_trials.length) {
+        return true;
+      } else {
+        trial_count = 0;
+        return false;
+      }
+    },
+  };
 
  //make conditional timeline variable for choice task instructions
  var if_choose_one = {
