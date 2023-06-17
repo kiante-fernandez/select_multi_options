@@ -240,7 +240,7 @@ var calibration = {
     ],
     repetitions_per_point: 2,
     randomize_calibration_order: true,
-    calibration_mode: "view", //if view they look at points, if click they have to click on them
+    calibration_mode: "click", //if view they look at points, if click they have to click on them
     time_per_point: 3000
 }
 // validation eye tracking
@@ -262,7 +262,7 @@ var validation = {
     ],
     roi_radius: 200,
     time_to_saccade: 1000,
-    validation_duration: 2000,
+    validation_duration: 3000,
     data: {
         task: 'validate'
     }
@@ -284,7 +284,7 @@ var recalibrate = {
     conditional_function: function () {
       var validation_data = jsPsych.data.get().filter({ task: 'validate' }).values()[0];
       return validation_data.percent_in_roi.some(function (x) {
-        var minimum_percent_acceptable = 70;
+        var minimum_percent_acceptable = 65;
         return x < minimum_percent_acceptable;
       });
     },
