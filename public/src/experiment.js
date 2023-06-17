@@ -38,20 +38,22 @@ for (var i = 0; i < nImageInst; i++) {
 }
 //Creating list of image paths
 
-//These are image paths to images for the experimental treatment shown on each trial
-var image_indices_lst = math.range(1, 80); //math.range() returns a js obj that has a parameter called '._data' and that has an Array of the range.
+// experimental stimulus. 
+ //Creating list of image paths to load for the main task
+  var items_of_interest = [1, 5, 8, 12, 13, 16, 17, 18, 25, 26, 28, 33, 39, 51, 55, 60,
+    61, 63, 65, 70, 77, 80, 93, 96, 98, 99, 100, 102, 103, 104, 105,
+    106, 114, 115, 118, 119, 123, 124, 131, 142, 150, 153, 154, 155,
+    158, 159, 160, 161, 164, 165, 168, 170, 172, 173, 174, 176, 184,
+    187, 188, 200];
+    var arrayLength = items_of_interest.length;
+    
+    var image_paths = [];
+    for (var i = 0; i < arrayLength; i++) {
+        // This for loop fills the image_paths list with urls to the images for each of the individual items
+        var path_str1 = "../../img/60Foods/item" + String(items_of_interest[i]) + ".jpg";
+        image_paths.push(path_str1);
+    }
 
-image_indices_lst = Array.from(image_indices_lst._data); // This is just a list containing the range of numbers used for each url of the
-// experimental stimulus. The experimental stimuli are all saved in the /img/food/ folder. They have a prefix "food"
-// and then they include the number 1-N for N number of trials.
-var arrayLength = image_indices_lst.length; // arrayLength is used to show how many images/trials there are from 1-N trials.
-var image_paths = [];
-for (var i = 0; i < arrayLength; i++) {
-    //"../../public/img/food/food" when not on local server
-    // This for loop fills the image_paths list with urls to the images for each of the experimental treatments
-    var path_str1 = "../../img/food/food" + String(image_indices_lst[i]) + ".jpg";
-    image_paths.push(path_str1);
-}
 
 const individual_shuffled_image_names = jsPsych.randomization.shuffle(image_paths);
 var individual_items = [];
@@ -59,7 +61,7 @@ individual_items = individual_shuffled_image_names.map(img => ({
   stimulus: img
 }));
 const shuffled_image_names = jsPsych.randomization.shuffle(image_paths);
-const trial_options = shuffled_image_names.slice(0, 15); // set to low number for debugging
+const trial_options = shuffled_image_names.slice(0, 60); // set to low number for debugging
 
 // Preloading files are needed to present the stimuli accurately.
 const preload = {
