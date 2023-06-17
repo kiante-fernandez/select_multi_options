@@ -8,6 +8,6 @@ Things to do:
 ~~ move the demo script to the experiment js file ~~
 add a reward distribution screen
 ~~ change the foods to the lee data set ~~ 
-update the instructions
+~~ update the instructions~~
 proof read entire experiment
 

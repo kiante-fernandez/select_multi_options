@@ -241,7 +241,7 @@ var calibration = {
     repetitions_per_point: 2,
     randomize_calibration_order: true,
     calibration_mode: "view", //if view they look at points, if click they have to click on them
-    time_per_point: 3000
+    time_per_point: 1000 // change for testing. Should be 3000
 }
 // validation eye tracking
 var validation_instructions = {
@@ -262,7 +262,7 @@ var validation = {
     ],
     roi_radius: 200,
     time_to_saccade: 1000,
-    validation_duration: 3000,
+    validation_duration: 2000, // change for testing. Should be 3000
     data: {
         task: 'validate'
     }
@@ -461,13 +461,13 @@ var stimulus_html = [
   You will now select <b><font color='green'>one</font></b> of the foods you'd prefer to eat. <br/>
   Please keep your head still, otherwise we may have to redo the calibration and validation.<br/>
   There will be a break halfway through the task. During the break you can move your head if you need to. <br/>
-  As a quick reminder, you are choosing which food you would prefer to eat: <br/><br/>
+  As a reminder, you are choosing which food you would prefer to eat: <br/><br/>
   If you want to eat to the left food,  press  the <b><font color='red'>J</font></b> key; <br/>
   If you want to eat to the top food,  press  the <b><font color='red'>I</font></b> key; <br/>
   If you want to eat to the right food,  press the <b><font color='red'>L</font></b>  key;<br/>
   If you want to eat to the bottom food,  press  the <b><font color='red'>K</font></b> key; <br/>
   <br/>
-  <img  height="150px" width="500px"  src="${instruct_img[5]}"><br/>
+  <img  height="125px" width="450px"  src="${instruct_img[5]}"><br/>
   Once selected the food will have a <b><font color=#FF7F00>Orange</font></b> outline. <br/>
   <u><b>Once you select an food, you cannot deselect it.</b> </u><br/>
   <br><br/>
@@ -476,16 +476,16 @@ var stimulus_html = [
   `<div><font size=120%; font color = 'green';>Food preference: Choose two</font><br/>
   <br><br/>
   You will now select <b><font color='green'>two</font></b> of the foods you'd prefer to eat. <br/>
-  Now, we will begin with the choice task. Please keep your head still, otherwise we may have to redo the calibration and validation.<br/>
+  Please keep your head still, otherwise we may have to redo the calibration and validation.<br/>
   There will be a break halfway through the task. During the break you can move your head if you need to.    <br/>
-  As a quick reminder, you are choosing which food you would prefer to eat: <br/>
+  As a reminder, you are choosing which food you would prefer to eat: <br/>
   To select an food:<br/>
   If you want to eat to the left food,  press  the <b><font color='red'>J</font></b> key; <br/>
   If you want to eat to the top food,  press  the <b><font color='red'>I</font></b> key; <br/>
   If you want to eat to the right food,  press the <b><font color='red'>L</font></b>  key;<br/>
   If you want to eat to the bottom food,  press  the <b><font color='red'>K</font></b> key; <br/>
   <br/>
-  <img  height="150px" width="500px"  src="${instruct_img[5]}"><br/>
+  <img  height="125px" width="450px"  src="${instruct_img[5]}"><br/>
   Once selected the food will have a <b><font color=#FF7F00>Orange</font></b> outline. <br/>
   <u><b>Once you select an food, you cannot deselect it.</b> </u><br/>
   <br><br/>
@@ -496,14 +496,14 @@ var stimulus_html = [
   You will now select <b><font color='green'>three</font></b> of the foods you'd prefer to eat. <br/>
   Please keep your head still, otherwise we may have to redo the calibration and validation.<br/>
   There will be a break halfway through the task. During the break you can move your head if you need to.    <br/>
-  As a quick reminder, you are choosing which food you would prefer to eat: <br/>
+  As a reminder, you are choosing which food you would prefer to eat: <br/>
   To select an food:<br/>
   If you want to eat to the left food,  press  the <b><font color='red'>J</font></b> key; <br/>
   If you want to eat to the top food,  press  the <b><font color='red'>I</font></b> key; <br/>
   If you want to eat to the right food,  press the <b><font color='red'>L</font></b>  key;<br/>
   If you want to eat to the bottom food,  press  the <b><font color='red'>K</font></b> key; <br/>
   <br/>
-  <img  height="150px" width="500px"  src="${instruct_img[5]}"><br/>
+  <img  height="125px" width="450px"  src="${instruct_img[5]}"><br/>
   Once selected the food will have a <b><font color=#FF7F00>Orange</font></b> outline. <br/>
   <u><b>Once you select an food, you cannot deselect it.</b> </u><br/>
   <br><br/>
