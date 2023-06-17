@@ -99,7 +99,7 @@
     key_forward: ' '
   };
 
-  const nImageInst = 5;
+  const nImageInst = 6;
   /** load all the instruction images, and remember to preload */
   var instruct_img = [];
   for (var i = 0; i < nImageInst; i++) {
@@ -509,7 +509,8 @@
     If you want to eat to the top food,  press  the <b><font color='green'>I</font></b> key; <br/>
     If you want to eat to the right food,  press the <b><font color='green'>L</font></b>  key;<br/>
     If you want to eat to the bottom food,  press  the <b><font color='green'>K</font></b> key; <br/>
-    <br><br/>
+    <br/>
+    <img  height="150px" width="400px"  src="${instruct_img[5]}"><br/>
     Once selected the animal will have a <b><font color=#FF7F00>Orange</font></b> outline. <br/>
     <u><b>Once you select an food, you cannot deselect it.</b> </u><br/>
     <br><br/>
@@ -525,7 +526,8 @@
     If you want to eat to the top food,  press  the <b><font color='green'>I</font></b> key; <br/>
     If you want to eat to the right food,  press the <b><font color='green'>L</font></b>  key;<br/>
     If you want to eat to the bottom food,  press  the <b><font color='green'>K</font></b> key; <br/>
-    <br><br/>
+    <br/>
+    <img  height="150px" width="400px"  src="${instruct_img[5]}"><br/>
     Once selected the animal will have a <b><font color=#FF7F00>Orange</font></b> outline. <br/>
     <u><b>Once you select an food, you cannot deselect it.</b> </u><br/>
     <br><br/>
@@ -540,7 +542,8 @@
     If you want to eat to the top food,  press  the <b><font color='green'>I</font></b> key; <br/>
     If you want to eat to the right food,  press the <b><font color='green'>L</font></b>  key;<br/>
     If you want to eat to the bottom food,  press  the <b><font color='green'>K</font></b> key; <br/>
-    <br><br/>
+    <br/>
+    <img  height="150px" width="500px"  src="${instruct_img[5]}"><br/>
     Once selected the animal will have a <b><font color=#FF7F00>Orange</font></b> outline. <br/>
     <u><b>Once you select an food, you cannot deselect it.</b> </u><br/>
     <br><br/>
@@ -580,15 +583,15 @@ var choiceInstruction_choose_one = {
     num_required_responses: jsPsych.timelineVariable('subset_size'),
     choices: () => choice_trials[trial_count].options,
     button_html: [
-      '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-j", data-choice=0>',
-      '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-i", data-choice=1>',
-      '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-l", data-choice=2>',
-      '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-k", data-choice=3>'
+      '<img src="%choice%", id="jspsych-html-button-response-button-j", data-choice=0>',
+      '<img src="%choice%", id="jspsych-html-button-response-button-i", data-choice=1>',
+      '<img src="%choice%", id="jspsych-html-button-response-button-l", data-choice=2>',
+      '<img src="%choice%", id="jspsych-html-button-response-button-k", data-choice=3>'
     ],
     response_ends_trial: true,
     keys: ['j', 'i', 'l', 'k'],
-    margin_vertical: "40px",
-    margin_horizontal: "50px",
+    margin_vertical: "15px",
+    margin_horizontal: "21px",
     on_finish: function (data) {
       //count how many options where selected
       //count how many objects in the res_buttons arrary.
@@ -707,10 +710,10 @@ var choiceInstruction_choose_one = {
   // timeline.push(ratings);
   //timeline.push(practice_trial);
 
-  timeline.push(trials_with_variables);
- // timeline.push(choose_k_procedure);
+//timeline.push(trials_with_variables);
+ timeline.push(choose_k_procedure);
 
-  //timeline.push(choiceInstruction);
+//timeline.push(choiceInstruction);
 
   //timeline.push(task_timeline);
 

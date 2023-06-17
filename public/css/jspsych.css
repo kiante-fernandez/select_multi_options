@@ -242,21 +242,33 @@
 #jspsych-multiple-select-response-button-i {
   grid-column: 2;
   grid-row: 1;
+  height: 200px;
+  width: 200px;
+  display:table;
 }
 
 #jspsych-multiple-select-response-button-l {
   grid-column: 3;
   grid-row: 2;
+  height: 200px;
+  width: 200px;
+  display:table;
 }
 
 #jspsych-multiple-select-response-button-k {
   grid-column: 2;
   grid-row: 3;
+  height: 200px;
+  width: 200px;
+  display:table;
 }
 
 #jspsych-multiple-select-response-button-j {
   grid-column: 1;
   grid-row: 2;
+  height: 200px;
+  width: 200px;
+  display:table;
 }
 
 .jspsych-slider::-ms-thumb {

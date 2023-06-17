@@ -28,15 +28,13 @@ var MM = String(TODAY.getMonth() + 1).padStart(2, '0');
 var YYYY = TODAY.getFullYear();
 const DATE = YYYY + MM + DD;
 
-
 //Creating list of image paths to load for instructions.
-const nImageInst = 5;
+const nImageInst = 6;
 /** load all the instruction images, and remember to preload */
 var instruct_img = [];
 for (var i = 0; i < nImageInst; i++) {
   instruct_img.push('../../img/instruct' + i + '.png');
 }
-//Creating list of image paths
 
 // experimental stimulus. 
  //Creating list of image paths to load for the main task
@@ -53,7 +51,6 @@ for (var i = 0; i < nImageInst; i++) {
         var path_str1 = "../../img/60Foods/item" + String(items_of_interest[i]) + ".jpg";
         image_paths.push(path_str1);
     }
-
 
 const individual_shuffled_image_names = jsPsych.randomization.shuffle(image_paths);
 var individual_items = [];
@@ -412,7 +409,6 @@ function getRandomInt(min, max) {
   };
 
 // Choice task
-
 var get_choice_images = function (image_paths) {
     // Number of trials to generate
     var numSets = 50;
@@ -460,51 +456,54 @@ var choice_trials = [0];
 
 var stimulus_html = [
   //select 1
-  `<div><font size=120%; font color = 'green';>Food preference: : Choose one</font><br/>
+  `<div><font size=120%; font color = 'green';>Food preference: Choose one</font><br/>
   <br><br/>
   You will now select <b><font color='green'>one</font></b> of the foods you'd prefer to eat. <br/>
   Please keep your head still, otherwise we may have to redo the calibration and validation.<br/>
   There will be a break halfway through the task. During the break you can move your head if you need to. <br/>
   As a quick reminder, you are choosing which food you would prefer to eat: <br/><br/>
-  If you want to eat to the left food,  press  the <b><font color='green'>J</font></b> key; <br/>
-  If you want to eat to the top food,  press  the <b><font color='green'>I</font></b> key; <br/>
-  If you want to eat to the right food,  press the <b><font color='green'>L</font></b>  key;<br/>
-  If you want to eat to the bottom food,  press  the <b><font color='green'>K</font></b> key; <br/>
-  <br><br/>
+  If you want to eat to the left food,  press  the <b><font color='red'>J</font></b> key; <br/>
+  If you want to eat to the top food,  press  the <b><font color='red'>I</font></b> key; <br/>
+  If you want to eat to the right food,  press the <b><font color='red'>L</font></b>  key;<br/>
+  If you want to eat to the bottom food,  press  the <b><font color='red'>K</font></b> key; <br/>
+  <br/>
+  <img  height="150px" width="500px"  src="${instruct_img[5]}"><br/>
   Once selected the food will have a <b><font color=#FF7F00>Orange</font></b> outline. <br/>
   <u><b>Once you select an food, you cannot deselect it.</b> </u><br/>
   <br><br/>
   When you are ready, press the <b>SPACE BAR</b> to begin. </div>`,
   //condition 2
-  `<div><font size=120%; font color = 'green';>Food preference: choose two</font><br/>
+  `<div><font size=120%; font color = 'green';>Food preference: Choose two</font><br/>
   <br><br/>
   You will now select <b><font color='green'>two</font></b> of the foods you'd prefer to eat. <br/>
   Now, we will begin with the choice task. Please keep your head still, otherwise we may have to redo the calibration and validation.<br/>
   There will be a break halfway through the task. During the break you can move your head if you need to.    <br/>
   As a quick reminder, you are choosing which food you would prefer to eat: <br/>
   To select an food:<br/>
-  If you want to eat to the left food,  press  the <b><font color='green'>J</font></b> key; <br/>
-  If you want to eat to the top food,  press  the <b><font color='green'>I</font></b> key; <br/>
-  If you want to eat to the right food,  press the <b><font color='green'>L</font></b>  key;<br/>
-  If you want to eat to the bottom food,  press  the <b><font color='green'>K</font></b> key; <br/>
-  <br><br/>
+  If you want to eat to the left food,  press  the <b><font color='red'>J</font></b> key; <br/>
+  If you want to eat to the top food,  press  the <b><font color='red'>I</font></b> key; <br/>
+  If you want to eat to the right food,  press the <b><font color='red'>L</font></b>  key;<br/>
+  If you want to eat to the bottom food,  press  the <b><font color='red'>K</font></b> key; <br/>
+  <br/>
+  <img  height="150px" width="500px"  src="${instruct_img[5]}"><br/>
   Once selected the food will have a <b><font color=#FF7F00>Orange</font></b> outline. <br/>
   <u><b>Once you select an food, you cannot deselect it.</b> </u><br/>
   <br><br/>
   When you are ready, press the <b>SPACE BAR</b> to begin. </div>`,
   //condition 3
-  `<div><font size=120%; font color = 'green';>Food preference: choose three</font><br/>
+  `<div><font size=120%; font color = 'green';>Food preference: Choose three</font><br/>
   <br><br/>
   You will now select <b><font color='green'>three</font></b> of the foods you'd prefer to eat. <br/>
   Please keep your head still, otherwise we may have to redo the calibration and validation.<br/>
   There will be a break halfway through the task. During the break you can move your head if you need to.    <br/>
   As a quick reminder, you are choosing which food you would prefer to eat: <br/>
   To select an food:<br/>
-  If you want to eat to the left food,  press  the <b><font color='green'>J</font></b> key; <br/>
-  If you want to eat to the top food,  press  the <b><font color='green'>I</font></b> key; <br/>
-  If you want to eat to the right food,  press the <b><font color='green'>L</font></b>  key;<br/>
-  If you want to eat to the bottom food,  press  the <b><font color='green'>K</font></b> key; <br/>
-  <br><br/>
+  If you want to eat to the left food,  press  the <b><font color='red'>J</font></b> key; <br/>
+  If you want to eat to the top food,  press  the <b><font color='red'>I</font></b> key; <br/>
+  If you want to eat to the right food,  press the <b><font color='red'>L</font></b>  key;<br/>
+  If you want to eat to the bottom food,  press  the <b><font color='red'>K</font></b> key; <br/>
+  <br/>
+  <img  height="150px" width="500px"  src="${instruct_img[5]}"><br/>
   Once selected the food will have a <b><font color=#FF7F00>Orange</font></b> outline. <br/>
   <u><b>Once you select an food, you cannot deselect it.</b> </u><br/>
   <br><br/>
@@ -543,15 +542,15 @@ var trial = {
   num_required_responses: jsPsych.timelineVariable('subset_size'),
   choices: () => choice_trials[trial_count].options,
   button_html: [
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-j", data-choice=0>',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-i", data-choice=1>',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-l", data-choice=2>',
-    '<img src="%choice%" style="width:128px;height:128px;display:table;", id="jspsych-html-button-response-button-k", data-choice=3>'
+    '<img src="%choice%", id="jspsych-html-button-response-button-j", data-choice=0>',
+    '<img src="%choice%", id="jspsych-html-button-response-button-i", data-choice=1>',
+    '<img src="%choice%", id="jspsych-html-button-response-button-l", data-choice=2>',
+    '<img src="%choice%", id="jspsych-html-button-response-button-k", data-choice=3>'
   ],
   response_ends_trial: true,
   keys: ['j', 'i', 'l', 'k'],
-  margin_vertical: "40px",
-  margin_horizontal: "50px",
+  margin_vertical: "15px",
+  margin_horizontal: "21px",
   on_finish: function (data) {
     //count how many options where selected
     //count how many objects in the res_buttons arrary.
