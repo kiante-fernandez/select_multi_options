@@ -248,13 +248,15 @@ var calibration = {
 }
 // validation eye tracking
 var validation_instructions = {
+ on_start: () => document.body.style.cursor = 'pointer',
  type: jsPsychHtmlButtonResponse,
  stimulus: `
    <p>Now we'll measure the accuracy of the calibration.</p>
    <p>Look at each dot as it appears on the screen.</p>
      `,
  choices: ['Got it'],
- post_trial_gap: 1000
+ post_trial_gap: 1000,
+ on_finish: () => document.body.style.cursor = 'none'
 }
 var validation = {
     type: jsPsychWebgazerValidate,
@@ -270,6 +272,7 @@ var validation = {
 }
 // recalibrate eye tracking
 var recalibrate_instructions = {
+    on_start: () => document.body.style.cursor = 'pointer',
     type: jsPsychHtmlButtonResponse,
     stimulus: `
     <p>The accuracy of the calibration is a little lower than we'd like.</p>
@@ -277,6 +280,7 @@ var recalibrate_instructions = {
     <p>On the next screen, look at the dots.<p>
     `,
     choices: ['OK'],
+    on_finish: () => document.body.style.cursor = 'none'
 }
 var recalibrate = {
     timeline: [recalibrate_instructions, calibration, validation_instructions, validation],
@@ -295,7 +299,8 @@ var recalibrate = {
     }
   }
 var calibration_done = {
-    type: jsPsychHtmlButtonResponse,
+  on_start: () => document.body.style.cursor = 'pointer',
+  type: jsPsychHtmlButtonResponse,
     stimulus: `
     <p>Great, we're done with calibration!</p>
     `,
@@ -571,7 +576,7 @@ var trial = {
 };
 
 var ratings_procedure = {
-    timeline: [ratingOverview, ratings],
+    timeline: [exposure_instruction, exposure_sequence,ratingOverview,ratings],
   };
 
    //make conditional timeline variable for eye tracking re-calibration
