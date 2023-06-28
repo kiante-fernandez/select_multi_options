@@ -241,7 +241,7 @@ var calibration = {
     repetitions_per_point: 2,
     randomize_calibration_order: true,
     calibration_mode: "view", //if view they look at points, if click they have to click on them
-    time_per_point: 3000 // change for testing. Should be 3000
+    time_per_point: 500 // change for testing. Should be 3000
 }
 // validation eye tracking
 var validation_instructions = {
@@ -262,7 +262,7 @@ var validation = {
     ],
     roi_radius: 200,
     time_to_saccade: 1000,
-    validation_duration: 3000, // change for testing. Should be 3000
+    validation_duration: 1500, // change for testing. Should be 3000
     data: {
         task: 'validate'
     }
@@ -287,7 +287,7 @@ var recalibrate = {
     conditional_function: function () {
       var validation_data = jsPsych.data.get().filter({ task: 'validate' }).values()[0];
       return validation_data.percent_in_roi.some(function (x) {
-        var minimum_percent_acceptable = 70;
+        var minimum_percent_acceptable = 0;
         return x < minimum_percent_acceptable;
       });
     },
@@ -397,7 +397,7 @@ function getRandomInt(min, max) {
     labels: ['Not at all', 'Very much'],
     min: 1,
     max: 100,
-    require_movement: true, //set to true for experiment
+    require_movement: false, //set to true for experiment
     slider_width: 1000,
     response_ends_trial: true,
     button_label: [`continue`],
