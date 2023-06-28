@@ -287,7 +287,7 @@ var recalibrate = {
     conditional_function: function () {
       var validation_data = jsPsych.data.get().filter({ task: 'validate' }).values()[0];
       return validation_data.percent_in_roi.some(function (x) {
-        var minimum_percent_acceptable = 0;
+        var minimum_percent_acceptable = 25;
         return x < minimum_percent_acceptable;
       });
     },
