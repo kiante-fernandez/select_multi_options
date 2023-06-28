@@ -429,10 +429,10 @@ var get_choice_images = function (image_paths) {
       while (uniquePaths.length < numImagesPerSet && numAttempts < image_paths.length) {
         // Randomly select an image path from the imagePaths array
         var imagePath = jsPsych.randomization.sampleWithoutReplacement(image_paths, 1)[0];
-        // Check if the selected image path is already in the set or has been used four times
+        // Check if the selected image path is already in the set or has been used 7 times
         if (
           uniquePaths.indexOf(imagePath) === -1 &&
-          (!imagePathCounter[imagePath] || imagePathCounter[imagePath] < 6)
+          (!imagePathCounter[imagePath] || imagePathCounter[imagePath] < 7)
         ) {
           uniquePaths.push(imagePath);
           selectedImages.push(imagePath);
@@ -592,7 +592,7 @@ var ratings_procedure = {
    var if_recalibrate = {
     timeline: [recalibrate],
     conditional_function: function(){
-      if (trial_count == choice_trials.length/2 || trial_count == 0){
+      if (trial_count == choice_trials.length/2 - 1 || trial_count == 0){
         return true;
       } else {
         return false;
@@ -604,7 +604,7 @@ var ratings_procedure = {
 //    timeline: [fixation, trial],
     timeline: [fixation, trial, if_recalibrate],
     loop_function: function () {
-      if (trial_count < choice_trials.length) {
+      if (trial_count < choice_trials.length - 1) {
         return true;
       } else {
         trial_count = 0;

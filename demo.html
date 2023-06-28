@@ -401,7 +401,7 @@
 
   var get_choice_images = function (image_paths) {
     // Number of trials to generate
-    var numSets = 2;
+    var numSets = 100;
     // Number of images trials
     var numImagesPerSet = 4;
     // Array to store the selected sets
@@ -419,7 +419,7 @@
         // Check if the selected image path is already in the set or has been used four times
         if (
           uniquePaths.indexOf(imagePath) === -1 &&
-          (!imagePathCounter[imagePath] || imagePathCounter[imagePath] < 6)
+          (!imagePathCounter[imagePath] || imagePathCounter[imagePath] < 7)
         ) {
           uniquePaths.push(imagePath);
           selectedImages.push(imagePath);
@@ -612,7 +612,7 @@ var choiceInstruction_choose_one = {
   var task_timeline = {
     timeline: [fixation, trial],
     loop_function: function () {
-      if (trial_count < choice_trials.length) {
+      if (trial_count < choice_trials.length - 1) {
         return true;
       } else {
         trial_count = 0;
