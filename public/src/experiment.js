@@ -352,7 +352,7 @@ var fixation = {
     data: { screen_id: "fixation" },
     type: jsPsychHtmlKeyboardResponse,
     stimulus: "<div style='font-size: 80px'>+</div>",
-    trial_duration: [700],
+    trial_duration: [900],
     response_ends_trial: false
 };
 
@@ -397,7 +397,7 @@ function getRandomInt(min, max) {
     labels: ['Not at all', 'Very much'],
     min: 1,
     max: 100,
-    require_movement: false, //set to true for experiment
+    require_movement: true, //set to true for experiment
     slider_width: 1000,
     response_ends_trial: true,
     button_label: [`continue`],
@@ -463,6 +463,7 @@ var stimulus_html = [
   <br><br/>
   You will now select <b><font color='green'>one</font></b> of the foods you'd most like to eat.<br/>
   Please keep your head still, otherwise we may have to redo the calibration and validation.<br/>
+  <b>Before each trial:</b> Please look at the center of the screen.<br/>
   There will be a break halfway through the task. During the break you can move your head if you need to. <br/>
   As a reminder, you are choosing which food you'd most like to eat: <br/><br/>
   To select a food:<br/>
@@ -475,12 +476,14 @@ var stimulus_html = [
   Once selected the food will have an <b><font color=#FF7F00>Orange</font></b> outline. <br/>
   <u><b>Once you select a food, you cannot deselect it.</b> </u><br/>
   <br><br/>
+  <b>Once you select the foods:</b> Please look at the center of the screen.<br/>
   When you are ready, press the <b>SPACE BAR</b> to begin. </div>`,
   //condition 2
   `<div><font size=120%; font color = 'green';>Food preference: Choose two</font><br/>
   <br><br/>
   You will now select <b><font color='green'>two</font></b> of the foods you'd most like to eat.<br/>
   Please keep your head still, otherwise we may have to redo the calibration and validation.<br/>
+  <b>Before each trial:</b> Please look at the center of the screen.<br/>
   There will be a break halfway through the task. During the break you can move your head if you need to.    <br/>
   As a reminder, you are choosing which food you'd most like to eat: <br/><br/>
   To select a food:<br/>
@@ -493,12 +496,14 @@ var stimulus_html = [
   Once selected the food will have an <b><font color=#FF7F00>Orange</font></b> outline. <br/>
   <u><b>Once you select a food, you cannot deselect it.</b> </u><br/>
   <br><br/>
+  <b>Once you select the foods:</b> Please look at the center of the screen.<br/>
   When you are ready, press the <b>SPACE BAR</b> to begin. </div>`,
   //condition 3
   `<div><font size=120%; font color = 'green';>Food preference: Choose three</font><br/>
   <br><br/>
   You will now select <b><font color='green'>three</font></b> of the foods you'd most like to eat.<br/>
   Please keep your head still, otherwise we may have to redo the calibration and validation.<br/>
+  <b>Before each trial:</b> Please look at the center of the screen.<br/>
   There will be a break halfway through the task. During the break you can move your head if you need to.    <br/>
   As a reminder, you are choosing which food you'd most like to eat: <br/><br/>
   To select a food:<br/>
@@ -511,6 +516,7 @@ var stimulus_html = [
   Once selected the food will have an <b><font color=#FF7F00>Orange</font></b> outline. <br/>
   <u><b>Once you select a food, you cannot deselect it.</b> </u><br/>
   <br><br/>
+  <b>Once you select the foods:</b> Please look at the center of the screen.<br/>
   When you are ready, press the <b>SPACE BAR</b> to begin. </div>`,
 ];
 
