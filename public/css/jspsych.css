@@ -270,6 +270,34 @@
   width: 200px;
   display:table;
 }
+#jspsych-multiple-select-response-button-e {
+  grid-column: 1;
+  grid-row: 1;
+  height: 200px;
+  width: 200px;
+  display:table;
+}
+#jspsych-multiple-select-response-button-s {
+  grid-column: 3;
+  grid-row: 1;
+  height: 200px;
+  width: 200px;
+  display:table;
+}
+#jspsych-multiple-select-response-button-d {
+  grid-column: 3;
+  grid-row: 3;
+  height: 200px;
+  width: 200px;
+  display:table;
+}
+#jspsych-multiple-select-response-button-f {
+  grid-column: 1;
+  grid-row: 3;
+  height: 200px;
+  width: 200px;
+  display:table;
+}
 
 .jspsych-slider::-ms-thumb {
   visibility: hidden;
