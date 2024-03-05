@@ -229,7 +229,7 @@
   };
 
   var get_choice_images = function (image_paths) {
-        // Number of trials to generate
+        // Number of trials to generate // needs to be +1 of what you want (so 3 will give 2)
         var numSets = 5;
         // Number of images per trial
         var numImagesPerSet = 12;
@@ -274,6 +274,40 @@
     return factorial_values;
   };
   
+// Reuse the shuffleArray function to shuffle an array
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+    }
+}
+
+// Function to initialize or reset originalOptions for each trial
+function initializeOriginalOptions(trials) {
+    trials.forEach(trial => {
+        // Store a copy of the options array in originalOptions if not already present
+        if (!trial.originalOptions) {
+            trial.originalOptions = [...trial.options];
+        } else {
+            // Reset options to the original full set if originalOptions already exists
+            trial.options = [...trial.originalOptions];
+        }
+    });
+}
+
+// Function to apply random selection to each trial's options, using originalOptions
+function applyRandomSelectionToAllTrials(trials, subsetSize) {
+    initializeOriginalOptions(trials); // Ensure originalOptions is set and options are reset to full set
+    trials.forEach(trial => {
+        shuffleArray(trial.originalOptions); // Shuffle the original options
+        trial.options = trial.originalOptions.slice(0, subsetSize); // Create a subset from the shuffled original options
+    });
+}
+
+// After calling this, each item in Choice_trials will have its options array modified 
+// to be a randomly chosen subset of size 4
+
+
   var choice_trials = [0];
 
   var stimulus_html = [
@@ -363,7 +397,8 @@ var choiceInstruction_choose_one = {
   var trial = {
     data: () => ({
         screen_id: 'trial',
-        options: choice_trials[trial_count].options
+        options: choice_trials[trial_count].options,
+        set_size: jsPsych.timelineVariable('alternative_size')
       }),
     type: jsPsychVisualSearchCircle,
 //    num_required_responses:3,
@@ -398,6 +433,7 @@ var choiceInstruction_choose_one = {
   };
 
   var task_timeline = {
+    on_start: () => applyRandomSelectionToAllTrials(choice_trials, jsPsych.timelineVariable('alternative_size')),
     timeline: [start_trial, trial],
     loop_function: function () {
       if (trial_count < choice_trials.length - 1) {
@@ -440,16 +476,23 @@ var choiceInstruction_choose_one = {
     }
   }
  }
-  var choose_k_procedure = {
+
+var choose_k_procedure = {
     on_start: () => choice_trials = get_choice_images(image_paths),
     timeline: [if_choose_one,if_choose_two,if_choose_three, task_timeline],
     timeline_variables: [
-        {subset_size: 1},
-        {subset_size: 2},
-        {subset_size: 3},
+    { subset_size: 1, alternative_size: 4 },
+    { subset_size: 1, alternative_size: 8 },
+    { subset_size: 1, alternative_size: 12 },
+    { subset_size: 2, alternative_size: 4 },
+    { subset_size: 2, alternative_size: 8 },
+    { subset_size: 2, alternative_size: 12 },
+    { subset_size: 3, alternative_size: 4 },
+    { subset_size: 3, alternative_size: 8 },
+    { subset_size: 3, alternative_size: 12 }
     ],
     randomize_order: true
-}
+ }
 
   var fullscreenEnd = {
     type: jsPsychFullscreen,
@@ -504,7 +547,7 @@ var choiceInstruction_choose_one = {
   timeline.push(preload);
   // timeline.push(welcome_block);
 
-//timeline.push(trials_with_variables);
+//timeline.push(trials_with_variables); //ratings procedure
 timeline.push(choose_k_procedure);
 
 //timeline.push(choiceInstruction);
