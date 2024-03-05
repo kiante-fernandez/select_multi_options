@@ -88,7 +88,7 @@ var jsPsychVisualSearchCircle = (function (jspsych) {
           fixation_duration: {
               type: jspsych.ParameterType.INT,
               pretty_name: "Fixation duration",
-              default: 1000,
+              default: 25,
           },
         /** The number of unique item selections required to end the trial. */
           num_required_responses: {
