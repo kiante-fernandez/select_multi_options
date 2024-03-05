@@ -90,6 +90,12 @@ var jsPsychVisualSearchCircle = (function (jspsych) {
               pretty_name: "Fixation duration",
               default: 1000,
           },
+        /** The number of unique item selections required to end the trial. */
+          num_required_responses: {
+              type: jspsych.ParameterType.INT,
+              pretty_name: "Number of required responses",
+              default: 2,
+          }
       },
   };
   /**
@@ -107,109 +113,117 @@ var jsPsychVisualSearchCircle = (function (jspsych) {
           this.jsPsych = jsPsych;
       }
       trial(display_element, trial) {
-          var paper_size = trial.circle_diameter + trial.target_size[0];
+        var paper_size = trial.circle_diameter + trial.target_size[0];
           // fixation location
-          var fix_loc = this.generateFixationLoc(trial);
+        var fix_loc = this.generateFixationLoc(trial);
           // check for correct combination of parameters and create stimuli set
-          var to_present = this.generatePresentationSet(trial);
+        var to_present = this.generatePresentationSet(trial);
           // stimulus locations on the circle
-          var display_locs = this.generateDisplayLocs(to_present.length, trial);
+        var display_locs = this.generateDisplayLocs(to_present.length, trial);
           // get target to draw on
-          display_element.innerHTML +=
-              '<div id="jspsych-visual-search-circle-container" style="position: relative; width:' +
-                  paper_size +
-                  "px; height:" +
-                  paper_size +
-                  'px"></div>';
-          var paper = display_element.querySelector("#jspsych-visual-search-circle-container");
-          const show_fixation = () => {
-              // show fixation
-              //var fixation = paper.image(trial.fixation_image, fix_loc[0], fix_loc[1], trial.fixation_size[0], trial.fixation_size[1]);
+        display_element.innerHTML +=
+          `<div id="jspsych-visual-search-circle-container" style="position: relative; width:${paper_size}px; height:${paper_size}px;"></div>`;
+        var paper = display_element.querySelector("#jspsych-visual-search-circle-container");
+
+        var waitingForFixationClick = false;
+
+        const show_fixation = () => {
+            paper.innerHTML +=
+            //   `<img id='fixation' src='${trial.fixation_image}' style='position: absolute; top:${fix_loc[0]}px; left:${fix_loc[1]}px; width:${trial.fixation_size[0]}px; height:${trial.fixation_size[1]}px;'></img>`;
+              `<img id='fixation' src='${trial.fixation_image}' style='position: absolute; top:${fix_loc[0]}px; left:${fix_loc[1]}px; width:${trial.fixation_size[0]}px; height:${trial.fixation_size[1]}px; cursor: pointer;'></img>`; // Ensure cursor: pointer; is set for visual cue
+            this.jsPsych.pluginAPI.setTimeout(() => {
+              show_search_array();
+            }, trial.fixation_duration);
+        };
+
+        var start_time = performance.now();
+        var responses = []; // Array to store response information
+
+        const enableImageClicks = () => {
+            display_element.querySelectorAll('.search-item').forEach((img, index) => {
+              img.addEventListener('click', imageClickHandler);
+            });
+          };
+      
+          const disableImageClicks = () => {
+            display_element.querySelectorAll('.search-item').forEach((img) => {
+              img.removeEventListener('click', imageClickHandler);
+            });
+          };
+        const imageClickHandler = (event) => {
+            if (waitingForFixationClick) return; // Ignore clicks if waiting for a fixation click
+      
+            var end_time = performance.now();
+            var rt = Math.round(end_time - start_time);
+            var imgFileName = event.target.src.split('/').pop();
+            responses.push({
+              imgId: event.target.id,
+              imgSrc: imgFileName,
+              position: display_locs[parseInt(event.target.id.replace('img', ''), 10)], // Save the position
+              rt: rt
+            });
+            event.target.classList.add('active');
+            
+            // Disable further image clicks and wait for a fixation click
+            waitingForFixationClick = true;
+            disableImageClicks();
+          };
+        
+        const show_search_array = () => {
+            // Set up the search items on the circle
+            to_present.forEach((imgSrc, index) => {
+              var imgId = 'img' + index;
               paper.innerHTML +=
-                  "<img src='" +
-                      trial.fixation_image +
-                      "' style='position: absolute; top:" +
-                      fix_loc[0] +
-                      "px; left:" +
-                      fix_loc[1] +
-                      "px; width:" +
-                      trial.fixation_size[0] +
-                      "px; height:" +
-                      trial.fixation_size[1] +
-                      "px;'></img>";
-              // wait
-              this.jsPsych.pluginAPI.setTimeout(() => {
-                  // after wait is over
-                  show_search_array();
-              }, trial.fixation_duration);
-          };
-          const end_trial = (rt, correct, key_press) => {
-              // data saving
-              var trial_data = {
-                  correct: correct,
-                  rt: rt,
-                  response: key_press,
-                  locations: display_locs,
-                  target_present: trial.target_present,
-                  set_size: trial.set_size,
-              };
-              // go to next trial
-              this.jsPsych.finishTrial(trial_data);
-          };
-          show_fixation();
-          const show_search_array = () => {
-              for (var i = 0; i < display_locs.length; i++) {
-                  paper.innerHTML +=
-                      "<img src='" +
-                          to_present[i] +
-                          "' style='position: absolute; top:" +
-                          display_locs[i][0] +
-                          "px; left:" +
-                          display_locs[i][1] +
-                          "px; width:" +
-                          trial.target_size[0] +
-                          "px; height:" +
-                          trial.target_size[1] +
-                          "px;'></img>";
+                `<img src='${imgSrc}' id='${imgId}' class='search-item' style='position: absolute; top:${display_locs[index][0]}px; left:${display_locs[index][1]}px; width:${trial.target_size[0]}px; height:${trial.target_size[1]}px;'></img>`;
+            });
+          
+            // Enable clicks on all images
+            enableImageClicks();
+          
+            // Set up the central fixation with a click event listener
+            var fixation = paper.querySelector('#fixation');
+            fixation.addEventListener('click', () => {
+              if (!waitingForFixationClick) return; // Ignore if we're not waiting for a fixation click
+          
+              fixation.classList.add('fixation-clicked');
+              setTimeout(() => {
+                fixation.classList.remove('fixation-clicked');
+              }, 250); // Adjust the timeout duration as needed            
+
+              // Check if enough responses have been collected
+              if (responses.length >= trial.num_required_responses) {
+                end_trial();
+              } else {
+                // Re-enable image clicks after fixation click
+                enableImageClicks();
+                waitingForFixationClick = false;
               }
-              var trial_over = false;
-              const after_response = (info) => {
-                  trial_over = true;
-                  var correct = false;
-                  if ((this.jsPsych.pluginAPI.compareKeys(info.key, trial.target_present_key) &&
-                      trial.target_present) ||
-                      (this.jsPsych.pluginAPI.compareKeys(info.key, trial.target_absent_key) &&
-                          !trial.target_present)) {
-                      correct = true;
-                  }
-                  clear_display();
-                  end_trial(info.rt, correct, info.key);
-              };
-              var valid_keys = [trial.target_present_key, trial.target_absent_key];
-              const key_listener = this.jsPsych.pluginAPI.getKeyboardResponse({
-                  callback_function: after_response,
-                  valid_responses: valid_keys,
-                  rt_method: "performance",
-                  persist: false,
-                  allow_held_key: false,
-              });
-              if (trial.trial_duration !== null) {
-                  this.jsPsych.pluginAPI.setTimeout(() => {
-                      if (!trial_over) {
-                          this.jsPsych.pluginAPI.cancelKeyboardResponse(key_listener);
-                          trial_over = true;
-                          var rt = null;
-                          var correct = false;
-                          var key_press = null;
-                          clear_display();
-                          end_trial(rt, correct, key_press);
-                      }
-                  }, trial.trial_duration);
-              }
-              function clear_display() {
-                  display_element.innerHTML = "";
-              }
+            });
           };
+
+        const end_trial = () => {
+            // kill keyboard listeners
+            if (typeof keyboardListener !== "undefined") {
+                            this.jsPsych.pluginAPI.cancelKeyboardResponse(keyboardListener);
+            }
+            var trial_data = {
+              num_required_responses: trial.num_required_responses,
+              rt: JSON.stringify(responses.map(r => r.rt)),
+              imgIds: JSON.stringify(responses.map(r => r.imgId)),
+              imgSrcs: JSON.stringify(responses.map(r => r.imgSrc)),
+              positions: JSON.stringify(responses.map(r => r.position)),
+              locations: display_locs
+            };
+            display_element.innerHTML = "";
+            this.jsPsych.finishTrial(trial_data);
+          };
+    
+          if (trial.trial_duration !== null) {
+            this.jsPsych.pluginAPI.setTimeout(() => {
+              end_trial();
+            }, trial.trial_duration);
+          }
+        show_fixation();
       }
       generateFixationLoc(trial) {
           var paper_size = trial.circle_diameter + trial.target_size[0];
