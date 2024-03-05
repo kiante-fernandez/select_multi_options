@@ -278,21 +278,20 @@
 
   var stimulus_html = [
   //select 1
-  `<div>
-    <font size="120%" color="green">Food Preference: Choose One</font><br/>
+  `<div><font size="120%" color="green">Food Preference: Choose One</font><br/>
     <br><br/>
     You will now select <b><font color="green">one</font></b> of the foods you'd most like to eat.<br/>
     <b>Before each trial:</b> You will be asked to click on the basket, indicating that you are ready to begin and that your mouse is in the center.<br/>
-    <b>Do not move your mouse from the cart until you are presented the items.<br/>
-    As a reminder, you are choosing which food you'd most like to eat: <br/><br/>
-    To select a food you simpley need to click on it.<br/>
+    <b>Do not move your mouse from the cart until you are presented with the items.</b><br/>
+    As a reminder, you are choosing which foods you'd most like to eat: <br/><br/>
+    To select a food, simply click on it.<br/>
 
-    <img height="400px" width="500px" src="${instruct_img[7]}"><br/>
+    <img height="450px" width="500px" src="${instruct_img[7]}"><br/>
 
     Once selected, the food will have an <b><font color="#FF7F00">orange</font></b> outline. <br/>
     <u><b>Once you select a food, you cannot deselect it.</b></u><br/>
     <br>
-    <b>Importantly, once you select each food:</b> You will not be able to select another until you have clicked on your cart (added it).<br/>
+    <b>Importantly, once you select a food:</b> You will not be able to select another until you have clicked on your cart (added it).<br/>
     <b>After you click on the cart:</b> The cart will briefly have a <b><font color="#720e9e">purple</font></b> outline to indicate that your item was selected.<br/><br/>
     When you are ready, press the <b>SPACE BAR</b> to begin.</div>`,
   //condition 2
@@ -300,16 +299,16 @@
   <br><br/>
   You will now select <b><font color='green'>two</font></b> of the foods you'd most like to eat.<br/>
   <b>Before each trial:</b> You will be asked to click on the basket, indicating that you are ready to begin and that your mouse is in the center.<br/>
-  <b>Do not move your mouse from the cart until you are presented the items.<br/>
-  As a reminder, you are choosing which food you'd most like to eat: <br/><br/>
-  To select a food you simpley need to click on it.<br/>
+  <b>Do not move your mouse from the cart until you are presented with the items.</b><br/>
+  As a reminder, you are choosing which foods you'd most like to eat: <br/><br/>
+  To select a food, simply click on it.<br/>
 
-  <img height="400px" width="500px" src="${instruct_img[7]}"><br/>
+  <img height="450px" width="500px" src="${instruct_img[7]}"><br/>
 
   Once selected, the food will have an <b><font color="#FF7F00">orange</font></b> outline. <br/>
   <u><b>Once you select a food, you cannot deselect it.</b></u><br/>
   <br>
-  <b>Importantly, once you select each food:</b> You will not be able to select another until you have clicked on your cart (added it).<br/>
+  <b>Importantly, once you select a food:</b> You will not be able to select another until you have clicked on your cart (added it).<br/>
   <b>After you click on the cart:</b> The cart will briefly have a <b><font color="#720e9e">purple</font></b> outline to indicate that your item was selected.<br/><br/>
   When you are ready, press the <b>SPACE BAR</b> to begin.</div>`,
   //condition 3
@@ -317,16 +316,16 @@
   <br><br/>
   You will now select <b><font color='green'>three</font></b> of the foods you'd most like to eat.<br/>
   <b>Before each trial:</b> You will be asked to click on the basket, indicating that you are ready to begin and that your mouse is in the center.<br/>
-  <b>Do not move your mouse from the cart until you are presented the items.<br/>
-  As a reminder, you are choosing which food you'd most like to eat: <br/><br/>
-  To select a food you simpley need to click on it.<br/>
+  <b>Do not move your mouse from the cart until you are presented with the items.</b><br/>
+  As a reminder, you are choosing which foods you'd most like to eat: <br/><br/>
+  To select a food, simply click on it.<br/>
 
-  <img height="400px" width="500px" src="${instruct_img[7]}"><br/>
+  <img height="450px" width="500px" src="${instruct_img[7]}"><br/>
 
   Once selected, the food will have an <b><font color="#FF7F00">orange</font></b> outline. <br/>
   <u><b>Once you select a food, you cannot deselect it.</b></u><br/>
-  <br><br/>
-  <b>Importantly, once you select each food:</b> You will not be able to select another until you have clicked on your cart (added it).<br/>
+  <br>
+  <b>Importantly, once you select a food:</b> You will not be able to select another until you have clicked on your cart (added it).<br/>
   <b>After you click on the cart:</b> The cart will briefly have a <b><font color="#720e9e">purple</font></b> outline to indicate that your item was selected.<br/><br/>
   When you are ready, press the <b>SPACE BAR</b> to begin.</div>`,
 ];
@@ -358,7 +357,7 @@ var choiceInstruction_choose_one = {
     type: jsPsychHtmlButtonResponse,
     stimulus: ' ',
     choices: ['Start Choosing'],
-    button_html: '<button class="jspsych-btn" style="background-color: white; border: 5px solid purple; border-radius:50%; padding: 20px; display: inline-block; cursor: pointer;"><img src="' + instruct_img[6] + '" style="width:60px; height:auto;"></button>'
+    button_html: '<button class="jspsych-btn" style="background-color: white; border: 5px solid purple; border-radius:50%; padding: 20px; display: inline-block; cursor: pointer;"><img src="' + instruct_img[6] + '" style="width:100px; height:auto;"></button>'
   };
  //task
   var trial = {
