@@ -93,12 +93,12 @@
       '<p>Welcome to the study!</p>' +
       "<p>Today, you will make some decisions about snack foods. </p>" +
       "<p>There will be multiple parts to the study, and you will receive instructions before each new part.</p>" +
-      "<p>If you have any questions, please contact the experimenter at neuroeconomics.osu@gmail.com. If you are ready to begin, please press the SPACEBAR.</p>",
+      "<p>If you have any questions, please contact the experimenter at kiante@ucla.edu. If you are ready to begin, please press the SPACEBAR.</p>",
     ],
     key_forward: ' '
   };
 
-  const nImageInst = 7;
+  const nImageInst = 8;
   /** load all the instruction images, and remember to preload */
   var instruct_img = [];
   for (var i = 0; i < nImageInst; i++) {
@@ -229,38 +229,40 @@
   };
 
   var get_choice_images = function (image_paths) {
-    // Number of trials to generate
-    var numSets = 100;
-    // Number of images trials
-    var numImagesPerSet = 8;
-    // Array to store the selected sets
-    var selectedSets = [];
-    // Create a counter object to track the usage of each image path
-    var imagePathCounter = {};
-    // Generate the sets
-    for (var i = 0; i < numSets; i++) {
-      var selectedImages = [];
-      var uniquePaths = []; // Array to store unique image paths for each set
-      var numAttempts = 0;
-      while (uniquePaths.length < numImagesPerSet && numAttempts < image_paths.length) {
-        // Randomly select an image path from the imagePaths array
-        var imagePath = jsPsych.randomization.sampleWithoutReplacement(image_paths, 1)[0];
-        // Check if the selected image path is already in the set or has been used four times
-        if (
-          uniquePaths.indexOf(imagePath) === -1 &&
-          (!imagePathCounter[imagePath] || imagePathCounter[imagePath] < 7)
-        ) {
-          uniquePaths.push(imagePath);
-          selectedImages.push(imagePath);
-          // Increment the counter for the used image path
-          imagePathCounter[imagePath] = (imagePathCounter[imagePath] || 0) + 1;
-        }
-        numAttempts++;
-      }
-      if (selectedImages.length === numImagesPerSet) {
-        selectedSets.push(selectedImages);
-      }
-    }
+        // Number of trials to generate
+        var numSets = 5;
+        // Number of images per trial
+        var numImagesPerSet = 12;
+        // Array to store the selected sets
+        var selectedSets = [];
+        // Create a counter object to track the usage of each image path
+        var imagePathCounter = {};
+        // Adjust the max usage limit as needed
+        var maxUsageLimit = 25; // Increased from 7 to allow more reuse
+        // Generate the sets
+        for (var i = 0; i < numSets; i++) {
+          var selectedImages = [];
+          var uniquePaths = []; // Array to store unique image paths for each set
+          var numAttempts = 0;
+          while (uniquePaths.length < numImagesPerSet && numAttempts < image_paths.length * 2) { // Adjusted attempt limit
+            // Randomly select an image path from the imagePaths array
+            var imagePath = jsPsych.randomization.sampleWithoutReplacement(image_paths, 1)[0];
+            // Check if the selected image path is already in the set or has been used too many times
+            if (
+              uniquePaths.indexOf(imagePath) === -1 &&
+              (!imagePathCounter[imagePath] || imagePathCounter[imagePath] < maxUsageLimit)
+            ) {
+              uniquePaths.push(imagePath);
+              selectedImages.push(imagePath);
+              // Increment the counter for the used image path
+              imagePathCounter[imagePath] = (imagePathCounter[imagePath] || 0) + 1;
+            }
+            numAttempts++;
+          }
+          if (selectedImages.length === numImagesPerSet) {
+            selectedSets.push(selectedImages);
+          }
+        }      
 
     var factors = {
       options: selectedSets
@@ -275,56 +277,58 @@
   var choice_trials = [0];
 
   var stimulus_html = [
-    //select 1
-    `<div><font size=120%; font color = 'green';>Food preference: : choose one</font><br/>
+  //select 1
+  `<div>
+    <font size="120%" color="green">Food Preference: Choose One</font><br/>
     <br><br/>
-    Now, we will begin with the choice task. Please keep your head still, otherwise we may have to redo the calibration and validation.<br/>
-    There will be a break halfway through the task. During the break you can move your head if you need to.    <br/>
-    As a quick reminder, you are choosing which food you would prefer to eat: <br/>
-    To select an food:<br/>
-    If you want to eat to the left food,  press  the <b><font color='green'>J</font></b> key; <br/>
-    If you want to eat to the top food,  press  the <b><font color='green'>I</font></b> key; <br/>
-    If you want to eat to the right food,  press the <b><font color='green'>L</font></b>  key;<br/>
-    If you want to eat to the bottom food,  press  the <b><font color='green'>K</font></b> key; <br/>
-    <br/>
-    <img  height="150px" width="400px"  src="${instruct_img[5]}"><br/>
-    Once selected the animal will have a <b><font color=#FF7F00>Orange</font></b> outline. <br/>
-    <u><b>Once you select an food, you cannot deselect it.</b> </u><br/>
-    <br><br/>
-    When you are ready, press the <b>SPACE BAR</b> to begin with a couple of practice rounds. </div>`,
-    //condition 2
-    `<div><font size=120%; font color = 'green';>Food preference: choose two</font><br/>
-    <br><br/>
-    Now, we will begin with the choice task. Please keep your head still, otherwise we may have to redo the calibration and validation.<br/>
-    There will be a break halfway through the task. During the break you can move your head if you need to.    <br/>
-    As a quick reminder, you are choosing which food you would prefer to eat: <br/>
-    To select an food:<br/>
-    If you want to eat to the left food,  press  the <b><font color='green'>J</font></b> key; <br/>
-    If you want to eat to the top food,  press  the <b><font color='green'>I</font></b> key; <br/>
-    If you want to eat to the right food,  press the <b><font color='green'>L</font></b>  key;<br/>
-    If you want to eat to the bottom food,  press  the <b><font color='green'>K</font></b> key; <br/>
-    <br/>
-    <img  height="150px" width="400px"  src="${instruct_img[5]}"><br/>
-    Once selected the animal will have a <b><font color=#FF7F00>Orange</font></b> outline. <br/>
-    <u><b>Once you select an food, you cannot deselect it.</b> </u><br/>
-    <br><br/>
-    When you are ready, press the <b>SPACE BAR</b> to begin with a couple of practice rounds. </div>`,
-    `<div><font size=120%; font color = 'green';>Food preference: choose three</font><br/>
-    <br><br/>
-    Now, we will begin with the choice task. Please keep your head still, otherwise we may have to redo the calibration and validation.<br/>
-    There will be a break halfway through the task. During the break you can move your head if you need to.    <br/>
-    As a quick reminder, you are choosing which food you would prefer to eat: <br/>
-    To select an food:<br/>
-    If you want to eat to the left food,  press  the <b><font color='green'>J</font></b> key; <br/>
-    If you want to eat to the top food,  press  the <b><font color='green'>I</font></b> key; <br/>
-    If you want to eat to the right food,  press the <b><font color='green'>L</font></b>  key;<br/>
-    If you want to eat to the bottom food,  press  the <b><font color='green'>K</font></b> key; <br/>
-    <br/>
-    <img  height="150px" width="500px"  src="${instruct_img[5]}"><br/>
-    Once selected the animal will have a <b><font color=#FF7F00>Orange</font></b> outline. <br/>
-    <u><b>Once you select an food, you cannot deselect it.</b> </u><br/>
-    <br><br/>
-    When you are ready, press the <b>SPACE BAR</b> to begin with a couple of practice rounds. </div>`
+    You will now select <b><font color="green">one</font></b> of the foods you'd most like to eat.<br/>
+    <b>Before each trial:</b> You will be asked to click on the basket, indicating that you are ready to begin and that your mouse is in the center.<br/>
+    <b>Do not move your mouse from the cart until you are presented the items.<br/>
+    As a reminder, you are choosing which food you'd most like to eat: <br/><br/>
+    To select a food you simpley need to click on it.<br/>
+
+    <img height="400px" width="500px" src="${instruct_img[7]}"><br/>
+
+    Once selected, the food will have an <b><font color="#FF7F00">orange</font></b> outline. <br/>
+    <u><b>Once you select a food, you cannot deselect it.</b></u><br/>
+    <br>
+    <b>Importantly, once you select each food:</b> You will not be able to select another until you have clicked on your cart (added it).<br/>
+    <b>After you click on the cart:</b> The cart will briefly have a <b><font color="#720e9e">purple</font></b> outline to indicate that your item was selected.<br/><br/>
+    When you are ready, press the <b>SPACE BAR</b> to begin.</div>`,
+  //condition 2
+  `<div><font size=120%; font color = 'green';>Food preference: Choose two</font><br/>
+  <br><br/>
+  You will now select <b><font color='green'>two</font></b> of the foods you'd most like to eat.<br/>
+  <b>Before each trial:</b> You will be asked to click on the basket, indicating that you are ready to begin and that your mouse is in the center.<br/>
+  <b>Do not move your mouse from the cart until you are presented the items.<br/>
+  As a reminder, you are choosing which food you'd most like to eat: <br/><br/>
+  To select a food you simpley need to click on it.<br/>
+
+  <img height="400px" width="500px" src="${instruct_img[7]}"><br/>
+
+  Once selected, the food will have an <b><font color="#FF7F00">orange</font></b> outline. <br/>
+  <u><b>Once you select a food, you cannot deselect it.</b></u><br/>
+  <br>
+  <b>Importantly, once you select each food:</b> You will not be able to select another until you have clicked on your cart (added it).<br/>
+  <b>After you click on the cart:</b> The cart will briefly have a <b><font color="#720e9e">purple</font></b> outline to indicate that your item was selected.<br/><br/>
+  When you are ready, press the <b>SPACE BAR</b> to begin.</div>`,
+  //condition 3
+  `<div><font size=120%; font color = 'green';>Food preference: Choose three</font><br/>
+  <br><br/>
+  You will now select <b><font color='green'>three</font></b> of the foods you'd most like to eat.<br/>
+  <b>Before each trial:</b> You will be asked to click on the basket, indicating that you are ready to begin and that your mouse is in the center.<br/>
+  <b>Do not move your mouse from the cart until you are presented the items.<br/>
+  As a reminder, you are choosing which food you'd most like to eat: <br/><br/>
+  To select a food you simpley need to click on it.<br/>
+
+  <img height="400px" width="500px" src="${instruct_img[7]}"><br/>
+
+  Once selected, the food will have an <b><font color="#FF7F00">orange</font></b> outline. <br/>
+  <u><b>Once you select a food, you cannot deselect it.</b></u><br/>
+  <br><br/>
+  <b>Importantly, once you select each food:</b> You will not be able to select another until you have clicked on your cart (added it).<br/>
+  <b>After you click on the cart:</b> The cart will briefly have a <b><font color="#720e9e">purple</font></b> outline to indicate that your item was selected.<br/><br/>
+  When you are ready, press the <b>SPACE BAR</b> to begin.</div>`,
 ];
 
 var choiceInstruction_choose_one = {
@@ -346,44 +350,47 @@ var choiceInstruction_choose_one = {
     post_trial_gap: 500
   }
 
-  //var choice_trials = get_choice_images(image_paths);
+  var choice_trials = get_choice_images(image_paths);
   var trial_count = 0;
-  //task
-  var trial = {
-    on_start: () => document.body.style.cursor = 'none',
-    data: {
-      screen_id: "trial",
-      options: choice_trials[trial_count].options
-    },
-    type: jsPsychMutipleButtonResponse,
-    stimulus: [],
-    num_required_responses: jsPsych.timelineVariable('subset_size'),
-    choices: () => choice_trials[trial_count].options,
-    button_html: [
-      '<img src="%choice%", id="jspsych-html-button-response-button-j", data-choice=0>',
-      '<img src="%choice%", id="jspsych-html-button-response-button-i", data-choice=1>',
-      '<img src="%choice%", id="jspsych-html-button-response-button-l", data-choice=2>',
-      '<img src="%choice%", id="jspsych-html-button-response-button-k", data-choice=3>',
-      '<img src="%choice%", id="jspsych-html-button-response-button-e", data-choice=4>',
-      '<img src="%choice%", id="jspsych-html-button-response-button-s", data-choice=5>',
-      '<img src="%choice%", id="jspsych-html-button-response-button-d", data-choice=6>',
-      '<img src="%choice%", id="jspsych-html-button-response-button-f", data-choice=7>'
 
-    ],
-    response_ends_trial: true,
-    keys: ['j', 'i', 'l', 'k', 'e','s','d','f'],
-    margin_vertical: "15px",
-    margin_horizontal: "21px",
-    on_finish: function (data) {
-      //count how many options where selected
-      //count how many objects in the res_buttons arrary.
-      //Its a string, so extract the numbers then count
-      matches = data.res_buttons.match(/\d+/g);
-      if (matches == null) { matches = 0 };
-      data.options_selected = matches.length
-      trial_count++;
-    }
+  var start_trial = {
+    data: { screen_id: "start_fixation" },
+    type: jsPsychHtmlButtonResponse,
+    stimulus: ' ',
+    choices: ['Start Choosing'],
+    button_html: '<button class="jspsych-btn" style="background-color: white; border: 5px solid purple; border-radius:50%; padding: 20px; display: inline-block; cursor: pointer;"><img src="' + instruct_img[6] + '" style="width:60px; height:auto;"></button>'
   };
+ //task
+  var trial = {
+    data: () => ({
+        screen_id: 'trial',
+        options: choice_trials[trial_count].options
+      }),
+    type: jsPsychVisualSearchCircle,
+//    num_required_responses:3,
+    num_required_responses: jsPsych.timelineVariable('subset_size'),
+//    stimuli: [ratings_images[0],ratings_images[1],ratings_images[2],ratings_images[3],ratings_images[4],ratings_images[5],ratings_images[6],ratings_images[7],ratings_images[8],ratings_images[9],ratings_images[10],ratings_images[11]],
+    stimuli: () => choice_trials[trial_count].options,
+    fixation_image: instruct_img[6],
+    target_present_key: ' ',
+    target_absent_key: 'n',
+    target_present: true,
+    circle_diameter: 1000,
+    fixation_size:[100,100],
+    target_size: [150,150],
+    extensions: [
+    {type: jsPsychExtensionMouseTracking, params: {targets: ['#fixation']}}
+  ],
+    on_finish: function (data) {
+        var responses = JSON.parse(data.imgIds);
+        // Count the number of responses
+        var options_selected = responses.length;
+        // Store the count back in the trial data
+        data.options_selected = options_selected;
+        // Increment trial count
+        trial_count++;
+  }
+  }
 
   //end the experiment, distribute the reward
 
@@ -392,7 +399,7 @@ var choiceInstruction_choose_one = {
   };
 
   var task_timeline = {
-    timeline: [fixation, trial],
+    timeline: [start_trial, trial],
     loop_function: function () {
       if (trial_count < choice_trials.length - 1) {
         return true;
@@ -463,33 +470,6 @@ var choiceInstruction_choose_one = {
 
 //  fixationImg= '/Users/kiante/Documents/select_multi_options/public/img/instruct4.png">';
 
-var start_trial = {
-    data: { screen_id: "start_fixation" },
-    type: jsPsychHtmlButtonResponse,
-    stimulus: ' ',
-    choices: ['Start Choosing'],
-    button_html: '<button class="jspsych-btn" style="background-color: white; border: 5px solid purple; border-radius:50%; padding: 20px; display: inline-block; cursor: pointer;"><img src="' + instruct_img[6] + '" style="width:60px; height:auto;"></button>'
-  };
-  
-  
-  var TrialCircle = {
-    type: jsPsychVisualSearchCircle,
-    stimuli: [ratings_images[0],ratings_images[1],ratings_images[2],ratings_images[3],ratings_images[4],ratings_images[5],ratings_images[6],ratings_images[7],ratings_images[8],ratings_images[9],ratings_images[10],ratings_images[11]],
-    fixation_image: instruct_img[6],
-    target_present_key: ' ',
-    target_absent_key: 'n',
-    target_present: true,
-    circle_diameter: 1000,
-    fixation_size:[100,100],
-    target_size: [150,150],
-    extensions: [
-    {type: jsPsychExtensionMouseTracking, params: {targets: ['#fixation']}}
-  ],
-  data: {
-    task: 'choose'
-  }
-  }
-
   var replay = {
     type: jsPsychHtmlButtonResponse,
     stimulus: '<div id="target"><img src="' + instruct_img[6] + '"></div>',
@@ -526,15 +506,15 @@ var start_trial = {
   // timeline.push(welcome_block);
 
 //timeline.push(trials_with_variables);
-//timeline.push(choose_k_procedure);
+timeline.push(choose_k_procedure);
 
 //timeline.push(choiceInstruction);
 
-  //timeline.push(task_timeline);
+//timeline.push(task_timeline);
 
   // timeline.push(fullscreenEnd); //end the fullscreen
-  timeline.push(start_trial);
-  timeline.push(TrialCircle);
+  //timeline.push(start_trial);
+  //timeline.push(TrialCircle);
   //timeline.push(trial)
   timeline.push(replay);
 

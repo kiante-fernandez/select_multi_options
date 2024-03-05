@@ -14,3 +14,6 @@ make the code work for many alternatives...it needs to factor through each condi
 Will the eye tracking still work? 
 
 create new instructions block with key mappings  (should we have a practice session?s)
+
+We now have a cicle array design for the experiment. 
+
