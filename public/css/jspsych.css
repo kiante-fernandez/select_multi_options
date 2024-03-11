@@ -212,7 +212,11 @@
   height: 130px;
   margin-bottom: 10px;
 }
-
+.img-cropped {
+  clip-path: circle(50% at 50% 50%);
+  object-fit: cover;
+  object-position: center;
+}
 .active {
   border: 5px solid #FF7F00; /* Orange border */
   background-color: #FFFFFF; /* White background */

@@ -177,7 +177,8 @@ var jsPsychVisualSearchCircle = (function (jspsych) {
             to_present.forEach((imgSrc, index) => {
               var imgId = 'img' + index;
               paper.innerHTML +=
-                `<img src='${imgSrc}' id='${imgId}' class='search-item' style='position: absolute; top:${display_locs[index][0]}px; left:${display_locs[index][1]}px; width:${trial.target_size[0]}px; height:${trial.target_size[1]}px;'></img>`;
+//                `<img src='${imgSrc}' id='${imgId}' class='search-item' style='position: absolute; top:${display_locs[index][0]}px; left:${display_locs[index][1]}px; width:${trial.target_size[0]}px; height:${trial.target_size[1]}px;'></img>`;
+                `<img src='${imgSrc}' id='${imgId}' class='search-item img-cropped' style='position: absolute; top:${display_locs[index][0]}px; left:${display_locs[index][1]}px; width:${trial.target_size[0]}px; height:${trial.target_size[1]}px;'></img>`;
             });
           
             // Enable clicks on all images
