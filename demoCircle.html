@@ -72,7 +72,7 @@
     type: jsPsychSurveyHtmlForm,
     preamble: "<p>Welcome to the experiment!</p>" +
       "Please complete the form",
-    html: "<p>Participant ID: <input name = 'subject_id' type = 'text'/></p><p>OSU EMAIL: <input name = 'subject_email' type = 'text'/></p>",
+    html: "<p>Participant ID: <input name = 'subject_id' type = 'text'/></p><p>EMAIL: <input name = 'subject_email' type = 'text'/></p>",
     on_finish: function (data) {
       responses = data.response;
       jsPsych.data.addProperties({

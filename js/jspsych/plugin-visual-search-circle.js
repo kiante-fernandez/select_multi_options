@@ -105,8 +105,8 @@ var jsPsychVisualSearchCircle = (function (jspsych) {
    * Subject responds with key press to whether or not the target is present.
    * Based on code written for psychtoolbox by Ben Motz.
    *
-   * @author Josh de Leeuw
-   * @see {@link https://www.jspsych.org/plugins/jspsych-visual-search-circle/ visual-search-circle plugin documentation on jspsych.org}
+   * @author Josh de Leeuw. Edited by Kianté Fernandez
+   * @see {@link https://www.jspsych.org/plugins/jspsych-visual-search-circle/ visual-search-circle plugin documentation on the orignal jspsych.org}
    **/
   class VisualSearchCirclePlugin {
       constructor(jsPsych) {
@@ -162,8 +162,11 @@ var jsPsychVisualSearchCircle = (function (jspsych) {
               position: display_locs[parseInt(event.target.id.replace('img', ''), 10)], // Save the position
               rt: rt
             });
-            event.target.classList.add('active');
-            
+            event.target.classList.add('active', 'selected');
+            // Hide all non-selected items
+            display_element.querySelectorAll('.search-item:not(.selected)').forEach(img => {
+              img.style.visibility = 'hidden'; // Use visibility to keep the layout stable
+            });
             // Disable further image clicks and wait for a fixation click
             waitingForFixationClick = true;
             disableImageClicks();
@@ -183,12 +186,17 @@ var jsPsychVisualSearchCircle = (function (jspsych) {
             // Set up the central fixation with a click event listener
             var fixation = paper.querySelector('#fixation');
             fixation.addEventListener('click', () => {
-              if (!waitingForFixationClick) return; // Ignore if we're not waiting for a fixation click
+            if (!waitingForFixationClick) return; // Ignore if we're not waiting for a fixation click
           
+            // Make all items visible again
+            display_element.querySelectorAll('.search-item').forEach(img => {
+              img.style.visibility = ''; // Reset visibility
+            });
+
               fixation.classList.add('fixation-clicked');
               setTimeout(() => {
                 fixation.classList.remove('fixation-clicked');
-              }, 250); // Adjust the timeout duration as needed            
+              }, 300); // Adjust the timeout duration as needed            
 
               // Check if enough responses have been collected
               if (responses.length >= trial.num_required_responses) {

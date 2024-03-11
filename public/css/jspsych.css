@@ -214,19 +214,32 @@
 }
 
 .active {
-  border: 4px solid #FF7F00; /* Orange border */
+  border: 5px solid #FF7F00; /* Orange border */
   background-color: #FFFFFF; /* White background */
   pointer-events: none; /* Prevent further clicks */
+  border-radius: 50%; /* Essential for circular appearance */
   box-shadow: 0px 0px 10px #FF7F00; /* Soft shadow with the same orange color */
   transform: scale(1.1); /* Slightly scale up the image */
-  transition: transform 0.2s ease, box-shadow 0.2s ease; /* Smooth transition for scale and shadow */
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border 0.2s ease; /* Smooth transition for scale, shadow, and border */
+  display: inline-block; /* or 'block' depending on your layout */
+  padding: 5px; /* Adjust padding as needed to fit the circle */
 }
 
 .fixation-clicked {
-  border: 2px solid #720e9e; /* Purple border */
-  box-shadow: 0 0 8px #720e9e; /* Soft glow effect */
-  transform: scale(1.1); /* Slightly enlarge to indicate activation */
-  transition: all 0.2s ease; /* Smooth transition for visual feedback */
+  width: 100px; /* Maintain a specific width */
+  height: 100px; /* Set height equal to width for a perfect circle */
+  border: 3px solid #720e9e; /* Purple border */
+  box-shadow: 0 0 9px #720e9e; /* Soft glow effect */
+  border-radius: 50%; /* Essential for circular appearance */
+  transform: scale(1.05); /* Slightly enlarge to indicate activation */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smoother transition */
+  /* Adjust padding as needed, but ensure it does not interfere with the circular shape */
+  display: flex; /* Utilize flex to center inner content, if necessary */
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  overflow: hidden; /* Prevents content overflow */
+  padding: 20px; /* Adjust padding as needed to fit the circle */
+
 }
 
 #jspsych-multiple-select-response-btngroup {
