@@ -124,7 +124,7 @@ var NamesOfFoods = [
   }));
   var individual_items = jsPsych.randomization.shuffle(individual_items);
   const shuffled_image_names = jsPsych.randomization.shuffle(image_paths);
-  const trial_options = shuffled_image_names.slice(0, 60);
+  const trial_options = shuffled_image_names.slice(0, 5); //change for debug
 
 // Preloading files are needed to present the stimuli accurately.
 const preload = {
@@ -481,7 +481,7 @@ function getRandomInt(min, max) {
 // Choice task
 var get_choice_images = function (image_paths) {
   // Number of trials to generate // needs to be +1 of what you want (so 3 will give 2)
-  var numSets = 5;
+  var numSets = 1;
   // Number of images per trial
   var numImagesPerSet = 12;
   // Array to store the selected sets
