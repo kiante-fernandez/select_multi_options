@@ -448,7 +448,7 @@ var choiceInstruction_choose_one = {
     post_trial_gap: 500
   }
 
-  var choice_trials = get_choice_images(image_paths);
+//  var choice_trials = get_choice_images(image_paths);
   var trial_count = 0;
 
   var start_trial = {
@@ -457,7 +457,7 @@ var choiceInstruction_choose_one = {
     type: jsPsychHtmlButtonResponse,
     stimulus: ' ',
     choices: ['Start Choosing'],
-    button_html: '<button class="jspsych-btn" style="background-color: white; border: 5px solid purple; border-radius:50%; padding: 20px; display: inline-block; cursor: pointer;"><img src="' + instruct_img[6] + '" style="width:100px; height:auto;"></button>'
+    button_html: '<button class="jspsych-btn" style="background-color: white; border: 5px solid purple; border-radius:50%; padding: 25px; display: inline-block; cursor: pointer;"><img src="' + instruct_img[6] + '" style="width:100px; height:100px;"></button>'
   };
  //task
   var trial = {
@@ -611,7 +611,7 @@ var choose_k_procedure = {
   var timeline = []
   timeline.push(fullscreenEnter); //start the fullscreen
   timeline.push(preload);
-  timeline.push(exposure_sequence);
+  //timeline.push(exposure_sequence);
   // timeline.push(welcome_block);
 
 //timeline.push(trials_with_variables); //ratings procedure
@@ -625,7 +625,7 @@ timeline.push(choose_k_procedure);
   //timeline.push(start_trial);
   //timeline.push(TrialCircle);
   //timeline.push(trial)
-  timeline.push(replay);
+  timeline.push(replay); //look at a mouse track trial
 
   timeline.push(debrief);
 
