@@ -143,7 +143,8 @@ var jsPsychImageKeyboardResponse = (function (jspsych) {
               }
               // add prompt if there is one
               if (trial.prompt !== null) {
-                  display_element.insertAdjacentHTML("beforeend", trial.prompt);
+                //   display_element.insertAdjacentHTML("beforeend", trial.prompt);
+                  display_element.insertAdjacentHTML("beforeend", `<div class="prompt-large">${trial.prompt}</div>`);
               }
           }
           else {

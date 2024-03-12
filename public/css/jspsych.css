@@ -332,3 +332,15 @@
 .jspsych-slider::-moz-range-thumb {
   visibility:hidden;
 }
+
+.prompt-large {
+  font-size: 40px; /* Larger text makes it more readable */
+  margin-top: 10px; /* Adds space between the image and the prompt */
+  font-family: 'Arial', sans-serif; /* Professional, widely available font */
+  line-height: 1.5; /* Improves readability by spacing out lines */
+  color: #333; /* Dark gray for text, easier on the eyes than pure black */
+  text-align: center; /* Centers the text below the image */
+  max-width: 80%; /* Limits the width of the prompt for better readability */
+  margin-left: auto; /* Together with margin-right, centers the prompt block */
+  margin-right: auto;
+}

@@ -106,6 +106,68 @@
   }
 
     // experimental stimulus. 
+  var NamesOfFoods = [
+  "orange",
+  "plum",
+  "blackberry",
+  "peach",
+  "cherry",
+  "raspberry",
+  "apple",
+  "grape",
+  "golden delicious apple",
+  "honeydew melon",
+  "kiwi",
+  "green bell pepper",
+  "carrot",
+  "peanuts",
+  "almonds",
+  "baguette",
+  "sliced loaf bread",
+  "boule bread",
+  "rye bread",
+  "deli turkey",
+  "chicken tenders",
+  "meatballs",
+  "gouda",
+  "swiss cheese",
+  "potato chips",
+  "tortilla chips",
+  "doritos",
+  "ritz cracker",
+  "saltine cracker",
+  "wheat thins",
+  "egg rolls",
+  "french fries",
+  "buttered popcorn",
+  "triscuits",
+  "wavy lays",
+  "chocolate ice cream cone",
+  "strawberry ice cream cone",
+  "vanilla soft serve cone",
+  "nutrigrain bar",
+  "churro",
+  "twist donut",
+  "tuile cookie",
+  "madeleine",
+  "oatmeal raisin cookie",
+  "thumbprint cookie",
+  "sugar cookie",
+  "vanilla wafer",
+  "chocolate wafer",
+  "chocolate bark",
+  "dark chocolate",
+  "milk chocolate",
+  "pocky",
+  "toblerone",
+  "lindt lindor chocolate truffle",
+  "twix",
+  "caramel",
+  "peanut M&M's",
+  "brownie",
+  "frosted brownie",
+  "lemon cake"
+];
   //Creating list of image paths to load for the main task
   var items_of_interest = [1, 5, 8, 12, 13, 16, 17, 18, 25, 26, 28, 33, 39, 51, 55, 60,
   61, 63, 65, 70, 77, 80, 93, 96, 98, 99, 100, 102, 103, 104, 105,
@@ -121,11 +183,13 @@
       image_paths.push(path_str1);
   }
 
-  const individual_shuffled_image_names = jsPsych.randomization.shuffle(image_paths);
+  const individual_shuffled_image_names = image_paths;
   var individual_items = [];
-  individual_items = individual_shuffled_image_names.map(img => ({
-    stimulus: img
+  var individual_items = individual_shuffled_image_names.map((img, index) => ({
+    stimulus: img,
+    names: NamesOfFoods[index] // Associate each img with a name from the CSV
   }));
+  var individual_items = jsPsych.randomization.shuffle(individual_items);
   const shuffled_image_names = jsPsych.randomization.shuffle(image_paths);
   const trial_options = shuffled_image_names.slice(0, 60);
 
@@ -150,6 +214,7 @@
     data: { screen_id: "exposure" },
     type: jsPsychImageKeyboardResponse,
     stimulus: jsPsych.timelineVariable('stimulus'),
+    prompt: jsPsych.timelineVariable('names'),
     trial_duration: [750],
     // trial_duration: [50],
     stimulus_height: 520,
@@ -387,6 +452,7 @@ var choiceInstruction_choose_one = {
   var trial_count = 0;
 
   var start_trial = {
+    on_start: () => document.body.style.cursor = 'pointer',
     data: { screen_id: "start_fixation" },
     type: jsPsychHtmlButtonResponse,
     stimulus: ' ',
@@ -545,6 +611,7 @@ var choose_k_procedure = {
   var timeline = []
   timeline.push(fullscreenEnter); //start the fullscreen
   timeline.push(preload);
+  timeline.push(exposure_sequence);
   // timeline.push(welcome_block);
 
 //timeline.push(trials_with_variables); //ratings procedure
