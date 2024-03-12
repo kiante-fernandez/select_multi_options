@@ -44,8 +44,8 @@ const drive = google.drive({ version: 'v3', auth: oauth2Client });
 
 function writeJSONFile(id,data) {
     try {
-    const createStream = fs.createWriteStream(`choosek_exp_${id}.json`);
-    const writeStream = fs.createWriteStream(`choosek_exp_${id}.json`);
+    const createStream = fs.createWriteStream(`choosek_exp2_${id}.json`);
+    const writeStream = fs.createWriteStream(`choosek_exp2_${id}.json`);
     writeStream.write(JSON.stringify(data));
     createStream.end();
     writeStream.end();
@@ -56,7 +56,7 @@ function writeJSONFile(id,data) {
 
 async function removeFile(id) {
     try {
-    await fs.unlink(`choosek_exp_${id}.json`);
+    await fs.unlink(`choosek_exp2_${id}.json`);
       console.log('filePath was deleted');
     } catch(error) {
         console.error(`Got an error trying to delete the file: ${error.message}`);
@@ -68,13 +68,13 @@ async function uploadFile(id,data) {
     // console.log("are we breaking?")
     const response = await drive.files.create({
             requestBody: {
-                name: `choosek_exp_${id}.json`, //file name
+                name: `choosek_exp2_${id}.json`, //file name
                 mimeType: 'application/json',
                 parents: ['18f5ereBSs2AifIQtSV50TzxkP_VCqm5d']
             },
             media: {
                 mimeType: 'application/json',
-                body: fs.createReadStream(`choosek_exp_${id}.json`),
+                body: fs.createReadStream(`choosek_exp2_${id}.json`),
             },
         });
         // report the response from the request
