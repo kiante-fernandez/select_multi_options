@@ -377,12 +377,12 @@ function applyRandomSelectionToAllTrials(trials, subsetSize) {
 
   var stimulus_html = [
   //select 1
-  `<div><font size="120%" color="green">Food Preference: Choose One</font><br/>
-    <br><br/>
+  `<div><br/><font size="120%" color="green">Food Preference: Choose One</font><br/>
+    <br/>
     You will now select <b><font color="green">one</font></b> of the foods you'd most like to eat.<br/>
     <b>Before each trial:</b> You will be asked to click on the basket, indicating that you are ready to begin and that your mouse is in the center.<br/>
     <b>Do not move your mouse from the cart until you are presented with the items.</b><br/>
-    As a reminder, you are choosing which foods you'd most like to eat: <br/><br/>
+    As a reminder, you are choosing which foods you'd most like to eat: <br/>
     To select a food, simply click on it.<br/>
 
     <img height="450px" width="500px" src="${instruct_img[7]}"><br/>
@@ -394,12 +394,12 @@ function applyRandomSelectionToAllTrials(trials, subsetSize) {
     <b>After you click on the cart:</b> The cart will briefly have a <b><font color="#720e9e">purple</font></b> outline to indicate that your item was selected.<br/><br/>
     When you are ready, press the <b>SPACE BAR</b> to begin.</div>`,
   //condition 2
-  `<div><font size=120%; font color = 'green';>Food preference: Choose two</font><br/>
-  <br><br/>
+  `<div><br/><font size=120%; font color = 'green';>Food preference: Choose two</font><br/>
+  <br/>
   You will now select <b><font color='green'>two</font></b> of the foods you'd most like to eat.<br/>
   <b>Before each trial:</b> You will be asked to click on the basket, indicating that you are ready to begin and that your mouse is in the center.<br/>
   <b>Do not move your mouse from the cart until you are presented with the items.</b><br/>
-  As a reminder, you are choosing which foods you'd most like to eat: <br/><br/>
+  As a reminder, you are choosing which foods you'd most like to eat: <br/>
   To select a food, simply click on it.<br/>
 
   <img height="450px" width="500px" src="${instruct_img[7]}"><br/>
@@ -411,12 +411,12 @@ function applyRandomSelectionToAllTrials(trials, subsetSize) {
   <b>After you click on the cart:</b> The cart will briefly have a <b><font color="#720e9e">purple</font></b> outline to indicate that your item was selected.<br/><br/>
   When you are ready, press the <b>SPACE BAR</b> to begin.</div>`,
   //condition 3
-  `<div><font size=120%; font color = 'green';>Food preference: Choose three</font><br/>
-  <br><br/>
+  `<div><br/><font size=120%; font color = 'green';>Food preference: Choose three</font><br/>
+  <br/>
   You will now select <b><font color='green'>three</font></b> of the foods you'd most like to eat.<br/>
   <b>Before each trial:</b> You will be asked to click on the basket, indicating that you are ready to begin and that your mouse is in the center.<br/>
   <b>Do not move your mouse from the cart until you are presented with the items.</b><br/>
-  As a reminder, you are choosing which foods you'd most like to eat: <br/><br/>
+  As a reminder, you are choosing which foods you'd most like to eat: <br/>
   To select a food, simply click on it.<br/>
 
   <img height="450px" width="500px" src="${instruct_img[7]}"><br/>
@@ -475,7 +475,7 @@ var choiceInstruction_choose_one = {
     target_present_key: ' ',
     target_absent_key: 'n',
     target_present: true,
-    circle_diameter: 1000,
+    circle_diameter: 725,
     fixation_size:[100,100],
     target_size: [225,225],
     extensions: [

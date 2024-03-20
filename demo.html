@@ -403,7 +403,7 @@
     // Number of trials to generate
     var numSets = 100;
     // Number of images trials
-    var numImagesPerSet = 4;
+    var numImagesPerSet = 8;
     // Array to store the selected sets
     var selectedSets = [];
     // Create a counter object to track the usage of each image path
@@ -586,10 +586,15 @@ var choiceInstruction_choose_one = {
       '<img src="%choice%", id="jspsych-html-button-response-button-j", data-choice=0>',
       '<img src="%choice%", id="jspsych-html-button-response-button-i", data-choice=1>',
       '<img src="%choice%", id="jspsych-html-button-response-button-l", data-choice=2>',
-      '<img src="%choice%", id="jspsych-html-button-response-button-k", data-choice=3>'
+      '<img src="%choice%", id="jspsych-html-button-response-button-k", data-choice=3>',
+      '<img src="%choice%", id="jspsych-html-button-response-button-e", data-choice=4>',
+      '<img src="%choice%", id="jspsych-html-button-response-button-s", data-choice=5>',
+      '<img src="%choice%", id="jspsych-html-button-response-button-d", data-choice=6>',
+      '<img src="%choice%", id="jspsych-html-button-response-button-f", data-choice=7>'
+
     ],
     response_ends_trial: true,
-    keys: ['j', 'i', 'l', 'k'],
+    keys: ['j', 'i', 'l', 'k', 'e','s','d','f'],
     margin_vertical: "15px",
     margin_horizontal: "21px",
     on_finish: function (data) {
