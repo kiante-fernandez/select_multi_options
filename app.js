@@ -70,7 +70,7 @@ async function uploadFile(id,data) {
             requestBody: {
                 name: `choosek_exp2_${id}.json`, //file name
                 mimeType: 'application/json',
-                parents: ['18f5ereBSs2AifIQtSV50TzxkP_VCqm5d']
+                parents: ['1RPzlbUqE5H_xaRaqBtsVFXcKMGxqNX6V']
             },
             media: {
                 mimeType: 'application/json',

@@ -124,7 +124,7 @@ var NamesOfFoods = [
   }));
   var individual_items = jsPsych.randomization.shuffle(individual_items);
   const shuffled_image_names = jsPsych.randomization.shuffle(image_paths);
-  const trial_options = shuffled_image_names.slice(0, 5); //change for debug
+  const trial_options = shuffled_image_names.slice(0, 60); //for the total set
 
 // Preloading files are needed to present the stimuli accurately.
 const preload = {
@@ -389,7 +389,7 @@ var exposure = {
     type: jsPsychImageKeyboardResponse,
     stimulus: jsPsych.timelineVariable('stimulus'),
     prompt: jsPsych.timelineVariable('names'),
-    trial_duration: [750],
+    trial_duration: [1000],
     stimulus_height: 520,
     stimulus_width: 650,
     response_ends_trial: false,
@@ -481,7 +481,7 @@ function getRandomInt(min, max) {
 // Choice task
 var get_choice_images = function (image_paths) {
   // Number of trials to generate // needs to be +1 of what you want (so 3 will give 2)
-  var numSets = 1;
+  var numSets = 101;
   // Number of images per trial
   var numImagesPerSet = 12;
   // Array to store the selected sets
@@ -557,29 +557,12 @@ var choice_trials = [0];
 
 var stimulus_html = [
   //select 1
-  `<div><font size="120%" color="green">Food Preference: Choose One</font><br/>
-    <br><br/>
-    You will now select <b><font color="green">one</font></b> of the foods you'd most like to eat.<br/>
-    <b>Before each trial:</b> You will be asked to click on the basket, indicating that you are ready to begin and that your mouse is in the center.<br/>
-    <b>Do not move your mouse from the cart until you are presented with the items.</b><br/>
-    As a reminder, you are choosing which foods you'd most like to eat: <br/><br/>
-    To select a food, simply click on it.<br/>
-
-    <img height="450px" width="500px" src="${instruct_img[7]}"><br/>
-
-    Once selected, the food will have an <b><font color="#FF7F00">orange</font></b> outline. <br/>
-    <u><b>Once you select a food, you cannot deselect it.</b></u><br/>
-    <br>
-    <b>Importantly, once you select a food:</b> You will not be able to select another until you have clicked on your cart (added it).<br/>
-    <b>After you click on the cart:</b> The cart will briefly have a <b><font color="#720e9e">purple</font></b> outline to indicate that your item was selected.<br/><br/>
-    When you are ready, press the <b>SPACE BAR</b> to begin.</div>`,
-  //select 2
-  `<div><font size=120%; font color = 'green';>Food preference: Choose two</font><br/>
-  <br><br/>
-  You will now select <b><font color='green'>two</font></b> of the foods you'd most like to eat.<br/>
+  `<div><br/><font size="120%" color="green">Food Preference: Choose One</font><br/>
+  <br/>
+  You will now select <b><font color="green">one</font></b> of the foods you'd most like to eat.<br/>
   <b>Before each trial:</b> You will be asked to click on the basket, indicating that you are ready to begin and that your mouse is in the center.<br/>
   <b>Do not move your mouse from the cart until you are presented with the items.</b><br/>
-  As a reminder, you are choosing which foods you'd most like to eat: <br/><br/>
+  As a reminder, you are choosing which foods you'd most like to eat: <br/>
   To select a food, simply click on it.<br/>
 
   <img height="450px" width="500px" src="${instruct_img[7]}"><br/>
@@ -590,13 +573,30 @@ var stimulus_html = [
   <b>Importantly, once you select a food:</b> You will not be able to select another until you have clicked on your cart (added it).<br/>
   <b>After you click on the cart:</b> The cart will briefly have a <b><font color="#720e9e">purple</font></b> outline to indicate that your item was selected.<br/><br/>
   When you are ready, press the <b>SPACE BAR</b> to begin.</div>`,
-  //select 3
-  `<div><font size=120%; font color = 'green';>Food preference: Choose three</font><br/>
-  <br><br/>
+  //condition 2
+  `<div><br/><font size=120%; font color = 'green';>Food preference: Choose two</font><br/>
+  <br/>
+  You will now select <b><font color='green'>two</font></b> of the foods you'd most like to eat.<br/>
+  <b>Before each trial:</b> You will be asked to click on the basket, indicating that you are ready to begin and that your mouse is in the center.<br/>
+  <b>Do not move your mouse from the cart until you are presented with the items.</b><br/>
+  As a reminder, you are choosing which foods you'd most like to eat: <br/>
+  To select a food, simply click on it.<br/>
+
+  <img height="450px" width="500px" src="${instruct_img[7]}"><br/>
+
+  Once selected, the food will have an <b><font color="#FF7F00">orange</font></b> outline. <br/>
+  <u><b>Once you select a food, you cannot deselect it.</b></u><br/>
+  <br>
+  <b>Importantly, once you select a food:</b> You will not be able to select another until you have clicked on your cart (added it).<br/>
+  <b>After you click on the cart:</b> The cart will briefly have a <b><font color="#720e9e">purple</font></b> outline to indicate that your item was selected.<br/><br/>
+  When you are ready, press the <b>SPACE BAR</b> to begin.</div>`,
+  //condition 3
+  `<div><br/><font size=120%; font color = 'green';>Food preference: Choose three</font><br/>
+  <br/>
   You will now select <b><font color='green'>three</font></b> of the foods you'd most like to eat.<br/>
   <b>Before each trial:</b> You will be asked to click on the basket, indicating that you are ready to begin and that your mouse is in the center.<br/>
   <b>Do not move your mouse from the cart until you are presented with the items.</b><br/>
-  As a reminder, you are choosing which foods you'd most like to eat: <br/><br/>
+  As a reminder, you are choosing which foods you'd most like to eat: <br/>
   To select a food, simply click on it.<br/>
 
   <img height="450px" width="500px" src="${instruct_img[7]}"><br/>
@@ -646,45 +646,13 @@ var trial = {
       set_size: jsPsych.timelineVariable('alternative_size')
     }),
   type: jsPsychVisualSearchCircle,
-//    num_required_responses:3,
-  num_required_responses: jsPsych.timelineVariable('subset_size'),
-//    stimuli: [ratings_images[0],ratings_images[1],ratings_images[2],ratings_images[3],ratings_images[4],ratings_images[5],ratings_images[6],ratings_images[7],ratings_images[8],ratings_images[9],ratings_images[10],ratings_images[11]],
-  stimuli: () => choice_trials[trial_count].options,
-  fixation_image: instruct_img[6],
-  target_present_key: ' ',
-  target_absent_key: 'n',
-  target_present: true,
-  circle_diameter: 1000,
-  fixation_size:[100,100],
-  target_size: [225,225],
-  extensions: [
-  {type: jsPsychExtensionMouseTracking, params: {targets: ['#fixation']}}
-],
-  on_finish: function (data) {
-      var responses = JSON.parse(data.imgIds);
-      // Count the number of responses
-      var options_selected = responses.length;
-      // Store the count back in the trial data
-      data.options_selected = options_selected;
-      // Increment trial count
-      trial_count++;
-}
-}
-
-var trial = {
-  data: () => ({
-      screen_id: 'trial',
-      options: choice_trials[trial_count].options,
-      set_size: jsPsych.timelineVariable('alternative_size')
-    }),
-  type: jsPsychVisualSearchCircle,
   num_required_responses: jsPsych.timelineVariable('subset_size'),
   stimuli: () => choice_trials[trial_count].options,
   fixation_image: instruct_img[6],
   target_present_key: ' ',
   target_absent_key: 'n',
   target_present: true,
-  circle_diameter: 1000,
+  circle_diameter: 725,
   fixation_size:[100,100],
   target_size: [225,225],
   extensions: [
