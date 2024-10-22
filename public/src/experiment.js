@@ -481,7 +481,7 @@ function getRandomInt(min, max) {
 // Choice task
 var get_choice_images = function (image_paths) {
   // Number of trials to generate // needs to be +1 of what you want (so 3 will give 2)
-  var numSets = 101;
+  var numSets = 41;
   // Number of images per trial
   var numImagesPerSet = 12;
   // Array to store the selected sets
@@ -643,7 +643,10 @@ var trial = {
   data: () => ({
       screen_id: 'trial',
       options: choice_trials[trial_count].options,
-      set_size: jsPsych.timelineVariable('alternative_size')
+      set_size: jsPsych.timelineVariable('alternative_size'),
+      subset_size: jsPsych.timelineVariable('subset_size'),
+      trial_number: trial_count,
+      block_number: Math.floor(trial_count / 40) + 1
     }),
   type: jsPsychVisualSearchCircle,
   num_required_responses: jsPsych.timelineVariable('subset_size'),
@@ -652,9 +655,9 @@ var trial = {
   target_present_key: ' ',
   target_absent_key: 'n',
   target_present: true,
-  circle_diameter: 725,
+  circle_diameter: 925, // Increased from 725
   fixation_size:[100,100],
-  target_size: [225,225],
+  target_size: [200, 200], // Slightly reduced from 225 to help prevent overlap
   extensions: [
   {type: jsPsychExtensionMouseTracking, params: {targets: ['#fixation']}}
   ],
