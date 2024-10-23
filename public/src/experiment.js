@@ -124,8 +124,7 @@ var NamesOfFoods = [
   }));
   var individual_items = jsPsych.randomization.shuffle(individual_items);
   const shuffled_image_names = jsPsych.randomization.shuffle(image_paths);
-//  const trial_options = shuffled_image_names.slice(0, 60); //for the total set
-  const trial_options = shuffled_image_names.slice(0, 3); //for the total set
+  const trial_options = shuffled_image_names.slice(0, 60); //for the total set
 
 // Preloading files are needed to present the stimuli accurately.
 const preload = {
@@ -481,47 +480,44 @@ function getRandomInt(min, max) {
 
 // Choice task
 var get_choice_images = function (image_paths) {
-  // Number of trials to generate // needs to be +1 of what you want (so 3 will give 2)
-  var numSets = 2; //set to 41 for experiemnet
-  // Number of images per trial
-  var numImagesPerSet = 12;
+  // Number of trials to generate
+  var numSets = 41; // Set to your desired number for the experiment
+  // Maximum number of images per set (should be the largest alternative_size you'll use)
+  var maxImagesPerSet = 12; // This ensures we have enough images for all conditions
+  
   // Array to store the selected sets
   var selectedSets = [];
   // Create a counter object to track the usage of each image path
   var imagePathCounter = {};
-  // Adjust the max usage limit as needed
-  var maxUsageLimit = 25; // Increased from 7 to allow more reuse
+  var maxUsageLimit = 25;
+  
   // Generate the sets
   for (var i = 0; i < numSets; i++) {
-    var selectedImages = [];
-    var uniquePaths = []; // Array to store unique image paths for each set
-    var numAttempts = 0;
-    while (uniquePaths.length < numImagesPerSet && numAttempts < image_paths.length * 2) { // Adjusted attempt limit
-      // Randomly select an image path from the imagePaths array
-      var imagePath = jsPsych.randomization.sampleWithoutReplacement(image_paths, 1)[0];
-      // Check if the selected image path is already in the set or has been used too many times
-      if (
-        uniquePaths.indexOf(imagePath) === -1 &&
-        (!imagePathCounter[imagePath] || imagePathCounter[imagePath] < maxUsageLimit)
-      ) {
-        uniquePaths.push(imagePath);
-        selectedImages.push(imagePath);
-        // Increment the counter for the used image path
-        imagePathCounter[imagePath] = (imagePathCounter[imagePath] || 0) + 1;
+      var selectedImages = [];
+      var uniquePaths = [];
+      var numAttempts = 0;
+      
+      // Always get maxImagesPerSet images - we'll subset later based on alternative_size
+      while (uniquePaths.length < maxImagesPerSet && numAttempts < image_paths.length * 2) {
+          var imagePath = jsPsych.randomization.sampleWithoutReplacement(image_paths, 1)[0];
+          if (uniquePaths.indexOf(imagePath) === -1 && 
+              (!imagePathCounter[imagePath] || imagePathCounter[imagePath] < maxUsageLimit)) {
+              uniquePaths.push(imagePath);
+              selectedImages.push(imagePath);
+              imagePathCounter[imagePath] = (imagePathCounter[imagePath] || 0) + 1;
+          }
+          numAttempts++;
       }
-      numAttempts++;
-    }
-    if (selectedImages.length === numImagesPerSet) {
-      selectedSets.push(selectedImages);
-    }
-  }      
-  var factors = {
-    options: selectedSets
-  };
-  var factorial_values = jsPsych.randomization.factorial( {
-    options: selectedSets
-  }, 1);
-return factorial_values;
+      
+      if (selectedImages.length === maxImagesPerSet) {
+          selectedSets.push({
+              options: selectedImages,
+              originalOptions: [...selectedImages] // Keep a copy of all images
+          });
+      }
+  }
+  
+  return selectedSets;
 };
 
 // Reuse the shuffleArray function to shuffle an array
@@ -651,7 +647,12 @@ var trial = {
     }),
   type: jsPsychVisualSearchCircle,
   num_required_responses: jsPsych.timelineVariable('subset_size'),
-  stimuli: () => choice_trials[trial_count].options,
+  stimuli: function() {
+    // Get the current trial's full set of options
+    let currentTrial = choice_trials[trial_count];
+    // Take only the number of options specified by alternative_size
+    return currentTrial.options.slice(0, jsPsych.timelineVariable('alternative_size'));
+  },  
   fixation_image: instruct_img[6],
   target_present_key: ' ',
   target_absent_key: 'n',
@@ -701,16 +702,15 @@ var ratings_procedure = {
 //     },
 //   };
 var task_timeline = {
-  on_start: () => applyRandomSelectionToAllTrials(choice_trials, jsPsych.timelineVariable('alternative_size')),
   timeline: [start_trial, trial],
-  loop_function: function () {
-    if (trial_count < choice_trials.length - 1) {
-      return true;
-    } else {
-      trial_count = 0;
-      return false;
-    }
-  },
+  loop_function: function() {
+      if (trial_count < choice_trials.length - 1) {
+          return true;
+      } else {
+          trial_count = 0;
+          return false;
+      }
+  }
 };
 
  //make conditional timeline variable for choice task instructions
@@ -745,21 +745,28 @@ var task_timeline = {
   }
  }
  var choose_k_procedure = {
-  on_start: () => choice_trials = get_choice_images(image_paths),
-  timeline: [if_choose_one,if_choose_two,if_choose_three, task_timeline],
+  on_start: function() {
+      choice_trials = get_choice_images(image_paths);
+  },
+  timeline: [
+      if_choose_one,
+      if_choose_two,
+      if_choose_three, 
+      task_timeline
+  ],
   timeline_variables: [
-  { subset_size: 1, alternative_size: 4 },
-  { subset_size: 1, alternative_size: 8 },
-  { subset_size: 1, alternative_size: 12 },
-  { subset_size: 2, alternative_size: 4 },
-  { subset_size: 2, alternative_size: 8 },
-  { subset_size: 2, alternative_size: 12 },
-  { subset_size: 3, alternative_size: 4 },
-  { subset_size: 3, alternative_size: 8 },
-  { subset_size: 3, alternative_size: 12 }
+      { subset_size: 1, alternative_size: 4 },
+      { subset_size: 1, alternative_size: 8 },
+      { subset_size: 1, alternative_size: 12 },
+      { subset_size: 2, alternative_size: 4 },
+      { subset_size: 2, alternative_size: 8 },
+      { subset_size: 2, alternative_size: 12 },
+      { subset_size: 3, alternative_size: 4 },
+      { subset_size: 3, alternative_size: 8 },
+      { subset_size: 3, alternative_size: 12 }
   ],
   randomize_order: true
-}
+};
 
 var debrief = {
     type: jsPsychHtmlKeyboardResponse,
