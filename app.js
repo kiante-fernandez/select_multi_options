@@ -13,61 +13,21 @@ const bowser = require("bowser");
 var app = express();
 const subjects = {};
 
-// --- OAuth2 SETUP
-const CLIENT_ID = '228376881552-hrg29htnkq46t0t8ql91uhe4o291tkjr.apps.googleusercontent.com';
-const CLIENT_SECRET = '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';
-const REDIRECT_URL = 'https://select-multi-options.herokuapp.com/oauth2callback';
-const SCOPES = ['https://www.googleapis.com/auth/drive.file'];
-
-// Initialize OAuth2 client
-const oauth2Client = new google.auth.OAuth2(
-    CLIENT_ID,
-    CLIENT_SECRET,
-    REDIRECT_URL
-);
-
-// Store tokens in memory (in production, consider using environment variables or a database)
-let tokens = null;
-
-// Add OAuth routes
-app.get('/auth', (req, res) => {
-    const authUrl = oauth2Client.generateAuthUrl({
-        access_type: 'offline',
-        scope: SCOPES,
-        prompt: 'consent'  // Forces refresh token generation
-    });
-    res.redirect(authUrl);
-});
-
-app.get('/oauth2callback', async (req, res) => {
-    const { code } = req.query;
+// --- Google Drive Setup using Service Account
+async function getGoogleDriveService() {
     try {
-        const { tokens: newTokens } = await oauth2Client.getToken(code);
-        tokens = newTokens;
-        oauth2Client.setCredentials(tokens);
-        res.send('Authentication successful! You can close this window.');
+        // Get service account credentials from environment variable
+        const credentials = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT || '{}');
+        
+        const auth = new google.auth.GoogleAuth({
+            credentials,
+            scopes: ['https://www.googleapis.com/auth/drive.file']
+        });
+
+        return google.drive({ version: 'v3', auth });
     } catch (error) {
-        console.error('Error getting tokens:', error);
-        res.status(400).send('Authentication failed!');
-    }
-});
-
-// Token refresh middleware
-async function ensureValidToken() {
-    if (!tokens) {
-        throw new Error('No tokens available. Please authenticate first.');
-    }
-
-    const isTokenExpired = tokens.expiry_date && tokens.expiry_date <= Date.now();
-    if (isTokenExpired) {
-        try {
-            const response = await oauth2Client.refreshToken(tokens.refresh_token);
-            tokens = response.credentials;
-            oauth2Client.setCredentials(tokens);
-        } catch (error) {
-            console.error('Error refreshing token:', error);
-            throw new Error('Failed to refresh token. Please authenticate again.');
-        }
+        console.error('Error creating Google Drive service:', error);
+        throw error;
     }
 }
 
@@ -76,7 +36,9 @@ function writeJSONFile(id, data) {
     try {
         const filePath = `choosek_exp2_${id}.json`;
         fs.writeFileSync(filePath, JSON.stringify(data));
+        return filePath;
     } catch (err) {
+        console.error('Error writing file:', err);
         throw err;
     }
 }
@@ -91,16 +53,14 @@ async function removeFile(id) {
 }
 
 async function uploadFile(id, data) {
+    let filePath = null;
     try {
-        await ensureValidToken();
-        await writeJSONFile(id, data);
+        filePath = writeJSONFile(id, data);
+        const driveService = await getGoogleDriveService();
 
-        const drive = google.drive({ version: 'v3', auth: oauth2Client });
-        const filePath = `choosek_exp2_${id}.json`;
-
-        const response = await drive.files.create({
+        const response = await driveService.files.create({
             requestBody: {
-                name: filePath,
+                name: `choosek_exp2_${id}.json`,
                 mimeType: 'application/json',
                 parents: ['1RPzlbUqE5H_xaRaqBtsVFXcKMGxqNX6V']
             },
@@ -115,8 +75,8 @@ async function uploadFile(id, data) {
         return response.data;
     } catch (error) {
         console.error('Upload error:', error);
-        if (error.message.includes('invalid_grant')) {
-            throw new Error('Authentication expired. Please authenticate again at /auth');
+        if (filePath) {
+            await removeFile(id);
         }
         throw error;
     }
@@ -153,17 +113,28 @@ app.post('/experiment-data', async function(request, response) {
         response.status(200).json({ message: 'Data uploaded successfully' });
     } catch (error) {
         console.error('Error handling experiment data:', error);
-        if (error.message.includes('authenticate')) {
-            response.status(401).json({ 
-                error: 'Authentication required',
-                authUrl: '/auth'
-            });
-        } else {
-            response.status(500).json({ 
-                error: 'Failed to upload data',
-                details: error.message 
-            });
-        }
+        response.status(500).json({ 
+            error: 'Failed to upload data',
+            details: error.message 
+        });
+    }
+});
+
+// Add a test endpoint to verify drive connection
+app.get('/test-drive-connection', async (req, res) => {
+    try {
+        const driveService = await getGoogleDriveService();
+        const testData = { test: 'Connection successful', timestamp: new Date().toISOString() };
+        const testId = 'test-' + Date.now();
+        await uploadFile(testId, testData);
+        res.json({ status: 'success', message: 'Test file uploaded successfully' });
+    } catch (error) {
+        console.error('Test connection error:', error);
+        res.status(500).json({ 
+            status: 'error', 
+            message: error.message,
+            details: error.toString()
+        });
     }
 });
 
