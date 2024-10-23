@@ -124,7 +124,8 @@ var NamesOfFoods = [
   }));
   var individual_items = jsPsych.randomization.shuffle(individual_items);
   const shuffled_image_names = jsPsych.randomization.shuffle(image_paths);
-  const trial_options = shuffled_image_names.slice(0, 60); //for the total set
+//  const trial_options = shuffled_image_names.slice(0, 60); //for the total set
+  const trial_options = shuffled_image_names.slice(0, 3); //for the total set
 
 // Preloading files are needed to present the stimuli accurately.
 const preload = {
