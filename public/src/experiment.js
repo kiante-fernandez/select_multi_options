@@ -481,7 +481,7 @@ function getRandomInt(min, max) {
 // Choice task
 var get_choice_images = function (image_paths) {
   // Number of trials to generate // needs to be +1 of what you want (so 3 will give 2)
-  var numSets = 41;
+  var numSets = 2; //set to 41 for experiemnet
   // Number of images per trial
   var numImagesPerSet = 12;
   // Array to store the selected sets
