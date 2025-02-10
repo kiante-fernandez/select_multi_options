@@ -627,6 +627,25 @@ var choiceInstruction_choose_three = {
 
 var trial_count = 0;
 
+var break_screen = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: function() {
+      let nextSubsetSize = jsPsych.timelineVariable('subset_size');
+      return `<div style="font-size: 24px; line-height: 1.6;">
+          <p style="font-size: 48px; color: green; margin-bottom: 40px;">Break Time!</p>
+          
+          <p style="margin-bottom: 30px;">You can take a short break now.</p>
+          
+          <p style="margin-bottom: 20px;">In the next block, you will:</p>
+          <p style="font-size: 36px; font-weight: bold; margin-bottom: 40px;">Choose ${nextSubsetSize}</p>
+          
+          <p>Press the <span style="font-weight: bold; font-size: 28px;">SPACE BAR</span> when you're ready to continue.</p>
+      </div>`;
+  },
+  choices: [' '],
+  post_trial_gap: 500
+};
+
 var start_trial = {
   on_start: () => document.body.style.cursor = 'pointer',
   data: { screen_id: "start_fixation" },
@@ -643,7 +662,8 @@ var trial = {
       set_size: jsPsych.timelineVariable('alternative_size'),
       subset_size: jsPsych.timelineVariable('subset_size'),
       trial_number: trial_count,
-      block_number: Math.floor(trial_count / 40) + 1
+      block_number: Math.floor(trial_count / 40) + 1,
+      total_trials: jsPsych.timelineVariable('total_trials')
     }),
   type: jsPsychVisualSearchCircle,
   num_required_responses: jsPsych.timelineVariable('subset_size'),
@@ -671,6 +691,7 @@ var trial = {
       data.options_selected = options_selected;
       // Increment trial count
       trial_count++;
+      data.final_trial_count = trial_count;
   }
 };
 
@@ -701,15 +722,48 @@ var ratings_procedure = {
 //       }
 //     },
 //   };
+var current_total_trials = 0;
+
+var trial_with_break = {
+  timeline: [
+      start_trial,
+      trial,
+      {
+          timeline: [break_screen],
+          conditional_function: function() {
+              // Show break screen every 20 trials (but only if not at the end)
+              return (trial_count % 20 === 0 && trial_count > 0 && trial_count < current_total_trials);
+          }
+      }
+  ]
+};
+
+// var task_timeline = {
+//   timeline: [start_trial, trial],
+//   loop_function: function() {
+//       if (trial_count < choice_trials.length - 1) {
+//           return true;
+//       } else {
+//           trial_count = 0;
+//           return false;
+//       }
+//   }
+// };
 var task_timeline = {
-  timeline: [start_trial, trial],
-  loop_function: function() {
-      if (trial_count < choice_trials.length - 1) {
-          return true;
-      } else {
+  timeline: [trial_with_break],
+  loop_function: function(data) {
+      // console.log('Current trial count in loop:', trial_count);
+      // console.log('Current total trials target:', current_total_trials);
+      if (trial_count >= current_total_trials) {
+          // console.log('Reached target trials, resetting count');
           trial_count = 0;
           return false;
       }
+      return true;
+  },
+  on_start: function() {
+      current_total_trials = jsPsych.timelineVariable('total_trials');
+      // console.log('Starting timeline, target trials:', current_total_trials);
   }
 };
 
@@ -744,17 +798,32 @@ var task_timeline = {
     }
   }
  }
- var choose_k_procedure = {
-  on_start: function() {
-      choice_trials = get_choice_images(image_paths);
-  },
-  timeline: [
-      if_choose_one,
-      if_choose_two,
-      if_choose_three, 
-      task_timeline
-  ],
-  timeline_variables: [
+//  var choose_k_procedure = {
+//   on_start: function() {
+//       choice_trials = get_choice_images(image_paths);
+//   },
+//   timeline: [
+//       if_choose_one,
+//       if_choose_two,
+//       if_choose_three, 
+//       task_timeline
+//   ],
+//   timeline_variables: [
+//       { subset_size: 1, alternative_size: 4 },
+//       { subset_size: 1, alternative_size: 8 },
+//       { subset_size: 1, alternative_size: 12 },
+//       { subset_size: 2, alternative_size: 4 },
+//       { subset_size: 2, alternative_size: 8 },
+//       { subset_size: 2, alternative_size: 12 },
+//       { subset_size: 3, alternative_size: 4 },
+//       { subset_size: 3, alternative_size: 8 },
+//       { subset_size: 3, alternative_size: 12 }
+//   ],
+//   randomize_order: true
+// };
+
+var make_block_timeline_variables = function() {
+  let base_conditions = [
       { subset_size: 1, alternative_size: 4 },
       { subset_size: 1, alternative_size: 8 },
       { subset_size: 1, alternative_size: 12 },
@@ -764,8 +833,44 @@ var task_timeline = {
       { subset_size: 3, alternative_size: 4 },
       { subset_size: 3, alternative_size: 8 },
       { subset_size: 3, alternative_size: 12 }
+  ];
+
+  // Create two blocks of 20 trials for each condition
+  let all_blocks = [];
+  base_conditions.forEach(condition => {
+      // Add two blocks of 20 trials each for this condition
+      all_blocks.push({
+          ...condition,
+          total_trials: 20,
+          block_id: `${condition.subset_size}_${condition.alternative_size}_1`
+      });
+      all_blocks.push({
+          ...condition,
+          total_trials: 20,
+          block_id: `${condition.subset_size}_${condition.alternative_size}_2`
+      });
+  });
+
+  // Shuffle the blocks to randomize order
+  return jsPsych.randomization.shuffle(all_blocks);
+};
+
+
+ var choose_k_procedure = {
+  on_start: function() {
+    choice_trials = get_choice_images(image_paths);
+    trial_count = 0;
+    current_total_trials = 0;
+    // console.log('Starting new condition, trial count reset to:', trial_count);
+},
+  timeline: [
+      if_choose_one,
+      if_choose_two,
+      if_choose_three, 
+      task_timeline
   ],
-  randomize_order: true
+  timeline_variables: make_block_timeline_variables(),
+  randomize_order: false
 };
 
 var debrief = {
