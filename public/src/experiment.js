@@ -732,7 +732,7 @@ var trial_with_break = {
           timeline: [break_screen],
           conditional_function: function() {
               // Show break screen every 20 trials (but only if not at the end)
-              return (trial_count % 20 === 0 && trial_count > 0 && trial_count < current_total_trials);
+              return (trial_count % 10 === 0 && trial_count > 0 && trial_count < current_total_trials);
           }
       }
   ]
