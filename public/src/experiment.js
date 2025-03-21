@@ -824,14 +824,14 @@ var task_timeline = {
 
 var make_block_timeline_variables = function() {
   let base_conditions = [
-      { subset_size: 1, alternative_size: 4 },
-      { subset_size: 1, alternative_size: 8 },
-      { subset_size: 1, alternative_size: 12 },
-      { subset_size: 2, alternative_size: 4 },
-      { subset_size: 2, alternative_size: 8 },
-      { subset_size: 2, alternative_size: 12 },
-      { subset_size: 3, alternative_size: 4 },
-      { subset_size: 3, alternative_size: 8 },
+//      { subset_size: 1, alternative_size: 4 },
+//      { subset_size: 1, alternative_size: 8 },
+//      { subset_size: 1, alternative_size: 12 },
+//      { subset_size: 2, alternative_size: 4 },
+//      { subset_size: 2, alternative_size: 8 },
+//      { subset_size: 2, alternative_size: 12 },
+//      { subset_size: 3, alternative_size: 4 },
+//      { subset_size: 3, alternative_size: 8 },
       { subset_size: 3, alternative_size: 12 }
   ];
 
